@@ -1,6 +1,7 @@
-import 'package:catat_uang/view/splash_screen_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'import_url_file.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,10 +21,11 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             routes: {
               '/': (context) => SplashScreenPage(),
+              '/login': (context) => LoginPage(),
             });
 
     return ScreenUtilInit(
-      designSize: const Size(360, 640),
+      designSize: Size(360, 640),
       builder: (context, Widget) => materialApp(),
       minTextAdapt: true,
     );
