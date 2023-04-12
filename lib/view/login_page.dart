@@ -6,17 +6,59 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   //////////////////
-  ///CUSTOM LABEL///
+  ///CUSTOM UTILS///
   //////////////////
-  customLabelSpan(label, isBold) => TextSpan(
+  customLabelSpan(label, isBold, color) => TextSpan(
         text: label,
-        style: GeneralStyle.labelStyle1(isBold, 15),
+        style: GeneralStyle.labelStyle1(isBold, 15, color),
       );
 
-  customLabel(label, size) => Text(
+  customLabel(label, size, isBold, color) => Text(
         label,
-        style: GeneralStyle.labelStyle1(true, size),
+        style: GeneralStyle.labelStyle1(isBold, size, color),
       );
+
+  brandingLogo(status) => ClipRRect(
+        borderRadius: BorderRadius.circular(5.r),
+        child: Image.asset(
+          status == "facebook"
+              ? 'assets/image/facebook_logo.png'
+              : 'assets/image/google_logo.png',
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.high,
+          width: 38.w,
+          height: 35.h,
+        ),
+      );
+
+  @override
+  initState() {
+    super.initState();
+
+    initData();
+  }
+
+  initData() {}
+
+  ///////////////////////////////////
+  ///SOCIAL MEDIA ACCOUNT FUNCTION///
+  ///////////////////////////////////
+
+  Future<UserCredential> requestGoogleSignIn() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser!.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth!.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    print("email: ${googleUser.email},${googleUser.displayName}");
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +79,10 @@ class LoginPageState extends State<LoginPage> {
             RichText(
               text: TextSpan(
                 children: [
-                  customLabelSpan("Simpan Catatan", false),
-                  customLabelSpan(" Keuanganmu disini", true),
+                  customLabelSpan(
+                      "Simpan Catatan", false, ColorsTheme.barStatusColor),
+                  customLabelSpan(
+                      " Keuanganmu disini", true, ColorsTheme.barStatusColor),
                 ],
               ),
             )
@@ -60,44 +104,79 @@ class LoginPageState extends State<LoginPage> {
             children: [
               InkWell(
                 onTap: () {},
-                child: customLabel("Lupa Password", 10),
+                child:
+                    customLabel("Lupa Password", 10, true, ColorsTheme.black),
               )
             ],
           ),
         );
 
-    btnLoginAction() => Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.r),
-          ),
-          color: ColorsTheme.yellow,
-          child: InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(5.r),
-            child: Container(
-              width: ScreenUtil().screenWidth,
-              padding: GeneralUtils.allAroundPadding(11, 0),
-              child: Center(child: customLabel("Login", 14)),
-            ),
+    ///////////////////////////////////////////
+    ///SOCIAL MEDIA ACCOUNT ACTION COMPONENT///
+    ///////////////////////////////////////////
+
+    socialMediaAccContent(status) => Row(
+          children: [
+            brandingLogo(status),
+            GeneralUtils.horizontalSpacer(5),
+            customLabel(
+              "Masuk Dengan ${status == "facebook" ? 'Facebook' : 'Google'}",
+              14,
+              true,
+              ColorsTheme.white,
+            )
+          ],
+        );
+
+    contentBtnAction(status, status1) => InkWell(
+          onTap: () => requestGoogleSignIn(),
+          borderRadius: BorderRadius.circular(5.r),
+          child: Container(
+            width: ScreenUtil().screenWidth,
+            height: 39.h,
+            padding: status != "custom"
+                ? GeneralUtils.allAroundPadding(11, 0)
+                : GeneralUtils.allAroundPadding(5, 0),
+            child: status == "custom"
+                ? socialMediaAccContent(status1)
+                : Center(
+                    child: customLabel("Login", 14, true, ColorsTheme.black),
+                  ),
           ),
         );
 
-    contentForm() => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headerLabel(),
-            GeneralUtils.verticalSpacer(20),
-            inputFormField(),
-            GeneralUtils.verticalSpacer(8),
-            forgotPasswordLabelAction(),
-            GeneralUtils.verticalSpacer(8),
-            btnLoginAction(),
-          ],
+    socialMediaAccountBtnAction(status, {String? status1}) => Card(
+          color: status1 == "facebook"
+              ? ColorsTheme.facebookColor
+              : ColorsTheme.googleColor,
+          child: contentBtnAction("custom", status1),
         );
 
     ////////////////////
     ///BASE COMPONENT///
     ////////////////////
+
+    contentForm() => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            headerLabel(),
+            GeneralUtils.verticalSpacer(35),
+            inputFormField(),
+            GeneralUtils.verticalSpacer(8),
+            forgotPasswordLabelAction(),
+            GeneralUtils.verticalSpacer(55),
+            //btnLoginAction(),
+            GeneralUtils.verticalSpacer(14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [customLabel("Atau", 12, false, ColorsTheme.black)],
+            ),
+            GeneralUtils.verticalSpacer(14),
+            socialMediaAccountBtnAction("custom", status1: "facebook"),
+            GeneralUtils.verticalSpacer(5),
+            socialMediaAccountBtnAction("custom", status1: "google"),
+          ],
+        );
 
     contentBody() => SafeArea(
           child: Scaffold(

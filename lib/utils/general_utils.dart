@@ -31,4 +31,12 @@ class GeneralUtils {
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.done,
       );
+
+  static generalBtnAction() => Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.r),
+        ),
+        color: ColorsTheme.yellow,
+        //child: contentBtnAction("", ""),
+      );
 }

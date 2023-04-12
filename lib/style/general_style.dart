@@ -1,10 +1,10 @@
 part of '../import_url_file.dart';
 
 class GeneralStyle {
-  static labelStyle1(isBold, int? fontSize) => GoogleFonts.mulish(
+  static labelStyle1(isBold, int? fontSize, color) => GoogleFonts.mulish(
         fontSize: fontSize!.sp,
-        fontWeight: (isBold) ? FontWeight.w800 : FontWeight.w400,
-        color: ColorsTheme.barStatusColor,
+        fontWeight: (isBold) ? FontWeight.w800 : FontWeight.w300,
+        color: color,
       );
 
   static labelHintStyle1(isFilled) => GoogleFonts.mulish(
