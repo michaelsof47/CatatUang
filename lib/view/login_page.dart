@@ -5,6 +5,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
+  //GENERAL VARIABLE
+  FirebaseAuth? firebaseAuth;
+
   //////////////////
   ///CUSTOM UTILS///
   //////////////////
@@ -35,7 +38,12 @@ class LoginPageState extends State<LoginPage> {
   initState() {
     super.initState();
 
+    initConstructor();
     initData();
+  }
+
+  initConstructor() {
+    firebaseAuth = FirebaseAuth.instance;
   }
 
   initData() {}
@@ -55,9 +63,26 @@ class LoginPageState extends State<LoginPage> {
       idToken: googleAuth.idToken,
     );
 
-    print("email: ${googleUser.email},${googleUser.displayName}");
+    return await firebaseAuth!.signInWithCredential(credential);
+  }
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+  requestFacebookSignIn() async {
+    var result = await FacebookAuth.instance.login(permissions: ['email','public_profile'],loginBehavior: LoginBehavior.katanaOnly);
+    switch(result.status) {
+      case LoginStatus.success:
+        var profileData = await FacebookAuth.instance.getUserData(fields: "name,email");
+        print("token: ${profileData.toString()}");
+        break;
+      case LoginStatus.cancelled:
+        print("error: ${result.message}");
+        break;
+      case LoginStatus.failed:
+        print("error: ${result.message}");
+        break;
+      case LoginStatus.operationInProgress:
+        print("error: ${result.message}");
+        break;
+    }
   }
 
   @override
@@ -129,7 +154,9 @@ class LoginPageState extends State<LoginPage> {
         );
 
     contentBtnAction(status, status1) => InkWell(
-          onTap: () => requestGoogleSignIn(),
+          onTap: () => (status1 == "facebook")
+              ? requestFacebookSignIn()
+              : requestGoogleSignIn(),
           borderRadius: BorderRadius.circular(5.r),
           child: Container(
             width: ScreenUtil().screenWidth,
