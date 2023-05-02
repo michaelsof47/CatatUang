@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
             routes: {
               '/': (context) => SplashScreenPage(),
               '/login': (context) => LoginPage(),
+              '/register': (context) => RegisterUserPage(),
+              '/verify_otp': (context) => VerifyOTPPage(),
+              '/home_navigation': (context) => HomeNavigationPage(),
             });
 
     return ScreenUtilInit(

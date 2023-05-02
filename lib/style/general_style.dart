@@ -18,4 +18,16 @@ class GeneralStyle {
         fontWeight: FontWeight.w300,
         color: ColorsTheme.barStatusColor,
       );
+
+  static registerAction(isAction) => GoogleFonts.mulish(
+        fontSize: 10.sp,
+        fontWeight: isAction ? FontWeight.w500 : FontWeight.w300,
+        color: isAction ? ColorsTheme.green : ColorsTheme.black,
+      );
+
+  static navigationActionLabel() => GoogleFonts.mulish(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w600,
+        color: ColorsTheme.black,
+      );
 }

@@ -1,4 +1,4 @@
-part of '../import_url_file.dart';
+part of 'package:catat_uang/import_url_file.dart';
 
 class SplashScreenPage extends StatefulWidget {
   SplashScreenPageState createState() => SplashScreenPageState();

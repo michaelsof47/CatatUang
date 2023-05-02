@@ -16,14 +16,16 @@ class GeneralUtils {
         ),
       );
 
-  static generalTextFormField(controller) => TextFormField(
+  static generalTextFormField(
+          {TextEditingController? controller, String? label}) =>
+      TextFormField(
         controller: controller,
         cursorColor: ColorsTheme.green,
         decoration: InputDecoration(
           border: GeneralUtils.outlineBorder(),
           enabledBorder: GeneralUtils.outlineBorder(),
           contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
-          hintText: "Email / No. Telp",
+          hintText: label,
           hintStyle: GeneralStyle.labelHintStyle1(false),
         ),
         style: GeneralStyle.labelHintStyle1(true),
@@ -32,11 +34,12 @@ class GeneralUtils {
         textInputAction: TextInputAction.done,
       );
 
-  static generalBtnAction() => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.r),
-        ),
-        color: ColorsTheme.yellow,
-        //child: contentBtnAction("", ""),
+  static alertSnackbar(label) => SnackBar(
+        content: Text(label,
+            style: GeneralStyle.labelStyle1(false, 12, ColorsTheme.white)),
+        backgroundColor: ColorsTheme.black,
+        duration: const Duration(seconds: 3),
+        dismissDirection: DismissDirection.down,
+        behavior: SnackBarBehavior.floating,
       );
 }
