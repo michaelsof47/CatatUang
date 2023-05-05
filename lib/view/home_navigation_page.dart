@@ -66,7 +66,9 @@ class HomeNavigationPageState extends ConsumerState<HomeNavigationPage> {
     if (currentBackPressed == null ||
         now.difference(currentBackPressed!) > Duration(seconds: 2)) {
       currentBackPressed = now;
-      print("Klik 2x untuk keluar dari Aplikasi");
+      ScaffoldMessenger.of(context).showSnackBar(
+        GeneralUtils.alertSnackbar("Klik 2x untuk keluar dari aplikasi."),
+      );
       return Future.value(false);
     }
     return Future.value(true);

@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
               '/register': (context) => RegisterUserPage(),
               '/verify_otp': (context) => VerifyOTPPage(),
               '/home_navigation': (context) => HomeNavigationPage(),
+              '/owner_register': (context) => OwnerRegisterPage(),
             });
 
     return ScreenUtilInit(

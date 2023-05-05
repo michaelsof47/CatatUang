@@ -207,7 +207,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                   onTap: () {
                     Navigator.pop(context);
                     label == "WIRAUSAHA"
-                        ? {}
+                        ? Navigator.pushNamed(context, "/owner_register")
                         : Navigator.pushNamed(context, "/register");
                   },
                   child: SizedBox(width: 71.w, height: 51.h)),
@@ -318,6 +318,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
     inputFormField() => GeneralUtils.generalTextFormField(
           controller: inputEditingController,
           label: "Email / No. Telp",
+          isFinalInput: true,
+          isEnabled: true,
         );
 
     forgotPasswordLabelAction() => Padding(
