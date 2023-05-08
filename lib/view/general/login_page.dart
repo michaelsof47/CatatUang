@@ -8,7 +8,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
   //GENERAL VARIABLE
   FirebaseAuth? firebaseAuth;
   TextEditingController? inputEditingController;
-  TextEditingController? verifyOTPPhoneNumberController;
 
   var versionName;
 
@@ -106,7 +105,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
   initConstructor() async {
     firebaseAuth = FirebaseAuth.instance;
     inputEditingController = TextEditingController();
-    verifyOTPPhoneNumberController = TextEditingController();
 
     versionName = "";
   }

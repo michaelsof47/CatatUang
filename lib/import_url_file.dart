@@ -2,6 +2,8 @@
 ///GENERAL BASE///
 //////////////////
 import 'dart:convert';
+import 'dart:ui';
+import 'package:catat_uang/widget/custom_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -14,6 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'firebase_options.dart';
 
@@ -34,6 +37,12 @@ import '../style/colors_theme.dart';
 ///PROVIDER UTILS///
 ////////////////////
 part 'utils/general_provider.dart';
+
+///////////////////
+///CUSTOM WIDGET///
+///////////////////
+part 'widget/custom_header_widget.dart';
+part 'widget/custom_menu_button.dart';
 
 /////////////////
 ///LINKED PAGE///

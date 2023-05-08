@@ -33,6 +33,17 @@ class HomeNavigationPageState extends ConsumerState<HomeNavigationPage> {
         borderRadius: BorderRadius.circular(10.r),
       );
 
+  customBoxBlur() => BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            ColorsTheme.white,
+            ColorsTheme.white,
+          ],
+        ),
+      );
+
   @override
   void initState() {
     super.initState();
@@ -132,10 +143,36 @@ class HomeNavigationPageState extends ConsumerState<HomeNavigationPage> {
           child: bottomNav1(),
         );
 
+    blurBackground() => BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+          blendMode: BlendMode.srcOver,
+          child: Container(
+            width: ScreenUtil().screenWidth,
+            decoration: customBoxBlur(),
+          ),
+        );
+
     contentBody() => SafeArea(
           child: Scaffold(
-            body: navPage![currentIndex],
-            bottomNavigationBar: customBottomNav(),
+            body: Stack(children: [
+              Positioned(
+                child: SvgPicture.asset(
+                  'assets/image/iv_cloud.svg',
+                  semanticsLabel: 'cloud_bg',
+                ),
+                top: -10.h,
+                right: -10.w,
+              ),
+              navPage![currentIndex],
+              Positioned(
+                child: ClipRRect(
+                  child: Stack(
+                    children: [blurBackground(), customBottomNav()],
+                  ),
+                ),
+                bottom: 0.h,
+              ),
+            ]),
           ),
         );
 
