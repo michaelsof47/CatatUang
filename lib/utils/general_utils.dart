@@ -80,4 +80,28 @@ class GeneralUtils {
         dismissDirection: DismissDirection.down,
         behavior: SnackBarBehavior.floating,
       );
+
+  static customCardLiner({
+    Color? color,
+    double? horizontalPad,
+    double? verticalPad,
+  }) =>
+      Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: verticalPad!.h,
+          horizontal: horizontalPad!.w,
+        ),
+        child: Container(
+          height: 3.h,
+          width: ScreenUtil().screenWidth,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(5.r),
+          ),
+        ),
+      );
+
+  static customDecoration() => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r),
+      );
 }

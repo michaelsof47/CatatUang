@@ -15,6 +15,7 @@ class ColorsTheme {
   static Color googleColor = const Color(0xff4285F4);
   static Color yellowSoft = const Color(0xffF3F4CB);
   static Color yellowHard = const Color(0xffBBBC93);
+  static Color redSoft = const Color(0xffF36E62);
 
   //////////////////////
   ///COLOR WITH ALPHA///

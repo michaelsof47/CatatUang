@@ -30,4 +30,10 @@ class GeneralStyle {
         fontWeight: FontWeight.w600,
         color: ColorsTheme.black,
       );
+
+  static navigationHeaderLabel() => GoogleFonts.mulish(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w600,
+        color: ColorsTheme.black,
+      );
 }

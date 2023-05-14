@@ -24,3 +24,9 @@ final currentTime = StateProvider<String>(
 ////////////////////////
 
 final itemMenu = StateProvider<Map<String, dynamic>>((ref) => {});
+
+////////////////////
+///UTILS PROVIDER///
+////////////////////
+
+final dropdownFilterValue = StateProvider<String>((ref) => "Semua");

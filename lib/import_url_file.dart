@@ -3,7 +3,6 @@
 //////////////////
 import 'dart:convert';
 import 'dart:ui';
-import 'package:catat_uang/widget/custom_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -42,7 +41,12 @@ part 'utils/general_provider.dart';
 ///CUSTOM WIDGET///
 ///////////////////
 part 'widget/custom_header_widget.dart';
-part 'widget/custom_menu_button.dart';
+part 'widget/custom_menu_button_widget.dart';
+part 'widget/custom_shorcut_menu_widget.dart';
+part 'widget/custom_appbar_widget.dart';
+part 'widget/custom_dropdown_widget.dart';
+part 'widget/transaction/custom_transaction_list_widget.dart';
+part 'widget/custom_header_no_current_time_widget.dart';
 
 /////////////////
 ///LINKED PAGE///

@@ -8,34 +8,6 @@ class HomeDashboardPage extends ConsumerStatefulWidget {
 class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
   List<String>? itemMenuLabelList;
 
-  ///////////////////////
-  ///CUSTOM DECORATION///
-  ///////////////////////
-
-  customBorder() => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.r),
-      );
-
-  //////////////////
-  ///CUSTOM UTILS///
-  //////////////////
-
-  customLiner({Color? color, double? horizontalPad, double? verticalPad}) =>
-      Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: verticalPad!.h,
-          horizontal: horizontalPad!.w,
-        ),
-        child: Container(
-          height: 3.h,
-          width: ScreenUtil().screenWidth,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(5.r),
-          ),
-        ),
-      );
-
   @override
   initState() {
     super.initState();
@@ -110,42 +82,6 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
             GeneralUtils.verticalSpacer(11),
             userTransactionLabel(),
           ],
-        );
-
-    itemMenuList() => SizedBox(
-          height: 80.h,
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 100.w,
-              mainAxisSpacing: 5.w,
-              childAspectRatio: 1,
-              crossAxisSpacing: 5.h,
-            ),
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 3,
-            itemBuilder: (context, index) => CustomMenuButton(
-              menuLabel: itemMenuLabelList![index],
-            ),
-          ),
-        );
-
-    shortcutMenuAndSummaryBalancesCardComponent() => Card(
-          shape: customBorder(),
-          color: ColorsTheme.yellowSoft,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
-            child: Column(
-              children: [
-                userInformation(),
-                customLiner(
-                  color: ColorsTheme.green,
-                  verticalPad: 9.h,
-                  horizontalPad: 14.w,
-                ),
-                itemMenuList(),
-              ],
-            ),
-          ),
         );
 
     //////////////////////////////////////////////
@@ -230,7 +166,7 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             headerLabel(),
-            customLiner(
+            GeneralUtils.customCardLiner(
               color: ColorsTheme.white,
               horizontalPad: 0.w,
               verticalPad: 3.h,
@@ -243,7 +179,7 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
         );
 
     lastestTransactionCardComponent() => Card(
-          shape: customBorder(),
+          shape: GeneralUtils.customDecoration(),
           color: ColorsTheme.green,
           child: Container(
             width: ScreenUtil().screenWidth,
@@ -254,9 +190,9 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
 
     ////////////////////////////////
 
-    ////////////////////////////////
-    ///CUSTOM LASTEST TRANSACTION///
-    ////////////////////////////////
+    /////////////////////////////
+    ///CUSTOM TIPS TRANSACTION///
+    /////////////////////////////
 
     headerLabel1() => Text(
           "Financial Tips",
@@ -302,7 +238,7 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             headerLabel1(),
-            customLiner(
+            GeneralUtils.customCardLiner(
               color: ColorsTheme.green,
               horizontalPad: 0.w,
               verticalPad: 3.h,
@@ -315,7 +251,7 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
         );
 
     lastestFinancialTipsCardComponent() => Card(
-          shape: customBorder(),
+          shape: GeneralUtils.customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: Container(
             width: ScreenUtil().screenWidth,
@@ -332,7 +268,11 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
               fullName: "Michael Fernando",
             ),
             GeneralUtils.verticalSpacer(40),
-            shortcutMenuAndSummaryBalancesCardComponent(),
+            CustomShortcutMenuWidget(
+              userInformation: userInformation(),
+              itemMenuLabelList: itemMenuLabelList,
+              itemMenuHeight: 80,
+            ),
             GeneralUtils.verticalSpacer(10),
             Expanded(
               child: SingleChildScrollView(

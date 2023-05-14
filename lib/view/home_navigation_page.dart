@@ -5,6 +5,9 @@ class HomeNavigationPage extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<HomeNavigationPage> createState() => HomeNavigationPageState();
+
+  static HomeNavigationPageState? of(context) =>
+      context.findAncestorStateOfType<HomeNavigationPageState>();
 }
 
 class HomeNavigationPageState extends ConsumerState<HomeNavigationPage> {
@@ -25,6 +28,8 @@ class HomeNavigationPageState extends ConsumerState<HomeNavigationPage> {
   ////////////////
 
   DateTime? currentBackPressed;
+
+  backIntoHome(int i) => setState(() => currentIndex = i);
 
   /////////////////////
   //CUSTOM DECORATION//
