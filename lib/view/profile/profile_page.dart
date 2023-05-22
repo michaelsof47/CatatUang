@@ -6,6 +6,36 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class ProfilePageState extends ConsumerState<ProfilePage> {
+  List<String>? menuLabelList;
+  List<IconData>? menuIconList;
+
+  @override
+  void initState() {
+    super.initState();
+
+    initConstructor();
+  }
+
+  initConstructor() {
+    menuLabelList = [
+      "Pengaturan",
+      "Pengingat Otomatis",
+      "Kebijakan Privasi",
+      "Pusat Bantuan",
+      "Saran dan Masukkan",
+      "Keluar"
+    ];
+
+    menuIconList = [
+      Icons.settings,
+      Icons.alarm,
+      Icons.security,
+      Icons.help,
+      Icons.message,
+      Icons.logout,
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     ////////////////////////////////
@@ -87,7 +117,14 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
           width: ScreenUtil().screenWidth,
           height: 270.h,
           padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 12.h),
-          child: Text("Menu"),
+          child: ListView.builder(
+            itemCount: menuLabelList!.length,
+            padding: EdgeInsets.only(bottom: 60.h),
+            itemBuilder: (context, index) => CustomMenuProfileWidget(
+              label: menuLabelList![index],
+              iconLabel: menuIconList![index],
+            ),
+          ),
         ));
 
     //////////////////////////////

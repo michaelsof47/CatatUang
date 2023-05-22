@@ -29,6 +29,7 @@ class CustomShortcutMenuWidget extends ConsumerWidget {
               isRoundedShape: false,
               width: 51,
               height: 51,
+              action: () {},
             ),
           ),
         );

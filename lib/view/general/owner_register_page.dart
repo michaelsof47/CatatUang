@@ -48,10 +48,6 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
         shape: BoxShape.circle,
       );
 
-  roundedRectangleDecoration() => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.r),
-      );
-
   /////////////////////////
   ///CUSTOM PATH / SHAPE///
   /////////////////////////
@@ -85,12 +81,6 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
         decoration: BoxDecoration(
           color: isCompleted ? ColorsTheme.green : ColorsTheme.grey,
         ),
-      );
-
-  pathIcon() => Icon(
-        Icons.add_rounded,
-        color: ColorsTheme.white,
-        size: 36.w,
       );
 
   ///GROUP OF PATH / SHAPE///
@@ -136,22 +126,6 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
   ///CUSTOM WIDGET///
   ///////////////////
 
-  addImageAction() => Card(
-        elevation: 0,
-        shape: roundedRectangleDecoration(),
-        color: ColorsTheme.green,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(10.r),
-          child: Container(
-            width: 69.w,
-            height: 55.h,
-            padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 17.w),
-            child: pathIcon(),
-          ),
-        ),
-      );
-
   inputFormField({
     String? label,
     TextEditingController? controller,
@@ -161,8 +135,10 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
       GeneralUtils.generalTextFormField(
         controller: controller,
         label: label,
+        isNumber: false,
         isFinalInput: isFinalInput,
         isEnabled: isEnabled,
+        decoType: "underline",
       );
 
   itemTextSpan(label, isAction) => TextSpan(
@@ -305,20 +281,16 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
     ///FORM GROUP 2///
     //////////////////
 
-    row2() => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Tambah Lokasi Toko",
-              style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
-            ),
-            addImageAction(),
-          ],
-        );
-
     contentGroup2() => Column(
           children: [
-            row2(),
+            CustomUploadPhotoButtonWidget(
+              headerTitle: "Tambah Lokasi Toko",
+              headerSubtitle: "",
+              colors: ColorsTheme.green,
+              colors2: ColorsTheme.white,
+              isNeedSubtitled: false,
+              mode: 2,
+            ),
             GeneralUtils.verticalSpacer(10),
             inputFormField(
               label: "Alamat Toko",
@@ -368,39 +340,17 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
     ///FORM GROUP 1///
     //////////////////
 
-    outletImageDescriptionLabel({String? headerLabel, String? subtitleLabel}) =>
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              headerLabel!,
-              style: GeneralStyle.labelStyle1(false, 14, ColorsTheme.black),
-            ),
-            GeneralUtils.verticalSpacer(5),
-            SizedBox(
-              width: 200.w,
-              child: Text(
-                subtitleLabel!,
-                style: GeneralStyle.labelStyle1(false, 10, ColorsTheme.black),
-              ),
-            ),
-          ],
-        );
-
-    row1() => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            addImageAction(),
-            outletImageDescriptionLabel(
-                headerLabel: "Tambah Foto Profil Toko",
-                subtitleLabel:
-                    "Ketentuan : Minimal Foto yang di upload adalah 500 x 500 px"),
-          ],
-        );
-
     contentGroup1() => Column(
           children: [
-            row1(),
+            CustomUploadPhotoButtonWidget(
+              headerTitle: "Tambah Foto Profil Toko",
+              headerSubtitle:
+                  "Ketentuan : Minimal Foto yang di upload adalah 500 x 500 px",
+              colors: ColorsTheme.green,
+              colors2: ColorsTheme.white,
+              isNeedSubtitled: true,
+              mode: 1,
+            ),
             GeneralUtils.verticalSpacer(5),
             inputFormField(
               label: "Nama Toko",

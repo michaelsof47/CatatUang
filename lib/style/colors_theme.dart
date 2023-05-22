@@ -16,6 +16,7 @@ class ColorsTheme {
   static Color yellowSoft = const Color(0xffF3F4CB);
   static Color yellowHard = const Color(0xffBBBC93);
   static Color redSoft = const Color(0xffF36E62);
+  static Color greenNature = const Color(0xffF3F4CB);
 
   //////////////////////
   ///COLOR WITH ALPHA///

@@ -24,6 +24,9 @@ class MyApp extends StatelessWidget {
               '/verify_otp': (context) => VerifyOTPPage(),
               '/home_navigation': (context) => HomeNavigationPage(),
               '/owner_register': (context) => OwnerRegisterPage(),
+              '/category_transaction_form': (context) =>
+                  CategoryTransactionForm(),
+              '/transaction_form': (context) => TransactionForm(),
             });
 
     return ScreenUtilInit(

@@ -5,12 +5,14 @@ class CustomMenuButton extends ConsumerWidget {
   bool? isRoundedShape;
   double? width;
   double? height;
+  VoidCallback? action;
 
   CustomMenuButton({
     required this.menuLabel,
     required this.isRoundedShape,
     required this.width,
     required this.height,
+    required this.action,
   });
 
   @override
@@ -41,7 +43,7 @@ class CustomMenuButton extends ConsumerWidget {
         ]);
 
     return InkWell(
-      onTap: () {},
+      onTap: () => action!(),
       borderRadius: BorderRadius.circular(10.r),
       child: contentBody(),
     );

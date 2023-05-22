@@ -9,15 +9,6 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
   List<String>? itemMenuLabel;
   List<String>? itemMenuLabelFilter;
 
-  ///////////////////////
-  ///CUSTOM DECORATION///
-  ///////////////////////
-
-  customBoxStyle1() => BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        color: ColorsTheme.white,
-      );
-
   @override
   void initState() {
     super.initState();
@@ -36,6 +27,25 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
       "Tabungan KPR"
     ];
   }
+
+  //CUSTOM UTILS
+  showAddTransactionBottomSheet() => showModalBottomSheet(
+        barrierColor: ColorsTheme.black25,
+        isDismissible: true,
+        context: context,
+        backgroundColor: ColorsTheme.yellowSoft,
+        shape: GeneralUtils.customBottomSheet(),
+        builder: (context) => CustomBottomSheetTwoActionWidget(
+          transactionCallback: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/transaction_form');
+          },
+          categoryCallback: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/category_transaction_form');
+          },
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +90,7 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
                 isRoundedShape: true,
                 width: 80,
                 height: 60,
+                action: () {},
               ),
             ),
           ),
@@ -112,20 +123,29 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
             child: CustomDropdownWidget(
+              initialValue: ref.watch(transactionItemDropdownValue),
               itemMenuLabelFilter: itemMenuLabelFilter,
-              callback: (value) => print(value!),
+              callback: (value) {
+                ref
+                    .read(transactionItemDropdownValue.notifier)
+                    .update((state) => value!);
+                print(value!);
+              },
             ),
-            decoration: customBoxStyle1(),
+            decoration: GeneralUtils.customBoxStyle1(),
           ),
         );
 
     contentCategoryFilter() => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            singleLineLabel(
-              label: "Filter Kategori",
-              color: ColorsTheme.white,
-              size: 14,
+            SizedBox(
+              width: 150.w,
+              child: singleLineLabel(
+                label: "Catatan Transaksi Berdasarkan Kategori",
+                color: ColorsTheme.white,
+                size: 12,
+              ),
             ),
             dropdownFilter(),
           ],
@@ -138,6 +158,41 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
             padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 9.w),
             child: contentCategoryFilter(),
           ),
+        );
+
+    /////////////////////
+
+    /////////////////////
+    ///ADD TRANSACTION///
+    /////////////////////
+
+    btnAction() => Card(
+        shape: GeneralUtils.customDecoration(),
+        color: ColorsTheme.yellowSoft,
+        child: InkWell(
+          onTap: () => showAddTransactionBottomSheet(),
+          borderRadius: BorderRadius.circular(10.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+            child: Icon(Icons.add_rounded, color: ColorsTheme.green),
+          ),
+        ));
+
+    contentAddTransaction() => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            singleLineLabel(
+              label: "Tambah Transaksi",
+              color: ColorsTheme.green,
+              size: 14,
+            ),
+            btnAction(),
+          ],
+        );
+
+    addTransactionComponent() => Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 9.w),
+          child: contentAddTransaction(),
         );
 
     /////////////////////
@@ -162,9 +217,19 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
         child: Container(
           width: ScreenUtil().screenWidth,
           height: 270.h,
-          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 12.h),
+          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 45.h),
           child: itemList(),
         ));
+
+    stackedView() => SizedBox(
+          height: 280.h,
+          child: Stack(
+            children: [
+              transactionListComponent(),
+              categoryFilterCardComponent(),
+            ],
+          ),
+        );
 
     //////////////////////
 
@@ -176,10 +241,10 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
     contentBody() => Column(
           children: [
             categoryShortcutComponentCard(),
-            GeneralUtils.verticalSpacer(23),
-            categoryFilterCardComponent(),
-            GeneralUtils.verticalSpacer(22),
-            transactionListComponent(),
+            GeneralUtils.verticalSpacer(12),
+            addTransactionComponent(),
+            GeneralUtils.verticalSpacer(8),
+            stackedView(),
           ],
         );
 

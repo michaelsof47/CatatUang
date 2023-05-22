@@ -16,12 +16,35 @@ class GeneralUtils {
         ),
       );
 
-  static outlineBorder() => OutlineInputBorder(
+  static outlineBorder(borderColor) => OutlineInputBorder(
         borderSide: BorderSide(
-          color: ColorsTheme.green,
+          color: borderColor,
           width: 2.w,
         ),
         borderRadius: BorderRadius.circular(10.r),
+      );
+
+  static underlineDecorationType(label, icon) => InputDecoration(
+        border: GeneralUtils.underlineBorder(),
+        enabledBorder: GeneralUtils.underlineBorder(),
+        contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
+        hintText: label,
+        fillColor: ColorsTheme.white,
+        hintStyle: GeneralStyle.labelHintStyle1(false),
+        suffixIcon: Icon(
+          icon,
+          color: ColorsTheme.green,
+        ),
+      );
+
+  static borderedDecorationType(label) => InputDecoration(
+        border: GeneralUtils.outlineBorder(ColorsTheme.white),
+        enabledBorder: GeneralUtils.outlineBorder(ColorsTheme.white),
+        contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+        hintText: label,
+        filled: true,
+        fillColor: ColorsTheme.white,
+        hintStyle: GeneralStyle.labelHintStyle1(false),
       );
 
   static generalTextFormField({
@@ -29,23 +52,42 @@ class GeneralUtils {
     String? label,
     bool? isFinalInput,
     bool? isEnabled,
+    String? decoType,
+    bool? isNumber,
+    Function(String value)? callback,
   }) =>
       TextFormField(
         controller: controller,
         cursorColor: ColorsTheme.green,
         readOnly: isEnabled! ? false : true,
-        decoration: InputDecoration(
-          border: GeneralUtils.underlineBorder(),
-          enabledBorder: GeneralUtils.underlineBorder(),
-          contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
-          hintText: label,
-          hintStyle: GeneralStyle.labelHintStyle1(false),
-        ),
+        decoration: decoType == "underline"
+            ? underlineDecorationType(label, null)
+            : borderedDecorationType(label),
         style: GeneralStyle.labelHintStyle1(true),
         maxLines: 1,
-        keyboardType: TextInputType.text,
+        onFieldSubmitted: (value) =>
+            decoType == "underline" ? {} : callback!(value),
+        keyboardType: isNumber! ? TextInputType.number : TextInputType.text,
         textInputAction:
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
+      );
+
+  static generalClickableTextFormField({
+    TextEditingController? controller,
+    String? label,
+    bool? isFinalInput,
+    String? decoType,
+    VoidCallback? callback,
+    IconData? icon,
+  }) =>
+      TextFormField(
+        controller: controller,
+        readOnly: true,
+        onTap: () => decoType == "underline" ? {} : callback!(),
+        decoration: decoType == "underline"
+            ? underlineDecorationType(label, icon)
+            : borderedDecorationType(label),
+        style: GeneralStyle.labelHintStyle1(true),
       );
 
   static multiTextFormField({
@@ -58,8 +100,8 @@ class GeneralUtils {
         controller: controller,
         cursorColor: ColorsTheme.green,
         decoration: InputDecoration(
-          border: GeneralUtils.outlineBorder(),
-          enabledBorder: GeneralUtils.outlineBorder(),
+          border: GeneralUtils.outlineBorder(ColorsTheme.green),
+          enabledBorder: GeneralUtils.outlineBorder(ColorsTheme.green),
           contentPadding:
               EdgeInsets.only(left: 8.w, top: 10.h, bottom: 10.h, right: 5.w),
           hintText: label,
@@ -103,5 +145,17 @@ class GeneralUtils {
 
   static customDecoration() => RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.r),
+      );
+
+  static customBottomSheet() => RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
+      );
+
+  static customBoxStyle1() => BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        color: ColorsTheme.white,
       );
 }

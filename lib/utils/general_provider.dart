@@ -29,4 +29,6 @@ final itemMenu = StateProvider<Map<String, dynamic>>((ref) => {});
 ///UTILS PROVIDER///
 ////////////////////
 
-final dropdownFilterValue = StateProvider<String>((ref) => "Semua");
+final transactionItemDropdownValue = StateProvider<String>((ref) => "Semua");
+final durationPlannerItemDropdownValue =
+    StateProvider<String>((ref) => "3 Bulan");

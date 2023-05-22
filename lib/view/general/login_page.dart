@@ -318,6 +318,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
           label: "Email / No. Telp",
           isFinalInput: true,
           isEnabled: true,
+          isNumber: false,
+          decoType: "underline",
         );
 
     forgotPasswordLabelAction() => Padding(

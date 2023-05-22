@@ -95,6 +95,8 @@ class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                 label: "Nama Depan",
                 isFinalInput: false,
                 isEnabled: true,
+                decoType: "underline",
+                isNumber: false,
               ),
               GeneralUtils.verticalSpacer(5.h),
               GeneralUtils.generalTextFormField(
@@ -102,6 +104,8 @@ class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                 label: "Nama Belakang",
                 isFinalInput: false,
                 isEnabled: true,
+                decoType: "underline",
+                isNumber: false,
               ),
               GeneralUtils.verticalSpacer(5.h),
               GeneralUtils.generalTextFormField(
@@ -109,6 +113,8 @@ class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                 label: "Email",
                 isFinalInput: false,
                 isEnabled: true,
+                isNumber: false,
+                decoType: "underline",
               ),
               GeneralUtils.verticalSpacer(5.h),
               GeneralUtils.generalTextFormField(
@@ -116,6 +122,8 @@ class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
                 label: "No. Telp",
                 isFinalInput: true,
                 isEnabled: true,
+                isNumber: false,
+                decoType: "underline",
               ),
             ],
           ),
