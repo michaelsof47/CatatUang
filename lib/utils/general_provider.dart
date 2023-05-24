@@ -6,6 +6,10 @@ final currentTime = StateProvider<String>(
   (ref) => DateFormat("HH:mm").format(DateTime.now()),
 );
 
+final currentTime1 = StateProvider<DateTime>(
+  (ref) => DateTime.now(),
+);
+
 /*final retrieveCurrentLocation = StreamProvider((ref) {
   LocationSettings? initLocation = const LocationSettings(
     accuracy: LocationAccuracy.best,

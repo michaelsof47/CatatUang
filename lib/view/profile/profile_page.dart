@@ -9,6 +9,8 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   List<String>? menuLabelList;
   List<IconData>? menuIconList;
 
+  LoginController? loginController;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +36,13 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
       Icons.message,
       Icons.logout,
     ];
+
+    loginController = Get.put(LoginController());
+  }
+
+  logout() async {
+    await loginController!.storeLoginStatusController(false);
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
@@ -123,6 +132,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
             itemBuilder: (context, index) => CustomMenuProfileWidget(
               label: menuLabelList![index],
               iconLabel: menuIconList![index],
+              callback: (label) => label == "Keluar" ? logout() : {},
             ),
           ),
         ));

@@ -3,10 +3,12 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomMenuProfileWidget extends ConsumerWidget {
   var label;
   var iconLabel;
+  Function(String)? callback;
 
   CustomMenuProfileWidget({
     required this.label,
     required this.iconLabel,
+    required this.callback,
   });
 
   @override
@@ -49,7 +51,7 @@ class CustomMenuProfileWidget extends ConsumerWidget {
 
     return Column(children: [
       InkWell(
-        onTap: () {},
+        onTap: () => callback!(label),
         child: Padding(
           padding: EdgeInsets.fromLTRB(17.w, 6.h, 17.w, 7.h),
           child: contentItem(),

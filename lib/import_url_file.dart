@@ -1,10 +1,11 @@
 //////////////////
 ///GENERAL BASE///
 //////////////////
-import 'dart:convert';
 import 'dart:ui';
+import 'package:catat_uang/main_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 ///////////////////////////////
@@ -16,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +75,7 @@ part 'package:catat_uang/database/local_manager.dart';
 ///CONTROLLER///
 ////////////////
 part 'package:catat_uang/controller/planner_controller.dart';
+part 'package:catat_uang/controller/login_controller.dart';
 
 /////////////////
 ///LINKED PAGE///

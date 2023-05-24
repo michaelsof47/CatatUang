@@ -37,6 +37,21 @@ class GeneralUtils {
         ),
       );
 
+  static currencyUnderlineDecoType(label, currencyFormat) => InputDecoration(
+      border: GeneralUtils.underlineBorder(),
+      enabledBorder: GeneralUtils.underlineBorder(),
+      contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
+      hintText: label,
+      hintStyle: GeneralStyle.labelHintStyle1(false),
+      fillColor: ColorsTheme.white,
+      prefix: Padding(
+        padding: EdgeInsets.only(right: 5.w),
+        child: Text(
+          currencyFormat,
+          style: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+        ),
+      ));
+
   static borderedDecorationType(label) => InputDecoration(
         border: GeneralUtils.outlineBorder(ColorsTheme.white),
         enabledBorder: GeneralUtils.outlineBorder(ColorsTheme.white),
@@ -72,18 +87,41 @@ class GeneralUtils {
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
       );
 
+  static currencyTextFormField({
+    TextEditingController? controller,
+    String? label,
+    bool? isFinalInput,
+    bool? isEnabled,
+    String? decoType,
+    String? currencyFormat,
+    Function(String v)? inputAction,
+    Function(String value)? callback,
+  }) =>
+      TextFormField(
+        controller: controller,
+        cursorColor: ColorsTheme.green,
+        readOnly: isEnabled! ? false : true,
+        onChanged: (string) => inputAction!(string),
+        decoration: currencyUnderlineDecoType(label, currencyFormat),
+        style: GeneralStyle.labelHintStyle1(true),
+        maxLines: 1,
+        keyboardType: TextInputType.number,
+        textInputAction:
+            isFinalInput! ? TextInputAction.done : TextInputAction.next,
+      );
+
   static generalClickableTextFormField({
     TextEditingController? controller,
     String? label,
     bool? isFinalInput,
     String? decoType,
-    VoidCallback? callback,
+    Function()? callback,
     IconData? icon,
   }) =>
       TextFormField(
         controller: controller,
         readOnly: true,
-        onTap: () => decoType == "underline" ? {} : callback!(),
+        onTap: () => decoType == "underline" ? callback!() : {},
         decoration: decoType == "underline"
             ? underlineDecorationType(label, icon)
             : borderedDecorationType(label),

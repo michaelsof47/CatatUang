@@ -5,12 +5,26 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class SplashScreenPageState extends State<SplashScreenPage> {
+  LoginController? loginController;
+
   @override
   initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 4),
-        () => Navigator.pushReplacementNamed(context, '/login'));
+    loginController = Get.put(LoginController());
+
+    initData();
+  }
+
+  initData() async {
+    var condition = await loginController!.retrieveLoginStatusController();
+
+    Timer(
+      const Duration(seconds: 4),
+      () async => await !condition
+          ? Navigator.pushReplacementNamed(context, '/login')
+          : Navigator.pushReplacementNamed(context, '/home_navigation'),
+    );
   }
 
   @override

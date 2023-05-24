@@ -10,4 +10,14 @@ class LocalManager {
     SharedPreferences? sharedpref = await SharedPreferences.getInstance();
     return sharedpref.setString("book_name", bookName);
   }
+
+  retrieveLoginStatus() async {
+    SharedPreferences? sharedpref = await SharedPreferences.getInstance();
+    return sharedpref.getBool("is_login") ?? false;
+  }
+
+  storedLoginStatusAccount(loginStatus) async {
+    SharedPreferences? sharedpref = await SharedPreferences.getInstance();
+    return sharedpref.setBool("is_login", loginStatus);
+  }
 }

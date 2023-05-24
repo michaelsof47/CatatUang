@@ -5,11 +5,15 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class LoginPageState extends ConsumerState<LoginPage> {
-  //GENERAL VARIABLE
+  //GENERAL UTILS
   FirebaseAuth? firebaseAuth;
   TextEditingController? inputEditingController;
+  LoginController? loginController;
+  MainConfig? config;
 
+  //GENERAL VARIABLE
   var versionName;
+  var roleStatusConfig;
 
   //////////////////
   ///CUSTOM UTILS///
@@ -72,13 +76,17 @@ class LoginPageState extends ConsumerState<LoginPage> {
         ],
       );
 
+  customLogin() async {
+    await loginController!.storeLoginStatusController(true);
+    Navigator.pushReplacementNamed(context, '/home_navigation');
+  }
+
   contentBtnAction(status, status1, {String? verificationId}) => InkWell(
         onTap: () => status1 == "facebook"
             ? requestFacebookSignIn()
             : status1 == "google"
                 ? requestGoogleSignIn()
-                : Navigator.pushNamed(
-                    context, '/home_navigation'), //: requestEmailPhoneSignIn(),
+                : customLogin(), //: requestEmailPhoneSignIn(),
         borderRadius: BorderRadius.circular(5.r),
         child: Container(
           width: ScreenUtil().screenWidth,
@@ -105,8 +113,11 @@ class LoginPageState extends ConsumerState<LoginPage> {
   initConstructor() async {
     firebaseAuth = FirebaseAuth.instance;
     inputEditingController = TextEditingController();
+    loginController = Get.put(LoginController());
+    //config = MainConfig.of(context);
 
     versionName = "";
+    roleStatusConfig = "Personal";
   }
 
   retrieveVersion() =>
@@ -375,11 +386,30 @@ class LoginPageState extends ConsumerState<LoginPage> {
           ],
         );
 
+    itemContent() =>
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          versionApps(),
+          MainConfig.of(context).flavorIndicator == "cu_development"
+              ? InkWell(
+                  onTap: () => setState(
+                    () => roleStatusConfig == "Personal"
+                        ? roleStatusConfig = "Owner"
+                        : roleStatusConfig = "Personal",
+                  ),
+                  child: Text(
+                    "Role : $roleStatusConfig",
+                    style:
+                        GeneralStyle.labelStyle1(true, 10, ColorsTheme.green),
+                  ),
+                )
+              : Container(),
+        ]);
+
     contentWrapBody() => Wrap(
           children: [
             Column(
               children: [
-                versionApps(),
+                itemContent(),
                 GeneralUtils.verticalSpacer(60),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.w),
