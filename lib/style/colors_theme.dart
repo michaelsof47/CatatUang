@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-
+part of 'package:catat_uang/import_url_file.dart';
 class ColorsTheme {
   static Color barStatusColor = const Color(0xff000000);
 

@@ -36,6 +36,8 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
         backgroundColor: ColorsTheme.yellowSoft,
         shape: GeneralUtils.customBottomSheet(),
         builder: (context) => CustomBottomSheetTwoActionWidget(
+          label1: "Tambah Kategori",
+          label2: "Tambah Transaksi",
           transactionCallback: () {
             Navigator.pop(context);
             Navigator.pushNamed(context, '/transaction_form');
@@ -55,7 +57,7 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
 
     singleLineLabel({label, color, size}) => Text(
           label,
-          style: GeneralStyle.labelStyle1(true, size, color),
+          style: FontTheme.labelStyle1(isBold: true,fontSize: size,color: color),
         );
 
     /////////////////////

@@ -17,6 +17,9 @@ class TransactionFormState extends ConsumerState<TransactionForm> {
   NumberFormat? priceNumberFormat;
   String? currencyFormat;
 
+  //REALM DATABASE UTILS
+  Realm? realm;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,8 @@ class TransactionFormState extends ConsumerState<TransactionForm> {
     productNameInputCtrl = TextEditingController();
     itemAmountInputCtrl = TextEditingController();
     productPriceInputCtrl = TextEditingController();
+
+    //realm = Realm(config);
   }
 
   initData() {
@@ -163,7 +168,10 @@ class TransactionFormState extends ConsumerState<TransactionForm> {
           padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 29.h),
           child: CustomBorderFormWidget(widgetCallback: () => contentBase()),
         ),
-        bottomNavigationBar: CustomFormActionButtonWidget(),
+        bottomNavigationBar: CustomFormActionButtonWidget(
+          "Simpan",
+          () {},
+        ),
         appBar: appbar(),
       ),
     );

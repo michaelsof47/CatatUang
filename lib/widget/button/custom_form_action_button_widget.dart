@@ -1,6 +1,14 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class CustomFormActionButtonWidget extends ConsumerWidget {
+  String? labelAction;
+  VoidCallback? callback;
+
+  CustomFormActionButtonWidget(
+    this.labelAction,
+    this.callback,
+  );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     itemContent() => Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -9,7 +17,10 @@ class CustomFormActionButtonWidget extends ConsumerWidget {
             hintLabel: "Batal",
           ),
           GeneralUtils.horizontalSpacer(20),
-          CustomSingleButtonWidget(actionCallback: () {}, hintLabel: "Simpan"),
+          CustomSingleButtonWidget(
+            actionCallback: () => callback!,
+            hintLabel: labelAction,
+          ),
         ]);
 
     return Padding(

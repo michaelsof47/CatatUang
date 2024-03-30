@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class OwnerRegisterPage extends ConsumerStatefulWidget {
+class OwnerRegisterPage extends StatefulWidget {
   @override
-  ConsumerState<OwnerRegisterPage> createState() => OwnerRegisterPageState();
+  State<OwnerRegisterPage> createState() => OwnerRegisterPageState();
 }
 
-class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
+class OwnerRegisterPageState extends State<OwnerRegisterPage> {
   /////////////////////
   ///GLOBAL VARIABLE///
   /////////////////////
@@ -143,8 +143,10 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
 
   itemTextSpan(label, isAction) => TextSpan(
         text: label,
-        style: GeneralStyle.labelStyle1(
-            false, 12, isAction ? ColorsTheme.green : ColorsTheme.black),
+        style: FontTheme.labelStyle1(
+            isBold: false,
+            fontSize: 12,
+            color: isAction ? ColorsTheme.green : ColorsTheme.black),
         recognizer: !isAction ? null : TapGestureRecognizer()
           ?..onTap = () => print("action"),
       );
@@ -203,15 +205,16 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
               : "Kategori Toko";
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     //////////////////
     ///HEADER LABEL///
     //////////////////
     contentTextSpan(row) => TextSpan(
-          text: headerLabel(row),
-          style: GeneralStyle.labelStyle1(
-              row == 1 ? false : true, 20, ColorsTheme.black),
-        );
+        text: headerLabel(row),
+        style: FontTheme.labelStyle1(
+            isBold: row == 1 ? false : true,
+            fontSize: 20,
+            color: ColorsTheme.black));
 
     titleAppBar() => RichText(
           text: TextSpan(children: [
@@ -403,7 +406,7 @@ class OwnerRegisterPageState extends ConsumerState<OwnerRegisterPage> {
               GeneralUtils.horizontalSpacer(5),
               Text(
                 isLeft ? "Kembali" : "Lanjut",
-                style: GeneralStyle.navigationActionLabel(),
+                style: FontTheme.navigationActionLabel(),
               ),
               !isLeft ? iconNav(isLeft) : Container(),
             ],

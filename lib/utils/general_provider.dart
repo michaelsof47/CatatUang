@@ -2,9 +2,9 @@ part of '../import_url_file.dart';
 
 final _verificationCode = StateProvider<String>((ref) => "");
 
-final currentTime = StateProvider<String>(
-  (ref) => DateFormat("HH:mm").format(DateTime.now()),
-);
+/*final currentTime = StateProvider<DateTime>(
+  (ref) => DateTime.now(),
+);*/
 
 final currentTime1 = StateProvider<DateTime>(
   (ref) => DateTime.now(),

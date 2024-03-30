@@ -42,7 +42,8 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
 
   logout() async {
     await loginController!.storeLoginStatusController(false);
-    Navigator.pushReplacementNamed(context, '/login');
+    await loginController!.clearDataController();
+    Navigator.popAndPushNamed(context, '/login');
   }
 
   @override
@@ -57,7 +58,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
             onTap: () {},
             child: Text(
               "Ubah Profil",
-              style: GeneralStyle.labelStyle1(true, 10, ColorsTheme.green),
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 10, color: ColorsTheme.green),
             ),
           )
         ]);
@@ -92,7 +93,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
             "Statistik Masuk / Keluar Dana",
-            style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.white),
+            style: FontTheme.labelStyle1(isBold: true,fontSize: 14,color: ColorsTheme.white),
           ),
           SvgPicture.asset(
             'assets/icon/planner.svg',

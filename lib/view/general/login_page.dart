@@ -1,106 +1,108 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  ConsumerState<LoginPage> createState() => LoginPageState();
+LoginController? loginCtrl = Get.put(LoginController());
+
+class LoginPage extends StatefulWidget {
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class LoginPageState extends ConsumerState<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   //GENERAL UTILS
-  FirebaseAuth? firebaseAuth;
   TextEditingController? inputEditingController;
-  LoginController? loginController;
   MainConfig? config;
 
   //GENERAL VARIABLE
   var versionName;
   var roleStatusConfig;
 
+  var alertStatus;
+
+  Color? palleteButtonColor({String? type}) {
+    switch (type) {
+      case "facebook":
+        return ColorsTheme.facebookColor;
+      case "google":
+        return ColorsTheme.googleColor;
+      case "phonenumber":
+        return ColorsTheme.yellow;
+    }
+    ;
+  }
+
   //////////////////
   ///CUSTOM UTILS///
   //////////////////
-  customLabelSpan(label, isBold, color) => TextSpan(
+  TextSpan? subtitleLabel({required String? label, required bool? isBold}) =>
+      TextSpan(
         text: label,
-        style: GeneralStyle.labelStyle1(isBold, 15, color),
+        style: FontTheme.labelStyle1(
+            isBold: isBold, fontSize: 15, color: ColorsTheme.barStatusColor),
       );
 
-  customLabel(label, size, isBold, color) => Text(
-        label,
-        style: GeneralStyle.labelStyle1(isBold, size, color),
-      );
+  Text? singleLabel({String? label, int? size, bool? isBold, bool? isSocMed}) {
+    Color? labelColor = isSocMed! ? ColorsTheme.white : ColorsTheme.black;
 
-  brandingLogo(status) => ClipRRect(
-        borderRadius: BorderRadius.circular(5.r),
-        child: Image.asset(
-          status == "facebook"
-              ? 'assets/image/facebook_logo.png'
-              : 'assets/image/google_logo.png',
-          fit: BoxFit.cover,
-          filterQuality: FilterQuality.high,
-          width: 38.w,
-          height: 35.h,
-        ),
-      );
+    TextStyle? fontTheme = FontTheme.labelStyle1(
+        isBold: isBold, fontSize: size!, color: labelColor);
 
-  decorationBox(
-          {double? topLeft,
-          double? topRight,
-          double? bottomLeft,
-          double? bottomRight}) =>
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(topLeft!.r),
-          topRight: Radius.circular(topRight!.r),
-          bottomLeft: Radius.circular(bottomLeft!.r),
-          bottomRight: Radius.circular(bottomRight!.r),
-        ),
-      );
+    return Text(label!, style: fontTheme);
+  }
 
-  showAlertSnackbar(label) => ScaffoldMessenger.of(context).showSnackBar(
-        GeneralUtils.alertSnackbar(label),
-      );
+  showAlertSnackbar({required String? label}) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+          GeneralUtils.alertSnackbar(label: label, color: ColorsTheme.redSoft));
 
   ///////////////////
   ///CUSTOM WIDGET///
   ///////////////////
 
-  socialMediaAccContent(status) => Row(
-        children: [
-          brandingLogo(status),
-          GeneralUtils.horizontalSpacer(5),
-          customLabel(
-            "Masuk Dengan ${status == "facebook" ? 'Facebook' : 'Google'}",
-            14,
-            true,
-            ColorsTheme.white,
-          )
-        ],
-      );
-
   customLogin() async {
-    await loginController!.storeLoginStatusController(true);
+    await loginCtrl!.storeLoginStatusController(true);
+    await loginCtrl!.storeDevelopmentRoleStatusController(roleStatusConfig);
     Navigator.pushReplacementNamed(context, '/home_navigation');
   }
 
-  contentBtnAction(status, status1, {String? verificationId}) => InkWell(
-        onTap: () => status1 == "facebook"
-            ? requestFacebookSignIn()
-            : status1 == "google"
-                ? requestGoogleSignIn()
-                : customLogin(), //: requestEmailPhoneSignIn(),
-        borderRadius: BorderRadius.circular(5.r),
-        child: Container(
+  navigationButtonComponent(status, status1, {String? verificationId}) {
+    double? paddingWidth = status != "custom" ? 11 : 5;
+    String? socialmedLabel = status1 == "facebook" ? 'Facebook' : 'Google';
+    String? socialMedIcon = status1 == "facebook"
+        ? 'assets/image/facebook_logo.png'
+        : 'assets/image/google_logo.png';
+
+    childLabelContent({String? label, bool? isSocMed}) =>
+        singleLabel(label: label, size: 14, isBold: true, isSocMed: true);
+
+    brandingLogo() => Image.asset(socialMedIcon,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.high,
+        width: 38.w,
+        height: 35.h);
+
+    socialmedContent() => Row(children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(5.r), child: brandingLogo()),
+          GeneralUtils.horizontalSpacer(5),
+          childLabelContent(
+              label: "Masuk Dengan $socialmedLabel", isSocMed: true)!
+        ]);
+
+    generalContent() =>
+        Center(child: childLabelContent(label: "Login", isSocMed: true));
+
+    buttonContent() => Container(
           width: ScreenUtil().screenWidth,
           height: 39.h,
-          padding: status != "custom"
-              ? GeneralUtils.allAroundPadding(11, 0)
-              : GeneralUtils.allAroundPadding(5, 0),
-          child: status == "custom"
-              ? socialMediaAccContent(status1)
-              : Center(
-                  child: customLabel("Login", 14, true, ColorsTheme.black),
-                ),
-        ),
-      );
+          padding: GeneralUtils.allAroundPadding(paddingWidth, 0),
+          child: status == "custom" ? socialmedContent() : generalContent(),
+        );
+
+    return Card(
+        color: palleteButtonColor(type: status1),
+        child: InkWell(
+            onTap: () => navigationMenu(loginType: status1),
+            borderRadius: BorderRadius.circular(5.r),
+            child: buttonContent()));
+  }
 
   @override
   initState() {
@@ -111,13 +113,13 @@ class LoginPageState extends ConsumerState<LoginPage> {
   }
 
   initConstructor() async {
-    firebaseAuth = FirebaseAuth.instance;
     inputEditingController = TextEditingController();
-    loginController = Get.put(LoginController());
     //config = MainConfig.of(context);
 
     versionName = "";
     roleStatusConfig = "Personal";
+
+    alertStatus = "".obs;
   }
 
   retrieveVersion() =>
@@ -133,68 +135,14 @@ class LoginPageState extends ConsumerState<LoginPage> {
   ///SOCIAL MEDIA ACCOUNT FUNCTION///
   ///////////////////////////////////
 
-  Future<UserCredential> requestGoogleSignIn() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    try {
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser!.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth!.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      return await firebaseAuth!.signInWithCredential(credential);
-    } catch (e) {
-      return showAlertSnackbar(e);
-    }
-  }
-
-  requestFacebookSignIn() async {
-    var result = await FacebookAuth.instance.login(
-        permissions: ['email', 'public_profile'],
-        loginBehavior: LoginBehavior.katanaOnly);
-    switch (result.status) {
-      case LoginStatus.success:
-        var profileData =
-            await FacebookAuth.instance.getUserData(fields: "name,email");
-        //print("token: ${profileData.toString()}");
-        break;
-      case LoginStatus.cancelled:
-        showAlertSnackbar(result.message);
-        break;
-      case LoginStatus.failed:
-        showAlertSnackbar(result.message);
-        break;
-      case LoginStatus.operationInProgress:
-        showAlertSnackbar(result.message);
-        break;
-    }
-  }
-
-  moveIntoVerifyPage(verificationId) {
-    ref.read(_verificationCode.notifier).update((state) => verificationId);
-    Navigator.pushNamed(context, '/verify_otp');
-  }
-
-  requestEmailPhoneSignIn() async =>
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber:
-            '+62 ${inputEditingController!.text.replaceRange(0, 1, '')}',
-        verificationCompleted: (credential) =>
-            print("kode sms: ${credential.smsCode}"),
-        verificationFailed: (e) => showAlertSnackbar(e),
-        codeSent: (verificationId, resendToken) =>
-            moveIntoVerifyPage(verificationId),
-        codeAutoRetrievalTimeout: (verificationId) => {},
-      );
+  moveIntoVerifyPage(verificationId) =>
+      Navigator.pushNamed(context, '/verify_otp');
 
   registerBottomSheet() {
     contentText(isBold, desc) => TextSpan(
-          text: desc,
-          style: GeneralStyle.labelStyle1(isBold, 18, ColorsTheme.black),
-        );
+        text: desc,
+        style: FontTheme.labelStyle1(
+            isBold: isBold, fontSize: 18, color: ColorsTheme.black));
 
     itemRow1() => RichText(
             text: TextSpan(children: [
@@ -206,11 +154,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Card(
-              shape: decorationBox(
-                  topLeft: 10.0,
-                  topRight: 10.0,
-                  bottomLeft: 10.0,
-                  bottomRight: 10.0),
+              shape: LayoutTheme.allRoundedRect(radius: 10),
               color: ColorsTheme.facebookColor,
               child: InkWell(
                   onTap: () {
@@ -224,7 +168,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
             SizedBox(height: 10.h),
             Text(
               label,
-              style: GeneralStyle.labelStyle1(false, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  isBold: false, fontSize: 14, color: ColorsTheme.black),
             )
           ],
         );
@@ -252,56 +197,85 @@ class LoginPageState extends ConsumerState<LoginPage> {
               InkWell(
                   onTap: () => Navigator.pop(context),
                   child: Text("Kembali ke Halaman Login",
-                      style: GeneralStyle.labelStyle1(
-                          true, 12, ColorsTheme.black)))
+                      style: FontTheme.labelStyle1(
+                          isBold: true,
+                          fontSize: 12,
+                          color: ColorsTheme.black)))
             ],
           ),
         );
 
     return showModalBottomSheet(
       context: context,
-      shape: decorationBox(
-        topLeft: 10.0,
-        topRight: 10.0,
-        bottomLeft: 0,
-        bottomRight: 0,
-      ),
+      shape: LayoutTheme.allRoundedRect(radius: 10),
       builder: (context) => contentBottomSheet(),
       isDismissible: true,
       backgroundColor: ColorsTheme.yellowSoft,
     );
   }
 
+  Widget? handlingError() {
+    alertStatus.value = loginCtrl!.resultStatus.value;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      switch (alertStatus.value) {
+        case "success":
+          Navigator.pushReplacementNamed(context, '/home_navigation');
+          break;
+        case "failure":
+          showAlertSnackbar(label: loginCtrl!.resultMsg.value);
+          break;
+      }
+
+      loginCtrl!.resetResponse();
+    });
+
+    return Container();
+  }
+
+  void navigationMenu({String? loginType}) async {
+    switch (loginType) {
+      case "facebook":
+        await loginCtrl!.requestFacebookSignIn();
+        break;
+      case "google":
+        await loginCtrl!.requestGoogleSignIn();
+        break;
+      case "phone_number":
+        var phonenumber = inputEditingController!.text.replaceRange(0, 1, '');
+        await loginCtrl!.requestEmailPhoneSignIn(phonenumber: phonenumber);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    //////////////////////
-    ///CUSTOM COMPONENT///
-    //////////////////////
+    ///////////////////////////
+    ///CUSTOM VIEW COMPONENT///
+    ///////////////////////////
+
+    viewLabel({String? type, bool? isRegisterAction, String? label}) => Text(
+        label!,
+        style: type == "version"
+            ? FontTheme.versionLabel()
+            : FontTheme.registerAction(isRegisterAction!));
 
     versionApps() => Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Version $versionName", style: GeneralStyle.versionLabel())
-          ],
+          children: [viewLabel(type: "version", label: "Version $versionName")],
         );
 
-    registerView() => Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Tidak Punya Akun? ",
-              style: GeneralStyle.registerAction(false),
-            ),
-            InkWell(
-              onTap: () => registerBottomSheet(),
-              child: Text(
-                "Buat Akun Baru",
-                style: GeneralStyle.registerAction(true),
-              ),
-            )
-          ],
-        );
+    registerView() =>
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          viewLabel(
+              type: "", isRegisterAction: false, label: "Tidak Punya Akun? "),
+          InkWell(
+            onTap: () => registerBottomSheet(),
+            child: viewLabel(
+                type: "", isRegisterAction: true, label: "Buat Akun Baru"),
+          )
+        ]);
 
     headerLabel() => Column(
           children: [
@@ -310,10 +284,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
             RichText(
               text: TextSpan(
                 children: [
-                  customLabelSpan(
-                      "Simpan Catatan", false, ColorsTheme.barStatusColor),
-                  customLabelSpan(
-                      " Keuanganmu disini", true, ColorsTheme.barStatusColor),
+                  subtitleLabel(label: "Simpan Catatan", isBold: false)!,
+                  subtitleLabel(label: " Keuanganmu disini", isBold: true)!,
                 ],
               ),
             )
@@ -340,8 +312,11 @@ class LoginPageState extends ConsumerState<LoginPage> {
             children: [
               InkWell(
                 onTap: () {},
-                child:
-                    customLabel("Lupa Password", 10, true, ColorsTheme.black),
+                child: singleLabel(
+                    label: "Lupa Password",
+                    size: 10,
+                    isBold: true,
+                    isSocMed: false),
               )
             ],
           ),
@@ -350,15 +325,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
     ///////////////////////////////////////////
     ///SOCIAL MEDIA ACCOUNT ACTION COMPONENT///
     ///////////////////////////////////////////
-
-    socialMediaAccountBtnAction(status, {String? status1}) => Card(
-          color: status1 == "facebook"
-              ? ColorsTheme.facebookColor
-              : status1 == "google"
-                  ? ColorsTheme.googleColor
-                  : ColorsTheme.yellow,
-          child: contentBtnAction(status, status1),
-        );
 
     ////////////////////
     ///BASE COMPONENT///
@@ -373,16 +339,15 @@ class LoginPageState extends ConsumerState<LoginPage> {
             GeneralUtils.verticalSpacer(8),
             forgotPasswordLabelAction(),
             GeneralUtils.verticalSpacer(55),
-            socialMediaAccountBtnAction("basic", status1: ""),
+            navigationButtonComponent("basic", "phonenumber"),
             GeneralUtils.verticalSpacer(14),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [customLabel("Atau", 12, false, ColorsTheme.black)],
-            ),
+            Center(
+                child: singleLabel(
+                    label: "Atau", size: 12, isBold: false, isSocMed: false)!),
             GeneralUtils.verticalSpacer(14),
-            socialMediaAccountBtnAction("custom", status1: "facebook"),
+            navigationButtonComponent("custom", "facebook"),
             GeneralUtils.verticalSpacer(5),
-            socialMediaAccountBtnAction("custom", status1: "google"),
+            navigationButtonComponent("custom", "google"),
           ],
         );
 
@@ -398,98 +363,31 @@ class LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   child: Text(
                     "Role : $roleStatusConfig",
-                    style:
-                        GeneralStyle.labelStyle1(true, 10, ColorsTheme.green),
+                    style: FontTheme.labelStyle1(
+                        isBold: true, fontSize: 10, color: ColorsTheme.green),
                   ),
                 )
               : Container(),
         ]);
 
-    contentWrapBody() => Wrap(
-          children: [
-            Column(
-              children: [
-                itemContent(),
-                GeneralUtils.verticalSpacer(60),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  child: contentForm(),
-                ),
-                GeneralUtils.verticalSpacer(40),
-                registerView(),
-              ],
-            ),
-          ],
-        );
+    baseContent() => Column(children: [
+          itemContent(),
+          GeneralUtils.verticalSpacer(60),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: contentForm()),
+          GeneralUtils.verticalSpacer(40),
+          registerView()
+        ]);
 
-    contentBody() => SafeArea(
-          child: Scaffold(
-              body: Padding(
+    contentWrapBody() => Obx(() => Stack(children: [
+          Padding(
             padding: GeneralUtils.allAroundPadding(15, 18),
-            child: contentWrapBody(),
-          )),
-        );
-
-    return Container(
-      color: ColorsTheme.barStatusColor,
-      child: contentBody(),
-    );
-  }
-}
-
-//deprecated
-
-/*showVerificationBottomSheet({String? verificationId}) {
-    contentText(isBold, desc) => TextSpan(
-          text: desc,
-          style: GeneralStyle.labelStyle1(isBold, 18, ColorsTheme.black),
-        );
-
-    itemRow1() => RichText(
-            text: TextSpan(children: [
-          contentText(false, "Verifikasi "),
-          contentText(true, "Kode OTP"),
+            child: Wrap(children: [baseContent()]),
+          ),
+          handlingError()!
         ]));
 
-    inputFormField() => GeneralUtils.generalTextFormField(
-          controller: verifyOTPPhoneNumberController,
-          label: "Masukkan Kode OTP dari SMS yang anda terima.",
-        );
-
-    verifyBtn() => Card(
-          color: ColorsTheme.yellow,
-          child: contentBtnAction(
-            "basic",
-            "verify_otp",
-            verificationId: verificationId,
-          ),
-        );
-
-    contentBottomSheet() => Container(
-          height: 215.h,
-          padding:
-              EdgeInsets.only(left: 10.w, right: 10.w, top: 15.h, bottom: 5.h),
-          child: Column(
-            children: [
-              itemRow1(),
-              inputFormField(),
-              SizedBox(height: 10.h),
-              verifyBtn(),
-            ],
-          ),
-        );
-
-    return showModalBottomSheet(
-      context: context,
-      shape: decorationBox(
-        topLeft: 10.0,
-        topRight: 10.0,
-        bottomLeft: 0,
-        bottomRight: 0,
-      ),
-      builder: (context) => contentBottomSheet(),
-      isDismissible: true,
-      backgroundColor: ColorsTheme.yellowSoft,
-    );
-  }*/
-
+    return SafeArea(child: Scaffold(body: contentWrapBody()));
+  }
+}

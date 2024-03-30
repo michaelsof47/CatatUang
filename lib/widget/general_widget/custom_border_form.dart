@@ -16,7 +16,7 @@ class CustomBorderFormWidget extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
             child: Text(
               "Informasi Utama",
-              style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
             ),
           ),
         );

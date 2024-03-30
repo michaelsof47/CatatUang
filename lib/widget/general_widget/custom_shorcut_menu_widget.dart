@@ -3,16 +3,25 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomShortcutMenuWidget extends ConsumerWidget {
   Widget? userInformation;
   List<String>? itemMenuLabelList;
+  List<String>? itemMenuActionList;
   int? itemMenuHeight;
 
   CustomShortcutMenuWidget({
     required this.userInformation,
     required this.itemMenuLabelList,
+    required this.itemMenuActionList,
     required this.itemMenuHeight,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    comingSoonAlert() => ScaffoldMessenger.of(context).showSnackBar(
+          GeneralUtils.alertSnackbar(
+            label: "Coming Soon",
+            color: ColorsTheme.grey,
+          ),
+        );
+
     itemMenuList() => SizedBox(
           height: itemMenuHeight!.h,
           child: GridView.builder(
@@ -29,7 +38,12 @@ class CustomShortcutMenuWidget extends ConsumerWidget {
               isRoundedShape: false,
               width: 51,
               height: 51,
-              action: () {},
+              action: () => itemMenuActionList![index] != ""
+                  ? Navigator.pushNamed(
+                      context,
+                      itemMenuActionList![index],
+                    )
+                  : comingSoonAlert(),
             ),
           ),
         );

@@ -20,15 +20,15 @@ class CustomTransactionListWidget extends ConsumerWidget {
   Widget build(context, ref) {
     singleLineLabel({label, size, color}) => Text(
           label,
-          style: GeneralStyle.labelStyle1(true, size, color),
+          style: FontTheme.labelStyle1(isBold: true,fontSize: size,color: color),
         );
 
     itemInfoLabel({label, isHeader}) => Text(
           label,
-          style: GeneralStyle.labelStyle1(
-            isHeader ? true : false,
-            11,
-            ColorsTheme.black,
+          style: FontTheme.labelStyle1(
+            isBold: isHeader ? true : false,
+            fontSize: 11,
+            color: ColorsTheme.black,
           ),
         );
 

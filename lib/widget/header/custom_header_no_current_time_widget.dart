@@ -27,17 +27,17 @@ class CustomHeaderNoInfoTimeWidget extends ConsumerWidget {
     accountInformation() => Row(children: [
           Text(
             "Status Information",
-            style: GeneralStyle.labelStyle1(false, 12, ColorsTheme.black),
+            style: FontTheme.labelStyle1(isBold: false,fontSize: 12, color: ColorsTheme.black),
           ),
           GeneralUtils.horizontalSpacer(5),
           Text(
             ":",
-            style: GeneralStyle.labelStyle1(false, 12, ColorsTheme.black),
+            style: FontTheme.labelStyle1(isBold: false,fontSize: 12, color: ColorsTheme.black),
           ),
           GeneralUtils.horizontalSpacer(5),
           Text(
             statusInformation!,
-            style: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+            style: FontTheme.labelStyle1(isBold: true,fontSize: 12,color: ColorsTheme.black),
           )
         ]);
 
@@ -51,7 +51,7 @@ class CustomHeaderNoInfoTimeWidget extends ConsumerWidget {
           children: [
             Text(
               "Michael Fernando",
-              style: GeneralStyle.labelStyle1(true, 16, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 16, color: ColorsTheme.black),
             ),
             GeneralUtils.verticalSpacer(3),
             accountInformation(),

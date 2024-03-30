@@ -1,14 +1,25 @@
-part of '../import_url_file.dart';
+part of 'package:catat_uang/import_url_file.dart';
 
-class GeneralStyle {
-  static labelStyle1(isBold, int? fontSize, color) => GoogleFonts.mulish(
+class FontTheme {
+  static labelStyle1({
+    required bool? isBold,
+    required int? fontSize,
+    required Color? color,
+  }) =>
+      GoogleFonts.mulish(
         fontSize: fontSize!.sp,
-        fontWeight: (isBold) ? FontWeight.w800 : FontWeight.w300,
+        fontWeight: (isBold!) ? FontWeight.w800 : FontWeight.w300,
         color: color,
       );
 
   static labelHintStyle1(isFilled) => GoogleFonts.mulish(
         fontSize: 16.sp,
+        fontWeight: FontWeight.w700,
+        color: isFilled ? ColorsTheme.black : ColorsTheme.black25,
+      );
+
+  static labelHintStyle2(isFilled) => GoogleFonts.mulish(
+        fontSize: 12.sp,
         fontWeight: FontWeight.w700,
         color: isFilled ? ColorsTheme.black : ColorsTheme.black25,
       );

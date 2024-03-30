@@ -22,7 +22,7 @@ class CustomSingleButtonWidget extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 8.w),
             child: Text(
               hintLabel!,
-              style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
             ),
           ),
         ));

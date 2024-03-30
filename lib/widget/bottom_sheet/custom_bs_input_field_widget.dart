@@ -15,7 +15,7 @@ class CustomBottomSheetInputFieldWidget extends ConsumerWidget {
           onTap: () => Navigator.pop(context),
           child: Text(
             "Batal",
-            style: GeneralStyle.labelStyle1(false, 14, ColorsTheme.redSoft),
+            style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.redSoft),
           ),
         );
 
@@ -24,7 +24,7 @@ class CustomBottomSheetInputFieldWidget extends ConsumerWidget {
           children: [
             Text(
               "Tambah Buku Proyeksi",
-              style: GeneralStyle.labelStyle1(false, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black),
             ),
             exitBottomSheet(),
           ],

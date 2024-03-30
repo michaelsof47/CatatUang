@@ -38,7 +38,8 @@ class CustomMenuButton extends ConsumerWidget {
           GeneralUtils.verticalSpacer(5),
           Text(
             menuLabel!,
-            style: GeneralStyle.labelStyle1(true, 11, ColorsTheme.black),
+            style: FontTheme.labelStyle1(isBold: true,fontSize: 11,color: ColorsTheme.black),
+            textAlign: TextAlign.center,
           ),
         ]);
 

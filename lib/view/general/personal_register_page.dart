@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class RegisterUserPage extends ConsumerStatefulWidget {
+class RegisterUserPage extends StatefulWidget {
   @override
-  ConsumerState<RegisterUserPage> createState() => RegisterUserPageState();
+  State<RegisterUserPage> createState() => RegisterUserPageState();
 }
 
-class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
+class RegisterUserPageState extends State<RegisterUserPage> {
   //MECHANISM CONTROLLER
   TextEditingController? firstnameInputController;
   TextEditingController? lastNameInputController;
@@ -40,22 +40,22 @@ class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
   }
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     titleAppBar() => RichText(
           text: TextSpan(children: [
             TextSpan(
                 text: "Buat ",
-                style: GeneralStyle.labelStyle1(false, 20, ColorsTheme.black)),
+                style: FontTheme.labelStyle1(isBold: false,fontSize: 20, color: ColorsTheme.black)),
             TextSpan(
                 text: "Akun Baru",
-                style: GeneralStyle.labelStyle1(true, 20, ColorsTheme.black)),
+                style: FontTheme.labelStyle1(isBold: true,fontSize: 20, color: ColorsTheme.black)),
           ]),
         );
 
     itemTextSpan(label, isAction) => TextSpan(
           text: label,
-          style: GeneralStyle.labelStyle1(
-              false, 12, isAction ? ColorsTheme.green : ColorsTheme.black),
+          style: FontTheme.labelStyle1(
+              isBold: false,fontSize: 12,color: isAction ? ColorsTheme.green : ColorsTheme.black),
           recognizer: !isAction ? null : TapGestureRecognizer()
             ?..onTap = () => print("action"),
         );
@@ -146,7 +146,7 @@ class RegisterUserPageState extends ConsumerState<RegisterUserPage> {
               GeneralUtils.horizontalSpacer(5),
               Text(
                 isLeft ? "Kembali" : "Lanjut",
-                style: GeneralStyle.navigationActionLabel(),
+                style: FontTheme.navigationActionLabel(),
               ),
               !isLeft ? iconNav(isLeft) : Container(),
             ],

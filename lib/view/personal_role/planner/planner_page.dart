@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class PlannerPage extends ConsumerStatefulWidget {
+class PlannerPage extends StatefulWidget {
   @override
-  ConsumerState<PlannerPage> createState() => PlannerPageState();
+  State<PlannerPage> createState() => PlannerPageState();
 }
 
-class PlannerPageState extends ConsumerState<PlannerPage> {
+class PlannerPageState extends State<PlannerPage> {
   PlannerController? controller;
 
   TextEditingController? inputController;
@@ -41,19 +41,22 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
       PieChartSectionData(
         value: 10,
         color: ColorsTheme.yellow,
-        titleStyle: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+        titleStyle: FontTheme.labelStyle1(
+            isBold: true, fontSize: 12, color: ColorsTheme.black),
         title: "Kebutuhan\nSehari-Hari",
       ),
       PieChartSectionData(
         value: 25,
         color: ColorsTheme.green,
-        titleStyle: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+        titleStyle: FontTheme.labelStyle1(
+            isBold: true, fontSize: 12, color: ColorsTheme.black),
         title: "Tabungan",
       ),
       PieChartSectionData(
         value: 30,
         color: ColorsTheme.redSoft,
-        titleStyle: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+        titleStyle: FontTheme.labelStyle1(
+            isBold: true, fontSize: 12, color: ColorsTheme.black),
         title: "Pinjaman",
       ),
     ];
@@ -108,6 +111,7 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
             ),
           ),
           NewDocumentWidget(
+            moduleType: "",
             headerLabel: "Buku Proyeksi belum tersedia",
             descLabel: "Silahkan membuat Buku Proyeksi terlebih dahulu",
           ),
@@ -125,7 +129,8 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 7.h),
         child: Text(
           "Ubah",
-          style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.greenNature),
+          style: FontTheme.labelStyle1(
+              isBold: true, fontSize: 14, color: ColorsTheme.greenNature),
         ));
 
     updatePlannerBookNameButton() => Card(
@@ -150,12 +155,14 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             "Nama Buku",
-            style: GeneralStyle.labelStyle1(false, 10, ColorsTheme.black),
+            style: FontTheme.labelStyle1(
+                isBold: false, fontSize: 10, color: ColorsTheme.black),
           ),
           GeneralUtils.verticalSpacer(1),
           Text(
             bookName.value,
-            style: GeneralStyle.labelStyle1(true, 18, ColorsTheme.black),
+            style: FontTheme.labelStyle1(
+                isBold: true, fontSize: 18, color: ColorsTheme.black),
           ),
         ]);
 
@@ -172,17 +179,12 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
     dropdownItem() => DropdownButtonHideUnderline(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
-            child: CustomDropdownWidget(
-              initialValue: ref.watch(durationPlannerItemDropdownValue),
-              itemMenuLabelFilter: itemMenuLabelFilter,
-              callback: (value) {
-                ref
-                    .read(durationPlannerItemDropdownValue.notifier)
-                    .update((state) => value!);
-                print(value!);
-              },
-            ),
             decoration: GeneralUtils.customBoxStyle1(),
+            child: CustomDropdownWidget(
+              initialValue: "0",
+              itemMenuLabelFilter: itemMenuLabelFilter,
+              callback: (value) {},
+            ),
           ),
         );
 
@@ -190,7 +192,8 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
             "Rencana Proyeksi",
-            style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.white),
+            style: FontTheme.labelStyle1(
+                isBold: true, fontSize: 14, color: ColorsTheme.white),
           ),
           dropdownItem(),
         ]);
@@ -207,17 +210,17 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
 
     contentItem(label1, label2, isHeader) =>
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            label1,
-            style: GeneralStyle.labelStyle1(isHeader ? false : true, 14,
-                isHeader ? ColorsTheme.black : ColorsTheme.green),
-          ),
+          Text(label1,
+              style: FontTheme.labelStyle1(
+                  isBold: isHeader,
+                  fontSize: 14,
+                  color: isHeader ? ColorsTheme.black : ColorsTheme.green)),
           GeneralUtils.verticalSpacer(5),
-          Text(
-            label2,
-            style: GeneralStyle.labelStyle1(isHeader ? false : true, 14,
-                isHeader ? ColorsTheme.black : ColorsTheme.redSoft),
-          ),
+          Text(label2,
+              style: FontTheme.labelStyle1(
+                  isBold: isHeader,
+                  fontSize: 14,
+                  color: isHeader ? ColorsTheme.black : ColorsTheme.redSoft)),
         ]);
 
     itemInfoRowLabel() =>
@@ -255,12 +258,12 @@ class PlannerPageState extends ConsumerState<PlannerPage> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               "Preview Grafik Saat Ini",
-              style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
             ),
             GeneralUtils.horizontalSpacer(5),
             Tooltip(
               message: "Berikut ini merupakan grafik \nperkembangan saat ini",
-              textStyle: GeneralStyle.labelStyle1(false, 10, ColorsTheme.white),
+              textStyle: FontTheme.labelStyle1(isBold: false,fontSize: 10, color: ColorsTheme.white),
               child: Icon(
                 Icons.info_rounded,
                 color: ColorsTheme.green,

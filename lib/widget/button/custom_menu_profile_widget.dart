@@ -31,8 +31,8 @@ class CustomMenuProfileWidget extends ConsumerWidget {
           GeneralUtils.horizontalSpacer(7),
           Text(
             label,
-            style: GeneralStyle.labelStyle1(true, 14,
-                label == "Keluar" ? ColorsTheme.redSoft : ColorsTheme.black),
+            style: FontTheme.labelStyle1(isBold: true,fontSize: 14,
+                color: label == "Keluar" ? ColorsTheme.redSoft : ColorsTheme.black),
           ),
         ]);
 

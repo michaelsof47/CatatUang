@@ -13,7 +13,7 @@ class CustomAppBar extends ConsumerWidget {
           width: 15.w,
           height: 25.h,
           child: InkWell(
-            onTap: () => HomeNavigationPage.of(context)!.backIntoHome(0),
+            onTap: () {},//=> HomeNavigationPage.of(context)!.backIntoHome(0),
             child: SvgPicture.asset(
               'assets/icon/ic_nav_back.svg',
               semanticsLabel: 'ic_nav_back',
@@ -27,13 +27,18 @@ class CustomAppBar extends ConsumerWidget {
             GeneralUtils.horizontalSpacer(13),
             Text(
               appLabel,
-              style: GeneralStyle.navigationHeaderLabel(),
+              style: FontTheme.navigationHeaderLabel(),
             ),
           ],
         );
 
     currentBalances() => Container(
           padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 7.w),
+          decoration: BoxDecoration(
+            border: Border.all(color: ColorsTheme.green, width: 2.w),
+            color: ColorsTheme.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -41,14 +46,10 @@ class CustomAppBar extends ConsumerWidget {
               GeneralUtils.horizontalSpacer(7),
               Text(
                 "Rp. 250.000",
-                style: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+                style: FontTheme.labelStyle1(
+                    isBold: true, fontSize: 12, color: ColorsTheme.black),
               )
             ],
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(color: ColorsTheme.green, width: 2.w),
-            color: ColorsTheme.white,
-            borderRadius: BorderRadius.circular(10.r),
           ),
         );
 

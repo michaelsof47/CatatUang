@@ -7,6 +7,10 @@ class HomeDashboardPage extends ConsumerStatefulWidget {
 
 class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
   List<String>? itemMenuLabelList;
+  List<String>? itemMenuActionList;
+
+  //LocationPackage? locationPackage;
+  //DashboardMessagePackage? dashboardMessagePackage;
 
   @override
   initState() {
@@ -17,10 +21,17 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
   }
 
   initConstructor() {
-    itemMenuLabelList = ["Atur Proyeksi", "Atur Transaksi", "Analisis"];
+    itemMenuLabelList = ["Atur Proyeksi", "Atur Transaksi", "Analisa Keuangan"];
+    itemMenuActionList = ["/planner_form", "/transaction_page", ""];
+
+    //dashboardMessagePackage = Get.put(DashboardMessagePackage());
+    //locationPackage = Get.put(LocationPackage());
   }
 
-  initData() {}
+  initData() async {
+    //await dashboardMessagePackage!.statusTiming();
+    //await locationPackage!.requestPermissions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +57,14 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
           children: [
             Text(
               "Total Saldo Hari Ini",
-              style: GeneralStyle.labelStyle1(true, 13, ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  isBold: true, fontSize: 13, color: ColorsTheme.black),
             ),
             GeneralUtils.verticalSpacer(6),
             Text(
               "Rp. 250.000,00",
-              style: GeneralStyle.labelStyle1(true, 24, ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  isBold: true, fontSize: 24, color: ColorsTheme.black),
             ),
           ],
         );
@@ -61,11 +74,13 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
           children: [
             Text(
               "Rangkuman Transaksi Terbaru",
-              style: GeneralStyle.labelStyle1(true, 10, ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  isBold: true, fontSize: 10, color: ColorsTheme.black),
             ),
             Text(
               "5 Transaksi/Bulan",
-              style: GeneralStyle.labelStyle1(true, 10, ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  isBold: true, fontSize: 10, color: ColorsTheme.black),
             ),
           ],
         );
@@ -90,10 +105,9 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
     ///CUSTOM LASTEST TRANSACTION///
     ////////////////////////////////
 
-    headerLabel() => Text(
-          "Transaksi Terbaru Saat Ini",
-          style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.white),
-        );
+    headerLabel() => Text("Transaksi Terbaru Saat Ini",
+        style: FontTheme.labelStyle1(
+            isBold: true, fontSize: 14, color: ColorsTheme.white));
 
     iconTransaction() => Container(
           width: 70.w,
@@ -115,20 +129,20 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
               width: 110.w,
               child: Text(
                 label1,
-                style: GeneralStyle.labelStyle1(true, 11, ColorsTheme.white),
+                style: FontTheme.labelStyle1(isBold: true,fontSize: 11, color: ColorsTheme.white),
               ),
             ),
             GeneralUtils.horizontalSpacer(4),
             Text(
               ":",
-              style: GeneralStyle.labelStyle1(false, 11, ColorsTheme.white),
+              style: FontTheme.labelStyle1(isBold: false,fontSize: 11, color: ColorsTheme.white),
             ),
             GeneralUtils.horizontalSpacer(2),
             SizedBox(
               width: 115.w,
               child: Text(
                 label2,
-                style: GeneralStyle.labelStyle1(false, 11, ColorsTheme.white),
+                style: FontTheme.labelStyle1(isBold: false,fontSize: 11, color: ColorsTheme.white),
               ),
             ),
           ],
@@ -194,10 +208,9 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
     ///CUSTOM TIPS TRANSACTION///
     /////////////////////////////
 
-    headerLabel1() => Text(
-          "Financial Tips",
-          style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
-        );
+    headerLabel1() => Text("Financial Tips",
+        style: FontTheme.labelStyle1(
+            isBold: true, fontSize: 14, color: ColorsTheme.black));
 
     iconFinancial() => Container(
           width: 70.w,
@@ -219,7 +232,7 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
               width: 180.w,
               child: Text(
                 "Tips untuk mengelola keuangan secara efektif ? ",
-                style: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+                style: FontTheme.labelStyle1(isBold: true,fontSize: 12, color: ColorsTheme.black),
               ),
             )
           ],
@@ -264,21 +277,26 @@ class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
 
     contentBody() => Column(
           children: [
-            CustomHeaderWidget(
-              fullName: "Michael Fernando",
-            ),
+            /*Obx(
+              () => CustomHeaderWidget(
+                fullName: "Michael Fernando",
+                location: locationPackage!.itemAddress.value,
+                conditionStatus: dashboardMessagePackage!.messageStatus.value,
+              ),
+            ),*/
             GeneralUtils.verticalSpacer(40),
-            CustomShortcutMenuWidget(
-              userInformation: userInformation(),
-              itemMenuLabelList: itemMenuLabelList,
-              itemMenuHeight: 80,
-            ),
-            GeneralUtils.verticalSpacer(10),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(bottom: 80.h, top: 0.h),
                 child: Column(
                   children: [
+                    CustomShortcutMenuWidget(
+                      userInformation: userInformation(),
+                      itemMenuLabelList: itemMenuLabelList,
+                      itemMenuActionList: itemMenuActionList,
+                      itemMenuHeight: 80,
+                    ),
+                    GeneralUtils.verticalSpacer(10),
                     lastestTransactionCardComponent(),
                     GeneralUtils.verticalSpacer(15),
                     lastestFinancialTipsCardComponent(),

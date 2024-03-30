@@ -1,10 +1,10 @@
 part of '../../import_url_file.dart';
 
-class VerifyOTPPage extends ConsumerStatefulWidget {
-  ConsumerState<VerifyOTPPage> createState() => VerifyOTPPageState();
+class VerifyOTPPage extends StatefulWidget {
+  State<VerifyOTPPage> createState() => VerifyOTPPageState();
 }
 
-class VerifyOTPPageState extends ConsumerState<VerifyOTPPage> {
+class VerifyOTPPageState extends State<VerifyOTPPage> {
   //////////////////
   ///GLOBAL UTILS///
   //////////////////
@@ -21,7 +21,7 @@ class VerifyOTPPageState extends ConsumerState<VerifyOTPPage> {
   ///////////////////////
 
   pinFieldDecoration() => UnderlineDecoration(
-        textStyle: GeneralStyle.labelStyle1(true, 18, ColorsTheme.black),
+        textStyle: FontTheme.labelStyle1(isBold: true,fontSize: 18,color: ColorsTheme.black),
         colorBuilder: FixedColorBuilder(ColorsTheme.black),
         lineHeight: 2.h,
       );
@@ -40,7 +40,7 @@ class VerifyOTPPageState extends ConsumerState<VerifyOTPPage> {
   }
 
   initData() async {
-    verificationId = ref.read(_verificationCode.notifier).state;
+    //verificationId = ref.read(_verificationCode.notifier).state;
     await SmsAutoFill().listenForCode();
   }
 
@@ -49,13 +49,13 @@ class VerifyOTPPageState extends ConsumerState<VerifyOTPPage> {
   /////////////////////
 
   formFieldAction(code) => setState(() {
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        /*PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: verificationId!,
           smsCode: code,
         );
 
         FirebaseAuth.instance.signInWithCredential(credential);
-        FocusManager.instance.primaryFocus?.unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();*/
       });
 
   @override
@@ -63,7 +63,7 @@ class VerifyOTPPageState extends ConsumerState<VerifyOTPPage> {
     titleApps() => Center(
           child: Text(
             "Verifikasi Kode OTP",
-            style: GeneralStyle.labelStyle1(true, 18, ColorsTheme.black),
+            style: FontTheme.labelStyle1(isBold: true,fontSize: 18,color: ColorsTheme.black),
           ),
         );
 
@@ -89,7 +89,7 @@ class VerifyOTPPageState extends ConsumerState<VerifyOTPPage> {
               child: Center(
                 child: Text(
                   "Lanjut",
-                  style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
+                  style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
                 ),
               ),
             ),

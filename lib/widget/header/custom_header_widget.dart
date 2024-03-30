@@ -2,9 +2,13 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class CustomHeaderWidget extends ConsumerStatefulWidget {
   final String? fullName;
+  final String? location;
+  final String? conditionStatus;
 
   CustomHeaderWidget({
     required this.fullName,
+    required this.location,
+    required this.conditionStatus,
   });
 
   ConsumerState<CustomHeaderWidget> createState() => CustomHeaderWidgetState();
@@ -34,13 +38,21 @@ class CustomHeaderWidgetState extends ConsumerState<CustomHeaderWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Selamat Siang,",
-                  style: GeneralStyle.labelStyle1(false, 16, ColorsTheme.black),
+                SizedBox(
+                  width: 120.w,
+                  child: Text(
+                    "${widget.conditionStatus},",
+                    style:
+                        FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black),
+                  ),
                 ),
-                Text(
-                  "Michael Fernando",
-                  style: GeneralStyle.labelStyle1(true, 16, ColorsTheme.black),
+                SizedBox(
+                  width: 100.w,
+                  child: Text(
+                    "Michael Fernando",
+                    style:
+                        FontTheme.labelStyle1(isBold: true,fontSize: 16, color: ColorsTheme.black),
+                  ),
                 ),
               ],
             )
@@ -49,13 +61,17 @@ class CustomHeaderWidgetState extends ConsumerState<CustomHeaderWidget> {
 
     currentTimeAndLocation() =>
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text(
-            "Jakarta, Indonesia",
-            style: GeneralStyle.labelStyle1(true, 12, ColorsTheme.black),
+          SizedBox(
+            width: 135.w,
+            child: Text(
+              "${widget.location}",
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 12, color: ColorsTheme.black),
+              textAlign: TextAlign.end,
+            ),
           ),
           Text(
-            ref.read(currentTime),
-            style: GeneralStyle.labelStyle1(true, 30, ColorsTheme.black),
+            DateFormat("HH:mm").format(DateTime.now()),
+            style: FontTheme.labelStyle1(isBold: true,fontSize: 30,color: ColorsTheme.black),
           ),
         ]);
 

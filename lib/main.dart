@@ -24,14 +24,20 @@ class MyApp extends StatelessWidget {
               '/verify_otp': (context) => VerifyOTPPage(),
               '/home_navigation': (context) => HomeNavigationPage(),
               '/owner_register': (context) => OwnerRegisterPage(),
+              '/planner_form': (context) => PlannerPage(),
               '/category_transaction_form': (context) =>
                   CategoryTransactionForm(),
-              '/transaction_form': (context) => TransactionForm(),
+              '/transaction_page': (context) => TransactionPage(),
+              /*'/owner_add_product': (context) => ProductPage(),
+              '/owner_add_product_form': (context) => AddProductFormPage(),
+              '/point_of_sales': (context) => POSPage(),
+              '/hutang_piutang': (context) => DebtLoanBookPage(),
+              '/camera': (context) => CameraPage(),*/
             });
 
     return ScreenUtilInit(
-      designSize: Size(360, 640),
-      builder: (context, Widget) => materialApp(),
+      designSize: const Size(360, 640),
+      builder: (context, widget) => materialApp(),
       minTextAdapt: true,
     );
   }

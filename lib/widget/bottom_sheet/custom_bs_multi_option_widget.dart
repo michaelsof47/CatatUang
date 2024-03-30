@@ -1,10 +1,14 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class CustomBottomSheetTwoActionWidget extends ConsumerWidget {
+  String? label1;
+  String? label2;
   VoidCallback? categoryCallback;
   VoidCallback? transactionCallback;
 
   CustomBottomSheetTwoActionWidget({
+    required this.label1,
+    required this.label2,
     required this.categoryCallback,
     required this.transactionCallback,
   });
@@ -15,7 +19,7 @@ class CustomBottomSheetTwoActionWidget extends ConsumerWidget {
           onTap: () => Navigator.pop(context),
           child: Text(
             "Batal",
-            style: GeneralStyle.labelStyle1(false, 14, ColorsTheme.redSoft),
+            style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.redSoft),
           ),
         );
 
@@ -24,7 +28,7 @@ class CustomBottomSheetTwoActionWidget extends ConsumerWidget {
           children: [
             Text(
               "Opsi Pilih Tambah Dokumen",
-              style: GeneralStyle.labelStyle1(false, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black),
             ),
             exitBottomSheet(),
           ],
@@ -35,14 +39,14 @@ class CustomBottomSheetTwoActionWidget extends ConsumerWidget {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             CustomMenuButton(
-              menuLabel: "Tambah Kategori",
+              menuLabel: label1,
               isRoundedShape: true,
               width: 75.w,
               height: 50.h,
               action: () => categoryCallback!(),
             ),
             CustomMenuButton(
-              menuLabel: "Tambah Transaksi",
+              menuLabel: label2,
               isRoundedShape: true,
               width: 75.w,
               height: 50.h,

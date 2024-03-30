@@ -26,7 +26,7 @@ class CustomUploadPhotoButtonWidget extends ConsumerWidget {
           shape: GeneralUtils.customDecoration(),
           color: colors,
           child: InkWell(
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(context, '/camera'),
             borderRadius: BorderRadius.circular(10.r),
             child: Container(
               width: 69.w,
@@ -47,14 +47,14 @@ class CustomUploadPhotoButtonWidget extends ConsumerWidget {
           children: [
             Text(
               headerLabel!,
-              style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
+              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
             ),
             GeneralUtils.verticalSpacer(5),
             SizedBox(
               width: 200.w,
               child: Text(
                 subtitleLabel!,
-                style: GeneralStyle.labelStyle1(false, 10, ColorsTheme.black),
+                style: FontTheme.labelStyle1(isBold: false,fontSize: 10, color: ColorsTheme.black),
               ),
             ),
           ],
@@ -74,7 +74,7 @@ class CustomUploadPhotoButtonWidget extends ConsumerWidget {
                 )
               : Text(
                   headerTitle!,
-                  style: GeneralStyle.labelStyle1(true, 14, ColorsTheme.black),
+                  style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
                 ),
         ),
         mode == 2 ? addImageAction() : Container(),

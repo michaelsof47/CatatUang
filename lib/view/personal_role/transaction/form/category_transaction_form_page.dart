@@ -63,7 +63,10 @@ class CategoryTransactionFormState
           padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 29.h),
           child: CustomBorderFormWidget(widgetCallback: () => contentBase()),
         ),
-        bottomNavigationBar: CustomFormActionButtonWidget(),
+        bottomNavigationBar: CustomFormActionButtonWidget(
+          "Simpan",
+          () {},
+        ),
         appBar: appbar(),
       ),
     );

@@ -1,10 +1,10 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomDropdownWidget extends ConsumerWidget {
+class CustomDropdownWidget extends StatelessWidget {
   List<String>? itemMenuLabelFilter;
   Function(String? value) callback;
   String? initialValue;
-  customStyle() => GeneralStyle.labelStyle1(false, 14, ColorsTheme.black);
+  customStyle() => FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black);
 
   CustomDropdownWidget({
     required this.itemMenuLabelFilter,
@@ -13,7 +13,7 @@ class CustomDropdownWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(context, ref) {
+  Widget build(BuildContext context) {
     itemDropdown(String value) => DropdownMenuItem(
           value: value,
           child: Text(value, style: customStyle()),
