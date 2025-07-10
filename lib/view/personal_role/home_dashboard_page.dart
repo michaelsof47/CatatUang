@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class HomeDashboardPage extends ConsumerStatefulWidget {
+class HomeDashboardPage extends StatefulWidget {
   @override
-  ConsumerState<HomeDashboardPage> createState() => HomeDashboardPageState();
+  State<HomeDashboardPage> createState() => HomeDashboardPageState();
 }
 
-class HomeDashboardPageState extends ConsumerState<HomeDashboardPage> {
+class HomeDashboardPageState extends State<HomeDashboardPage> {
   List<String>? itemMenuLabelList;
   List<String>? itemMenuActionList;
 

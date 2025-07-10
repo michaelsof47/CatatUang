@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class ProfilePage extends ConsumerStatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  ConsumerState<ProfilePage> createState() => ProfilePageState();
+  State<ProfilePage> createState() => ProfilePageState();
 }
 
-class ProfilePageState extends ConsumerState<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   List<String>? menuLabelList;
   List<IconData>? menuIconList;
 

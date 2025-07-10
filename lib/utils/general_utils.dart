@@ -1,6 +1,7 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
+
   static horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 
   static verticalSpacer(double? amount) => SizedBox(height: amount!.h);
@@ -9,9 +10,11 @@ class GeneralUtils {
       EdgeInsets.symmetric(
           vertical: verticalAmount!.h, horizontal: horizontalAmount!.w);
 
-  static fromHTBPadding({double? h,double? t, double? b}) => EdgeInsets.fromLTRB(h!.w, t!.h, h.w, b!.h);
+  static fromHTBPadding({double? h, double? t, double? b}) =>
+      EdgeInsets.fromLTRB(h!.w, t!.h, h.w, b!.h);
 
-  static symmetricPadding({double? v, double? h}) =>  EdgeInsets.symmetric(vertical: v!.h, horizontal: h!.w);
+  static symmetricPadding({double? v, double? h}) =>
+      EdgeInsets.symmetric(vertical: v!.h, horizontal: h!.w);
 
   static underlineBorder() => UnderlineInputBorder(
         borderSide: BorderSide(
@@ -28,17 +31,22 @@ class GeneralUtils {
         borderRadius: BorderRadius.circular(10.r),
       );
 
-  static underlineDecorationType(label, icon) => InputDecoration(
+  static underlineDecorationType(label, bool? isPasswordVisible,
+          VoidCallback? onPasswordVisible, bool? isPassword) =>
+      InputDecoration(
         border: GeneralUtils.underlineBorder(),
         enabledBorder: GeneralUtils.underlineBorder(),
         contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
         hintText: label,
         fillColor: ColorsTheme.white,
         hintStyle: FontTheme.labelHintStyle1(false),
-        suffixIcon: Icon(
-          icon,
-          color: ColorsTheme.green,
-        ),
+        suffixIcon: isPassword! ? IconButton(
+          icon: Icon(
+            isPasswordVisible! ? Icons.visibility_off : Icons.visibility,
+            color: ColorsTheme.green,
+          ),
+          onPressed: () => onPasswordVisible!(),
+        ) : null,
       );
 
   static searchDecorationType(label, color) => InputDecoration(
@@ -86,14 +94,21 @@ class GeneralUtils {
     bool? isEnabled,
     String? decoType,
     bool? isNumber,
+    bool? isPassword,
     Function(String value)? callback,
+    VoidCallback? onPasswordVisible,
+    bool? isPasswordVisible,
   }) =>
       TextFormField(
         controller: controller,
         cursorColor: ColorsTheme.green,
         readOnly: isEnabled! ? false : true,
         decoration: decoType == "underline"
-            ? underlineDecorationType(label, null)
+            ? underlineDecorationType(
+                label,
+                isPasswordVisible,
+                onPasswordVisible,
+                isPassword)
             : borderedDecorationType(label),
         style: FontTheme.labelHintStyle1(true),
         maxLines: 1,
@@ -102,6 +117,8 @@ class GeneralUtils {
         keyboardType: isNumber! ? TextInputType.number : TextInputType.text,
         textInputAction:
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
+        obscuringCharacter: "*",
+        obscureText: isPassword! ? !isPasswordVisible! : false,
       );
 
   static filterTextFormField({
@@ -162,7 +179,7 @@ class GeneralUtils {
         readOnly: true,
         onTap: () => decoType == "underline" ? callback!() : {},
         decoration: decoType == "underline"
-            ? underlineDecorationType(label, icon)
+            ? underlineDecorationType(label, false, () {}, false)
             : borderedDecorationType(label),
         style: FontTheme.labelHintStyle1(true),
       );
@@ -194,7 +211,8 @@ class GeneralUtils {
   static alertSnackbar({required String? label, required Color? color}) =>
       SnackBar(
         content: Text(label!,
-            style: FontTheme.labelStyle1(isBold: false,fontSize: 12, color: ColorsTheme.white)),
+            style: FontTheme.labelStyle1(
+                isBold: false, fontSize: 12, color: ColorsTheme.white)),
         backgroundColor: color!,
         duration: const Duration(seconds: 3),
         dismissDirection: DismissDirection.down,
@@ -262,4 +280,16 @@ class GeneralUtils {
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: ColorsTheme.green, width: 2.w),
       );
+
+  static customProgressLoading(context) => showDialog(
+    context: context,
+    barrierDismissible: true, 
+    builder: (BuildContext context) => Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 250.h),
+      backgroundColor: Colors.transparent,
+      elevation: 0.h,
+      child: Card(
+        child: Center(child: CircularProgressIndicator()),
+      )
+    ));
 }

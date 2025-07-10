@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomBorderFormWidget extends ConsumerWidget {
+class CustomBorderFormWidget extends StatelessWidget {
   var widgetCallback;
 
   CustomBorderFormWidget({
@@ -8,7 +8,7 @@ class CustomBorderFormWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     baseHeader() => Card(
           shape: GeneralUtils.customDecoration(),
           color: ColorsTheme.yellow,

@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomSingleButtonWidget extends ConsumerWidget {
+class CustomSingleButtonWidget extends StatelessWidget {
   final Function()? actionCallback;
   final String? hintLabel;
 
@@ -10,7 +10,7 @@ class CustomSingleButtonWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Card(
         elevation: 3.h,
         shape: GeneralUtils.customDecoration(),

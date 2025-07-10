@@ -1,43 +1,29 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-LoginController? loginCtrl = Get.put(LoginController());
-
 class LoginPage extends StatefulWidget {
-  State<LoginPage> createState() => LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
-  //GENERAL UTILS
-  TextEditingController? inputEditingController;
-  MainConfig? config;
+  //Global Variable
+  TextEditingController? emailphoneInputCtrl;
+  TextEditingController? passwordInputCtrl;
 
-  //GENERAL VARIABLE
-  var versionName;
-  var roleStatusConfig;
+  LoginController? loginCtrl;
 
   var alertStatus;
+  var isPasswordVisible;
 
-  Color? palleteButtonColor({String? type}) {
-    switch (type) {
-      case "facebook":
-        return ColorsTheme.facebookColor;
-      case "google":
-        return ColorsTheme.googleColor;
-      case "phonenumber":
-        return ColorsTheme.yellow;
-    }
-    ;
+  //Global Props
+  showAlertSnackbar(String? label, bool? isSuccessful) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+          GeneralUtils.alertSnackbar(label: label, color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
+
+  customLogin() async {
+    await loginCtrl!.storeLoginStatusController(true);
+    //await loginCtrl!.storeDevelopmentRoleStatusController(roleStatusConfig);
+    Navigator.pushReplacementNamed(context, '/home_navigation');
   }
-
-  //////////////////
-  ///CUSTOM UTILS///
-  //////////////////
-  TextSpan? subtitleLabel({required String? label, required bool? isBold}) =>
-      TextSpan(
-        text: label,
-        style: FontTheme.labelStyle1(
-            isBold: isBold, fontSize: 15, color: ColorsTheme.barStatusColor),
-      );
 
   Text? singleLabel({String? label, int? size, bool? isBold, bool? isSocMed}) {
     Color? labelColor = isSocMed! ? ColorsTheme.white : ColorsTheme.black;
@@ -48,97 +34,30 @@ class LoginPageState extends State<LoginPage> {
     return Text(label!, style: fontTheme);
   }
 
-  showAlertSnackbar({required String? label}) =>
-      ScaffoldMessenger.of(context).showSnackBar(
-          GeneralUtils.alertSnackbar(label: label, color: ColorsTheme.redSoft));
-
-  ///////////////////
-  ///CUSTOM WIDGET///
-  ///////////////////
-
-  customLogin() async {
-    await loginCtrl!.storeLoginStatusController(true);
-    await loginCtrl!.storeDevelopmentRoleStatusController(roleStatusConfig);
-    Navigator.pushReplacementNamed(context, '/home_navigation');
-  }
-
-  navigationButtonComponent(status, status1, {String? verificationId}) {
-    double? paddingWidth = status != "custom" ? 11 : 5;
-    String? socialmedLabel = status1 == "facebook" ? 'Facebook' : 'Google';
-    String? socialMedIcon = status1 == "facebook"
-        ? 'assets/image/facebook_logo.png'
-        : 'assets/image/google_logo.png';
-
-    childLabelContent({String? label, bool? isSocMed}) =>
-        singleLabel(label: label, size: 14, isBold: true, isSocMed: true);
-
-    brandingLogo() => Image.asset(socialMedIcon,
-        fit: BoxFit.cover,
-        filterQuality: FilterQuality.high,
-        width: 38.w,
-        height: 35.h);
-
-    socialmedContent() => Row(children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(5.r), child: brandingLogo()),
-          GeneralUtils.horizontalSpacer(5),
-          childLabelContent(
-              label: "Masuk Dengan $socialmedLabel", isSocMed: true)!
-        ]);
-
-    generalContent() =>
-        Center(child: childLabelContent(label: "Login", isSocMed: true));
-
-    buttonContent() => Container(
-          width: ScreenUtil().screenWidth,
-          height: 39.h,
-          padding: GeneralUtils.allAroundPadding(paddingWidth, 0),
-          child: status == "custom" ? socialmedContent() : generalContent(),
-        );
-
-    return Card(
-        color: palleteButtonColor(type: status1),
-        child: InkWell(
-            onTap: () => navigationMenu(loginType: status1),
-            borderRadius: BorderRadius.circular(5.r),
-            child: buttonContent()));
-  }
+  viewLabel({String? type, bool? isRegisterAction, String? label}) =>
+      Text(label!,
+          style: FontTheme.registerAction(isRegisterAction!));
 
   @override
   initState() {
     super.initState();
 
     initConstructor();
-    initData();
   }
 
-  initConstructor() async {
-    inputEditingController = TextEditingController();
-    //config = MainConfig.of(context);
+  initConstructor() {
+    emailphoneInputCtrl = TextEditingController();
+    passwordInputCtrl = TextEditingController();
 
-    versionName = "";
-    roleStatusConfig = "Personal";
-
+    loginCtrl = Get.put(LoginController());
+    isPasswordVisible = false.obs;
     alertStatus = "".obs;
   }
-
-  retrieveVersion() =>
-      PackageInfo.fromPlatform().then((PackageInfo packageInfo) =>
-          setState(() => versionName = packageInfo.version));
-
-  initData() {
-    WidgetsBinding.instance
-        .addPostFrameCallback((timeStamp) => retrieveVersion());
-  }
-
-  ///////////////////////////////////
-  ///SOCIAL MEDIA ACCOUNT FUNCTION///
-  ///////////////////////////////////
 
   moveIntoVerifyPage(verificationId) =>
       Navigator.pushNamed(context, '/verify_otp');
 
-  registerBottomSheet() {
+  /*registerBottomSheet() {
     contentText(isBold, desc) => TextSpan(
         text: desc,
         style: FontTheme.labelStyle1(
@@ -212,18 +131,34 @@ class LoginPageState extends State<LoginPage> {
       isDismissible: true,
       backgroundColor: ColorsTheme.yellowSoft,
     );
+  }*/
+
+  validateForm() {
+    FocusScope.of(context).unfocus();
+    if(emailphoneInputCtrl!.text.isEmpty) {
+      showAlertSnackbar("Masukkan Email / No.HP terlebih dahulu", false);
+    } else if (passwordInputCtrl!.text.isEmpty) {
+      showAlertSnackbar("Masukkan Password terlebih dahulu", false);
+    } else {
+      GeneralUtils.customProgressLoading(context);
+      loginCtrl!.requestEmailPhoneSignIn(email: emailphoneInputCtrl!.text, password: passwordInputCtrl!.text);
+    }
   }
 
   Widget? handlingError() {
     alertStatus.value = loginCtrl!.resultStatus.value;
+    var alertMessage = loginCtrl!.resultMsg.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (alertStatus.value) {
         case "success":
-          Navigator.pushReplacementNamed(context, '/home_navigation');
+          Navigator.pop(context);
+          showAlertSnackbar(alertMessage, true);
+          //Navigator.pushReplacementNamed(context, '/home_navigation');
           break;
         case "failure":
-          showAlertSnackbar(label: loginCtrl!.resultMsg.value);
+          Navigator.pop(context);
+          showAlertSnackbar(alertMessage, false);
           break;
       }
 
@@ -233,76 +168,28 @@ class LoginPageState extends State<LoginPage> {
     return Container();
   }
 
-  void navigationMenu({String? loginType}) async {
-    switch (loginType) {
-      case "facebook":
-        await loginCtrl!.requestFacebookSignIn();
-        break;
-      case "google":
-        await loginCtrl!.requestGoogleSignIn();
-        break;
-      case "phone_number":
-        var phonenumber = inputEditingController!.text.replaceRange(0, 1, '');
-        await loginCtrl!.requestEmailPhoneSignIn(phonenumber: phonenumber);
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    ///////////////////////////
-    ///CUSTOM VIEW COMPONENT///
-    ///////////////////////////
 
-    viewLabel({String? type, bool? isRegisterAction, String? label}) => Text(
-        label!,
-        style: type == "version"
-            ? FontTheme.versionLabel()
-            : FontTheme.registerAction(isRegisterAction!));
+    //kalkulasi untuk mengukur resolusi image background
+    final double imageWidth = MediaQuery.of(context).size.width;
+    final double aspectRatioValue = 8.0.w / 8.4.h; // Nilai rasio numerik (lebar / tinggi)
+    final double imageHeightCalculated = imageWidth / aspectRatioValue;
 
-    versionApps() => Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [viewLabel(type: "version", label: "Version $versionName")],
-        );
 
-    registerView() =>
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          viewLabel(
-              type: "", isRegisterAction: false, label: "Tidak Punya Akun? "),
-          InkWell(
-            onTap: () => registerBottomSheet(),
-            child: viewLabel(
-                type: "", isRegisterAction: true, label: "Buat Akun Baru"),
-          )
-        ]);
-
-    headerLabel() => Column(
-          children: [
-            Center(child: Image.asset('assets/image/menu_title.png')),
-            GeneralUtils.verticalSpacer(10),
-            RichText(
-              text: TextSpan(
-                children: [
-                  subtitleLabel(label: "Simpan Catatan", isBold: false)!,
-                  subtitleLabel(label: " Keuanganmu disini", isBold: true)!,
-                ],
-              ),
-            )
-          ],
-        );
-
-    //////////////////////////////
-    ///INPUT & ACTION COMPONENT///
-    //////////////////////////////
-
-    inputFormField() => GeneralUtils.generalTextFormField(
-          controller: inputEditingController,
-          label: "Email / No. Telp",
+    inputFormField(hint, controller, isPassword) => GeneralUtils.generalTextFormField(
+          controller: controller,
+          label: hint,
           isFinalInput: true,
           isEnabled: true,
           isNumber: false,
+          isPassword: isPassword,
           decoType: "underline",
+          onPasswordVisible:() {
+            isPasswordVisible.value = !isPasswordVisible.value;
+            print(isPasswordVisible.value);
+          },
+          isPasswordVisible: isPasswordVisible.value,
         );
 
     forgotPasswordLabelAction() => Padding(
@@ -322,72 +209,70 @@ class LoginPageState extends State<LoginPage> {
           ),
         );
 
-    ///////////////////////////////////////////
-    ///SOCIAL MEDIA ACCOUNT ACTION COMPONENT///
-    ///////////////////////////////////////////
-
-    ////////////////////
-    ///BASE COMPONENT///
-    ////////////////////
-
-    contentForm() => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headerLabel(),
-            GeneralUtils.verticalSpacer(35),
-            inputFormField(),
-            GeneralUtils.verticalSpacer(8),
-            forgotPasswordLabelAction(),
-            GeneralUtils.verticalSpacer(55),
-            navigationButtonComponent("basic", "phonenumber"),
-            GeneralUtils.verticalSpacer(14),
-            Center(
-                child: singleLabel(
-                    label: "Atau", size: 12, isBold: false, isSocMed: false)!),
-            GeneralUtils.verticalSpacer(14),
-            navigationButtonComponent("custom", "facebook"),
-            GeneralUtils.verticalSpacer(5),
-            navigationButtonComponent("custom", "google"),
-          ],
-        );
-
-    itemContent() =>
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          versionApps(),
-          MainConfig.of(context).flavorIndicator == "cu_development"
-              ? InkWell(
-                  onTap: () => setState(
-                    () => roleStatusConfig == "Personal"
-                        ? roleStatusConfig = "Owner"
-                        : roleStatusConfig = "Personal",
-                  ),
-                  child: Text(
-                    "Role : $roleStatusConfig",
-                    style: FontTheme.labelStyle1(
-                        isBold: true, fontSize: 10, color: ColorsTheme.green),
-                  ),
-                )
-              : Container(),
+    registerView() =>
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          viewLabel(
+              type: "", isRegisterAction: false, label: "Tidak Punya Akun? "),
+          InkWell(
+            onTap: () => Navigator.pushNamed(context, "/register"),
+            child: viewLabel(
+                type: "", isRegisterAction: true, label: "Buat Akun Baru"),
+          )
         ]);
 
-    baseContent() => Column(children: [
-          itemContent(),
-          GeneralUtils.verticalSpacer(60),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.w),
-              child: contentForm()),
-          GeneralUtils.verticalSpacer(40),
-          registerView()
-        ]);
+    contentForm() => Container(
+      color: ColorsTheme.white,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(20.w, 15.h, 20.w, 10.h),
+        child: Column(children: [
+          inputFormField("Email / No. Telp", emailphoneInputCtrl,false),
+          GeneralUtils.verticalSpacer(10),
+          inputFormField("Password", passwordInputCtrl,true),
+          GeneralUtils.verticalSpacer(5),
+          forgotPasswordLabelAction(),
+          GeneralUtils.verticalSpacer(10),
+          CustomLoginFormButtonWidget(
+              status: "general", actionCallback: (status) => validateForm(), label: "Login"),
+          GeneralUtils.verticalSpacer(10),
+          registerView(),
+        ])),
+    );
 
-    contentWrapBody() => Obx(() => Stack(children: [
-          Padding(
-            padding: GeneralUtils.allAroundPadding(15, 18),
-            child: Wrap(children: [baseContent()]),
+
+    customBody() => Stack(
+      children: [
+        Positioned(
+          top: 0.h,
+          right: 0.w,
+          left: 0.w,
+          height: imageHeightCalculated,
+          child: Image.asset('assets/image/image_cover_2.png',
+                fit: BoxFit.cover),
+        ),
+        Positioned(
+          left: 0.w,
+          right: 0.w,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          child: AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            left: 0.w,
+            right: 0.w,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            child: contentForm(),
           ),
-          handlingError()!
-        ]));
+        )
+      ]
+    );
 
-    return SafeArea(child: Scaffold(body: contentWrapBody()));
+    return SafeArea(child: Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: ColorsTheme.white,
+      body: Obx(() => Stack(
+        children: [
+          customBody(),
+          handlingError()!,
+        ]
+      ))));
   }
 }

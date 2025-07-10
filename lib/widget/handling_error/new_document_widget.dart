@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class NewDocumentWidget extends ConsumerWidget {
+class NewDocumentWidget extends StatelessWidget {
   final String? moduleType;
   final String? headerLabel;
   final String? descLabel;
@@ -12,7 +12,7 @@ class NewDocumentWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     emptyDocument() => SizedBox(
         width: 200.w,
         height: 200.h,

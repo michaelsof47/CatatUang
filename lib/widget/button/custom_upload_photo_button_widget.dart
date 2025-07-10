@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomUploadPhotoButtonWidget extends ConsumerWidget {
+class CustomUploadPhotoButtonWidget extends StatelessWidget {
   String? headerTitle;
   String? headerSubtitle;
   bool? isUploadedPhoto;
@@ -20,7 +20,7 @@ class CustomUploadPhotoButtonWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     addImageAction() => Card(
           elevation: 0,
           shape: GeneralUtils.customDecoration(),

@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomHeaderNoInfoTimeWidget extends ConsumerWidget {
+class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
   final String? fullName;
   final String? statusInformation;
 
@@ -10,7 +10,7 @@ class CustomHeaderNoInfoTimeWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     profileIcon() => Container(
           width: 51.w,
           height: 51.h,

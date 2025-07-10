@@ -37,7 +37,7 @@ class FontTheme {
       );
 
   static navigationActionLabel() => GoogleFonts.mulish(
-        fontSize: 16.sp,
+        fontSize: 14.sp,
         fontWeight: FontWeight.w600,
         color: ColorsTheme.black,
       );

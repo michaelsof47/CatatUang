@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomMenuProfileWidget extends ConsumerWidget {
+class CustomMenuProfileWidget extends StatelessWidget {
   var label;
   var iconLabel;
   Function(String)? callback;
@@ -12,7 +12,7 @@ class CustomMenuProfileWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     icon1() => SizedBox(
           width: 15.w,
           height: 19.h,

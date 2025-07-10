@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomTransactionListWidget extends ConsumerWidget {
+class CustomTransactionListWidget extends StatelessWidget {
   List<String>? headerLabel = ["Jumlah Transaksi", "Items Termahal", "Outlet"];
   List<String>? dummyLabel = [
     "Rp.200.000",
@@ -17,7 +17,7 @@ class CustomTransactionListWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(context, ref) {
+  Widget build(context) {
     singleLineLabel({label, size, color}) => Text(
           label,
           style: FontTheme.labelStyle1(isBold: true,fontSize: size,color: color),

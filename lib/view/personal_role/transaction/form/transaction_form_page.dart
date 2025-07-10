@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class TransactionForm extends ConsumerStatefulWidget {
+class TransactionForm extends StatefulWidget {
   @override
-  ConsumerState<TransactionForm> createState() => TransactionFormState();
+  State<TransactionForm> createState() => TransactionFormState();
 }
 
-class TransactionFormState extends ConsumerState<TransactionForm> {
+class TransactionFormState extends State<TransactionForm> {
   TextEditingController? transactionDateInputCtrl;
   TextEditingController? categoryInputCtrl;
   TextEditingController? productNameInputCtrl;
@@ -46,13 +46,13 @@ class TransactionFormState extends ConsumerState<TransactionForm> {
   }
 
   initData() {
-    transactionDateInputCtrl!.text = currentTimeFormat!.format(
-      ref.read(currentTime1),
-    );
+    transactionDateInputCtrl!.text = "";/*currentTimeFormat!.format(
+      //ref.read(currentTime1),
+    );*/
     categoryInputCtrl!.text = "Lain-Lain";
   }
 
-  showDatePickerDialog() async {
+  /*showDatePickerDialog() async {
     final DateTime? datepicker = await showDatePicker(
       context: context,
       initialDate: ref.read(currentTime1),
@@ -71,7 +71,7 @@ class TransactionFormState extends ConsumerState<TransactionForm> {
         );
       });
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +128,7 @@ class TransactionFormState extends ConsumerState<TransactionForm> {
           isFinalInput: false,
           decoType: "underline",
           callback: () =>
-              label == "Tanggal Transaksi" ? showDatePickerDialog() : {},
+              /*label == "Tanggal Transaksi" ? showDatePickerDialog() :*/ {},
           icon: icon,
         );
 

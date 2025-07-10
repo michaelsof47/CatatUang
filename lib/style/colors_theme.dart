@@ -5,7 +5,7 @@ class ColorsTheme {
   /////////////////////////
   ///COLOR WITHOUT ALPHA///
   /////////////////////////
-  static Color green = const Color(0xff4C8C4A);
+  static Color green = const Color(0xff376736);
   static Color black = const Color(0xff000000);
   static Color yellow = const Color(0xffFDD835);
   static Color white = const Color(0xffFFFFFF);

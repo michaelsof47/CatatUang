@@ -1,11 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class TransactionPage extends ConsumerStatefulWidget {
+class TransactionPage extends StatefulWidget {
   @override
-  ConsumerState<TransactionPage> createState() => TransactionPageState();
+  State<TransactionPage> createState() => TransactionPageState();
 }
 
-class TransactionPageState extends ConsumerState<TransactionPage> {
+class TransactionPageState extends State<TransactionPage> {
   List<String>? itemMenuLabel;
   List<String>? itemMenuLabelFilter;
 
@@ -124,7 +124,7 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
     dropdownFilter() => DropdownButtonHideUnderline(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
-            child: CustomDropdownWidget(
+            child: Container(),/*CustomDropdownWidget(
               initialValue: ref.watch(transactionItemDropdownValue),
               itemMenuLabelFilter: itemMenuLabelFilter,
               callback: (value) {
@@ -132,8 +132,7 @@ class TransactionPageState extends ConsumerState<TransactionPage> {
                     .read(transactionItemDropdownValue.notifier)
                     .update((state) => value!);
                 print(value!);
-              },
-            ),
+              },*/
             decoration: GeneralUtils.customBoxStyle1(),
           ),
         );

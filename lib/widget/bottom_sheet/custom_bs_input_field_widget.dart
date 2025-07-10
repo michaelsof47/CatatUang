@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomBottomSheetInputFieldWidget extends ConsumerWidget {
+class CustomBottomSheetInputFieldWidget extends StatelessWidget {
   TextEditingController? inputController;
   Function(String value)? callback;
 
@@ -10,7 +10,7 @@ class CustomBottomSheetInputFieldWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     exitBottomSheet() => InkWell(
           onTap: () => Navigator.pop(context),
           child: Text(

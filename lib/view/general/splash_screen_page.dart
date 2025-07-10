@@ -22,7 +22,7 @@ class SplashScreenPageState extends State<SplashScreenPage> {
     Timer(
       const Duration(seconds: 4),
       () async => await !condition
-          ? Navigator.pushReplacementNamed(context, '/login')
+          ? Navigator.pushReplacementNamed(context, '/onboarding')
           : Navigator.pushReplacementNamed(context, '/home_navigation'),
     );
   }

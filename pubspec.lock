@@ -366,30 +366,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_facebook_auth:
-    dependency: "direct main"
-    description:
-      name: flutter_facebook_auth
-      sha256: fd1a6749dafbd5923585038671b63abdcedd4fe5923eb42fc154247dc5622519
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.4"
-  flutter_facebook_auth_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_facebook_auth_platform_interface
-      sha256: "86630c4dbba1c20fba26ea9e59ad0d48f5ff59e7373cacd36f916160186f9ce9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
-  flutter_facebook_auth_web:
-    dependency: transitive
-    description:
-      name: flutter_facebook_auth_web
-      sha256: "22dca8091409309ad85b9f430fbd8f57b686276979da5195e7e97587352567ce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -414,14 +390,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
-  flutter_riverpod:
-    dependency: "direct main"
-    description:
-      name: flutter_riverpod
-      sha256: "4bce556b7ecbfea26109638d5237684538d4abc509d253e6c5c4c5733b360098"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.10"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -673,7 +641,7 @@ packages:
     source: hosted
     version: "0.15.4"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: a2bbf9d017fcced29139daa8ed2bba4ece450ab222871df93ca9eec6f80c34ba
@@ -1104,14 +1072,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
-  riverpod:
-    dependency: transitive
-    description:
-      name: riverpod
-      sha256: "548e2192eb7aeb826eb89387f814edb76594f3363e2c0bb99dd733d795ba3589"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.0"
   sane_uuid:
     dependency: transitive
     description:
@@ -1245,14 +1205,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
-  state_notifier:
-    dependency: transitive
-    description:
-      name: state_notifier
-      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:

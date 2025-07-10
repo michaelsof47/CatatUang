@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomAppBar extends ConsumerWidget {
+class CustomAppBar extends StatelessWidget {
   var appLabel;
 
   CustomAppBar({
@@ -8,7 +8,7 @@ class CustomAppBar extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     iconNavBack() => SizedBox(
           width: 15.w,
           height: 25.h,

@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomFormActionButtonWidget extends ConsumerWidget {
+class CustomFormActionButtonWidget extends StatelessWidget {
   String? labelAction;
   VoidCallback? callback;
 
@@ -10,7 +10,7 @@ class CustomFormActionButtonWidget extends ConsumerWidget {
   );
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     itemContent() => Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           CustomSingleButtonWidget(
             actionCallback: () => Navigator.pop(context),

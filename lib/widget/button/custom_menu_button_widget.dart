@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomMenuButton extends ConsumerWidget {
+class CustomMenuButton extends StatelessWidget {
   String? menuLabel;
   bool? isRoundedShape;
   double? width;
@@ -16,7 +16,7 @@ class CustomMenuButton extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     circleShape() => BoxDecoration(
           shape: BoxShape.circle,
           color: ColorsTheme.green,

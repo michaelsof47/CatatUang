@@ -1,13 +1,12 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CategoryTransactionForm extends ConsumerStatefulWidget {
+class CategoryTransactionForm extends StatefulWidget {
   @override
-  ConsumerState<CategoryTransactionForm> createState() =>
+  State<CategoryTransactionForm> createState() =>
       CategoryTransactionFormState();
 }
 
-class CategoryTransactionFormState
-    extends ConsumerState<CategoryTransactionForm> {
+class CategoryTransactionFormState extends State<CategoryTransactionForm> {
   @override
   Widget build(BuildContext context) {
     appbar() => PreferredSize(

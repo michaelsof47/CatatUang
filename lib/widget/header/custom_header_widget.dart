@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomHeaderWidget extends ConsumerStatefulWidget {
+class CustomHeaderWidget extends StatefulWidget {
   final String? fullName;
   final String? location;
   final String? conditionStatus;
@@ -11,10 +11,10 @@ class CustomHeaderWidget extends ConsumerStatefulWidget {
     required this.conditionStatus,
   });
 
-  ConsumerState<CustomHeaderWidget> createState() => CustomHeaderWidgetState();
+  State<CustomHeaderWidget> createState() => CustomHeaderWidgetState();
 }
 
-class CustomHeaderWidgetState extends ConsumerState<CustomHeaderWidget> {
+class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
   @override
   build(context) {
     profileIcon() => Container(

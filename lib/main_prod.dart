@@ -2,7 +2,6 @@ import 'package:catat_uang/main.dart';
 import 'package:catat_uang/main_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'import_url_file.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -20,9 +19,7 @@ void main(List<String> args) async {
 
   var configureMain = MainConfig(
       flavorIndicator: "cu_production",
-      child: const ProviderScope(
-        child: MyApp(),
-      ));
+      child: MyApp());
 
   runApp(configureMain);
 }

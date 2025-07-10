@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomBottomSheetTwoActionWidget extends ConsumerWidget {
+class CustomBottomSheetTwoActionWidget extends StatelessWidget {
   String? label1;
   String? label2;
   VoidCallback? categoryCallback;
@@ -14,7 +14,7 @@ class CustomBottomSheetTwoActionWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     exitBottomSheet() => InkWell(
           onTap: () => Navigator.pop(context),
           child: Text(

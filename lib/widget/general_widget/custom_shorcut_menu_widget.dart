@@ -1,6 +1,6 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class CustomShortcutMenuWidget extends ConsumerWidget {
+class CustomShortcutMenuWidget extends StatelessWidget {
   Widget? userInformation;
   List<String>? itemMenuLabelList;
   List<String>? itemMenuActionList;
@@ -14,7 +14,7 @@ class CustomShortcutMenuWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     comingSoonAlert() => ScaffoldMessenger.of(context).showSnackBar(
           GeneralUtils.alertSnackbar(
             label: "Coming Soon",

@@ -1,6 +1,8 @@
 //////////////////
 ///GENERAL BASE///
 //////////////////
+import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:catat_uang/main_config.dart';
 import 'package:flutter/gestures.dart';
@@ -13,16 +15,18 @@ import 'dart:async';
 ///////////////////////////////
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'firebase_options.dart';
 
 ////////////////////
@@ -30,7 +34,6 @@ import 'firebase_options.dart';
 ////////////////////
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:lottie/lottie.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -42,11 +45,6 @@ import 'package:realm/realm.dart';
 part 'style/colors_theme.dart';
 part 'style/font_theme.dart';
 part 'style/layout_theme.dart';
-
-////////////////////
-///PROVIDER UTILS///
-////////////////////
-part 'utils/general_provider.dart';
 
 ///////////////////
 ///CUSTOM WIDGET///
@@ -66,6 +64,7 @@ part 'widget/button/custom_single_button_widget.dart';
 part 'widget/general_widget/custom_border_form.dart';
 part 'widget/button/custom_upload_photo_button_widget.dart';
 part 'widget/button/custom_form_action_button_widget.dart';
+part 'widget/button/custom_login_form_button_widget.dart';
 
 /////////////////
 ///MINI MODULE///
@@ -99,11 +98,18 @@ part 'controller/login_controller.dart';
 part 'utils/general_utils.dart';
 part 'utils/general_package.dart';
 
+//MODEL//
+part 'model/login_model.dart';
+
+//SERVICE//
+part 'service/user_service.dart';
+
 /////////////////
 ///LINKED PAGE///
 /////////////////
 
 //GENERAL//
+part 'view/general/onboarding_page.dart';
 part 'view/general/login_page.dart';
 part 'view/general/splash_screen_page.dart';
 part 'view/general/personal_register_page.dart';

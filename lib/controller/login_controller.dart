@@ -3,13 +3,16 @@ part of 'package:catat_uang/import_url_file.dart';
 class LoginController extends GetxController {
   FirebaseAuth? firebaseAuth;
   LocalManager? localManager;
+  UserService? userService;
 
   var resultMsg;
   var resultStatus;
+  RxMap<dynamic,dynamic> dataMap = {}.obs;
 
   LoginController() {
     firebaseAuth = FirebaseAuth.instance;
     localManager = Get.put(LocalManager());
+    userService = Get.put(UserService());
 
     resultMsg = "".obs;
     resultStatus = "".obs;
@@ -48,53 +51,68 @@ class LoginController extends GetxController {
 
       var result = await firebaseAuth!.signInWithCredential(credential);
       print("data user : ${result.user!}");
-      if (result.user!.emailVerified) {
-        resultStatus.value = "success";
-        resultMsg.value = "";
+      if (result.user!.emailVerified) {        
+        Map<String,dynamic>? data = {
+          "email": result.user!.email,
+          "firstname": result.user!.displayName.toString().split(" ")[0],
+          "lastname": result.user!.displayName.toString().split(" ")[1],
+        };
+
+        validateEmailFromDB(data);
+
       } else {
-        resultStatus.value = "failure";
+        resultStatus.value = "failure_google";
         resultMsg.value = "Akses Login dengan Google dibatalkan.";
       }
     } catch (e) {
-      resultStatus.value = "failure";
+      resultStatus.value = "failure_google";
       resultMsg.value = "Akses Login dengan Google dibatalkan.";
     }
   }
 
-  Future requestFacebookSignIn() async {
-    var result = await FacebookAuth.instance.login(
-        permissions: ['email', 'public_profile'],
-        loginBehavior: LoginBehavior.katanaOnly);
+  Future validateEmailFromDB(Map<String,dynamic> data) async {
+    Map<String,dynamic> responseData = await userService!.checkEmail(email: data['email']);
 
-    switch (result.status) {
-      case LoginStatus.success:
-        var profileData =
-            await FacebookAuth.instance.getUserData(fields: "name,email");
-        resultStatus.value = "success";
-        resultMsg.value = "";
-        break;
-      case LoginStatus.cancelled || LoginStatus.failed:
-        resultStatus.value = "failure";
-        resultMsg.value = result.message;
-        break;
-      case LoginStatus.operationInProgress:
-        break;
+    if(responseData["status_code"] == 200) {
+      if(responseData["data"]["message"] == "Silahkan Masuk") {
+        resultStatus.value = "success_login";
+      } else {
+        resultStatus.value = "success_register";
+        dataMap.value = data;
+      }
+    } else {
+      resultStatus.value = "failure_google";
+      resultMsg.value = "Gagal Login.";
     }
   }
 
-  Future requestEmailPhoneSignIn({required String? phonenumber}) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+62 $phonenumber',
-      verificationCompleted: (credential) {},
-      verificationFailed: (e) {
-        resultStatus.value = "failure";
-        resultMsg.value = e.message;
-      },
-      codeSent: (verificationId, resendToken) {
+  Future requestEmailPhoneSignIn({required String? email,required String? password}) async {
+      Map<String,dynamic> responseData = await userService!.fetchLogin(email: email, password: password);
+
+      if(responseData["status_code"] == 200) {
+        LoginModel data = LoginModel.fromJson(responseData["data"]);
+        print("data success : ${data.token}");
         resultStatus.value = "success";
-        resultMsg.value = verificationId;
-      },
-      codeAutoRetrievalTimeout: (verificationId) => {},
-    );
+        resultMsg.value = "Berhasil Login.";
+      } else {
+        print("data failure: ${responseData["data"]}");
+        resultStatus.value = "failure";
+        resultMsg.value = "Gagal Login.";
+      }
+  }
+
+  Future requestRegisterData({required Map<String,dynamic>? data}) async {
+    Map<String,dynamic> responseData = await userService!.fetchRegister(temporaryData: data);
+
+
+    if(responseData["status_code"] == 201) {
+      LoginModel dataModel = LoginModel.fromJson(responseData["data"]);
+      print("data success : ${dataModel.token}");
+      resultStatus.value = "success_register";
+    } else {
+      print("data failure: ${responseData["data"]}");
+      resultStatus.value = "failure_register";
+      resultMsg.value = responseData["data"]["error"];
+    }
   }
 }
