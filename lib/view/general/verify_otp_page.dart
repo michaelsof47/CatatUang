@@ -21,7 +21,7 @@ class VerifyOTPPageState extends State<VerifyOTPPage> {
   ///////////////////////
 
   pinFieldDecoration() => UnderlineDecoration(
-        textStyle: FontTheme.labelStyle1(isBold: true,fontSize: 18,color: ColorsTheme.black),
+        textStyle: FontTheme.labelStyle1(status: "bold",fontSize: 18,color: ColorsTheme.black),
         colorBuilder: FixedColorBuilder(ColorsTheme.black),
         lineHeight: 2.h,
       );
@@ -63,7 +63,7 @@ class VerifyOTPPageState extends State<VerifyOTPPage> {
     titleApps() => Center(
           child: Text(
             "Verifikasi Kode OTP",
-            style: FontTheme.labelStyle1(isBold: true,fontSize: 18,color: ColorsTheme.black),
+            style: FontTheme.labelStyle1(status: "bold",fontSize: 18,color: ColorsTheme.black),
           ),
         );
 
@@ -85,11 +85,11 @@ class VerifyOTPPageState extends State<VerifyOTPPage> {
             child: Container(
               width: ScreenUtil().screenWidth,
               height: 39.h,
-              padding: GeneralUtils.allAroundPadding(11, 0),
+              padding: GeneralUtils().allAroundPadding(11, 0),
               child: Center(
                 child: Text(
                   "Lanjut",
-                  style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
+                  style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
                 ),
               ),
             ),
@@ -113,7 +113,7 @@ class VerifyOTPPageState extends State<VerifyOTPPage> {
     contentBody() => SafeArea(
           child: Scaffold(
               body: Padding(
-            padding: GeneralUtils.allAroundPadding(15, 18),
+            padding: GeneralUtils().allAroundPadding(15, 18),
             child: contentWrapBody(),
           )),
         );

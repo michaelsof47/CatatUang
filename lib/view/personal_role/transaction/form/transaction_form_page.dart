@@ -82,7 +82,7 @@ class TransactionFormState extends State<TransactionForm> {
 
     ////////////////////
 
-    itemInputField(label) => GeneralUtils.generalTextFormField(
+    itemInputField(label) => GeneralUtils().generalTextFormField(
           controller: label == "Jumlah Item"
               ? itemAmountInputCtrl
               : label == "Harga Produk"
@@ -97,7 +97,7 @@ class TransactionFormState extends State<TransactionForm> {
               label == "Harga Produk" || label == "Jumlah Item" ? true : false,
         );
 
-    currencyItemInputField(label) => GeneralUtils.currencyTextFormField(
+    currencyItemInputField(label) => GeneralUtils().currencyTextFormField(
           controller: label == "Jumlah Item"
               ? itemAmountInputCtrl
               : label == "Harga Produk"
@@ -120,7 +120,7 @@ class TransactionFormState extends State<TransactionForm> {
         );
 
     itemClickableField(label, IconData? icon) =>
-        GeneralUtils.generalClickableTextFormField(
+        GeneralUtils().generalClickableTextFormField(
           controller: label == "Tanggal Transaksi"
               ? transactionDateInputCtrl
               : categoryInputCtrl,
@@ -138,18 +138,18 @@ class TransactionFormState extends State<TransactionForm> {
               "Tanggal Transaksi",
               Icons.calendar_today_outlined,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             itemClickableField(
               "Lain-Lain",
               Icons.arrow_drop_down,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             itemInputField("Nama Produk"),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             itemInputField("Jumlah Item"),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             currencyItemInputField("Harga Produk"),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
           ],
         );
 

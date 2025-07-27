@@ -23,7 +23,7 @@ class CustomUploadPhotoButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     addImageAction() => Card(
           elevation: 0,
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: colors,
           child: InkWell(
             onTap: () => Navigator.pushNamed(context, '/camera'),
@@ -47,14 +47,14 @@ class CustomUploadPhotoButtonWidget extends StatelessWidget {
           children: [
             Text(
               headerLabel!,
-              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
             ),
-            GeneralUtils.verticalSpacer(5),
+            GeneralUtils().verticalSpacer(5),
             SizedBox(
               width: 200.w,
               child: Text(
                 subtitleLabel!,
-                style: FontTheme.labelStyle1(isBold: false,fontSize: 10, color: ColorsTheme.black),
+                style: FontTheme.labelStyle1(status: "thin",fontSize: 10, color: ColorsTheme.black),
               ),
             ),
           ],
@@ -74,7 +74,7 @@ class CustomUploadPhotoButtonWidget extends StatelessWidget {
                 )
               : Text(
                   headerTitle!,
-                  style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
+                  style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
                 ),
         ),
         mode == 2 ? addImageAction() : Container(),

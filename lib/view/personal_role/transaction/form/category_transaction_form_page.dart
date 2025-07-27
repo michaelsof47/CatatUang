@@ -27,8 +27,8 @@ class CategoryTransactionFormState extends State<CategoryTransactionForm> {
               isNeedSubtitled: true,
               mode: 1,
             ),
-            GeneralUtils.verticalSpacer(21),
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().verticalSpacer(21),
+            GeneralUtils().generalTextFormField(
               controller: TextEditingController(),
               label: "Nama Kategori",
               isFinalInput: false,
@@ -37,8 +37,8 @@ class CategoryTransactionFormState extends State<CategoryTransactionForm> {
               callback: (value) {},
               isNumber: false,
             ),
-            GeneralUtils.verticalSpacer(19),
-            GeneralUtils.multiTextFormField(
+            GeneralUtils().verticalSpacer(19),
+            GeneralUtils().multiTextFormField(
               controller: TextEditingController(),
               label: "Deskripsi",
               maxLines: 5,

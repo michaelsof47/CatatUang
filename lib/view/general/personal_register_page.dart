@@ -26,7 +26,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
 
   //Global Props
   showAlertSnackbar(String? label, bool? isSuccessful) =>
-      ScaffoldMessenger.of(context).showSnackBar(GeneralUtils.alertSnackbar(
+      ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
           label: label,
           color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
@@ -34,14 +34,14 @@ class RegisterUserPageState extends State<RegisterUserPage> {
     contentText(isBold, desc) => TextSpan(
         text: desc,
         style: FontTheme.labelStyle1(
-            isBold: isBold, fontSize: 18, color: ColorsTheme.black));
+            status: isBold, fontSize: 18, color: ColorsTheme.black));
 
     itemOnClick(label) => Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Card(
               shape: LayoutTheme.allRoundedRect(radius: 10),
-              color: ColorsTheme.facebookColor,
+              color: ColorsTheme.googleColor,
               child: InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -59,7 +59,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
             Text(
               label,
               style: FontTheme.labelStyle1(
-                  isBold: false, fontSize: 14, color: ColorsTheme.black),
+                  status: "thin", fontSize: 14, color: ColorsTheme.black),
             )
           ],
         );
@@ -78,15 +78,15 @@ class RegisterUserPageState extends State<RegisterUserPage> {
             children: [
               RichText(
                   text: TextSpan(children: [
-                contentText(false, "Pilih opsi untuk upload "),
-                contentText(true, "foto profilmu"),
+                contentText("thin", "Pilih opsi untuk upload "),
+                contentText("bold", "foto profilmu"),
               ])),
               actionBottomSheet(),
               InkWell(
                   onTap: () => Navigator.pop(context),
                   child: Text("Kembali",
                       style: FontTheme.labelStyle1(
-                          isBold: true,
+                          status: "bold",
                           fontSize: 12,
                           color: ColorsTheme.black)))
             ],
@@ -185,7 +185,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
     } else if (!isChecked!) {
       showAlertSnackbar("Silahkan lakukan persetujuan terlebih dahulu", false);
     } else {
-      GeneralUtils.customProgressLoading(context);
+      GeneralUtils().customProgressLoading(context);
       Map<String, dynamic> collectMap = {
         "url_image": imageFile!,
         "firstname": firstnameInputCtrl!.text,
@@ -242,18 +242,18 @@ class RegisterUserPageState extends State<RegisterUserPage> {
             TextSpan(
                 text: "Buat ",
                 style: FontTheme.labelStyle1(
-                    isBold: false, fontSize: 25, color: ColorsTheme.black)),
+                    status: "thin", fontSize: 25, color: ColorsTheme.black)),
             TextSpan(
                 text: "Akun Baru",
                 style: FontTheme.labelStyle1(
-                    isBold: true, fontSize: 25, color: ColorsTheme.black)),
+                    status: "bold", fontSize: 25, color: ColorsTheme.black)),
           ]),
         );
 
     itemTextSpan(label, isAction) => TextSpan(
           text: label,
           style: FontTheme.labelStyle1(
-              isBold: false,
+              status: "thin",
               fontSize: 12,
               color: isAction ? ColorsTheme.green : ColorsTheme.black),
           recognizer: !isAction ? null : TapGestureRecognizer()
@@ -287,7 +287,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
     formField() => Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().generalTextFormField(
                 controller: firstnameInputCtrl,
                 label: "Masukkan Nama Depan",
                 isFinalInput: false,
@@ -295,8 +295,8 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                 decoType: "underline",
                 isNumber: false,
                 isPassword: false),
-            GeneralUtils.verticalSpacer(5.h),
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().verticalSpacer(5.h),
+            GeneralUtils().generalTextFormField(
                 controller: lastnameInputCtrl,
                 label: "Masukkan Nama Belakang",
                 isFinalInput: false,
@@ -304,8 +304,8 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                 decoType: "underline",
                 isNumber: false,
                 isPassword: false),
-            GeneralUtils.verticalSpacer(5.h),
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().verticalSpacer(5.h),
+            GeneralUtils().generalTextFormField(
                 controller: emailInputCtrl,
                 label: "Masukkan Email",
                 isFinalInput: false,
@@ -313,8 +313,8 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                 isNumber: false,
                 decoType: "underline",
                 isPassword: false),
-            GeneralUtils.verticalSpacer(5.h),
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().verticalSpacer(5.h),
+            GeneralUtils().generalTextFormField(
                 controller: phoneInputCtrl,
                 label: "Masukkan No. Telp",
                 isFinalInput: false,
@@ -322,8 +322,8 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                 isNumber: false,
                 decoType: "underline",
                 isPassword: false),
-            GeneralUtils.verticalSpacer(5.h),
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().verticalSpacer(5.h),
+            GeneralUtils().generalTextFormField(
                 controller: passwordInputCtrl,
                 label: "Masukkan Password",
                 isFinalInput: false,
@@ -334,8 +334,8 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                 onPasswordVisible: () =>
                     isPasswordVisible.value = !isPasswordVisible.value,
                 isPasswordVisible: isPasswordVisible.value),
-            GeneralUtils.verticalSpacer(5.h),
-            GeneralUtils.generalTextFormField(
+            GeneralUtils().verticalSpacer(5.h),
+            GeneralUtils().generalTextFormField(
                 controller: rePasswordInputCtrl,
                 label: "Masukkan Ulang Password",
                 isFinalInput: true,
@@ -363,7 +363,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
           child: Row(
             children: [
               isLeft ? iconNav(isLeft) : Container(),
-              GeneralUtils.horizontalSpacer(5),
+              GeneralUtils().horizontalSpacer(5),
               Text(
                 isLeft ? "Kembali" : "Lanjut",
                 style: FontTheme.navigationActionLabel(),
@@ -409,7 +409,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
             children: [
               uploadProfileContent(),
               formField(),
-              GeneralUtils.verticalSpacer(10.h),
+              GeneralUtils().verticalSpacer(10.h),
               verifyCheckbox(),
             ]);
 
@@ -424,7 +424,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     titleAppBar(),
-                    GeneralUtils.verticalSpacer(20.h),
+                    GeneralUtils().verticalSpacer(20.h),
                     contentForm(),
                   ]),
             )));

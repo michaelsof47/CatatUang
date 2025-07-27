@@ -1,7 +1,5 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-LoginController? loginCtrl = Get.put(LoginController());
-
 class OnBoardingPage extends StatefulWidget {
   State<OnBoardingPage> createState() => OnBoardingPageState();
 }
@@ -10,6 +8,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   //GENERAL UTILS
   TextEditingController? inputEditingController;
   MainConfig? config;
+  LoginController? loginCtrl;
 
   //GENERAL VARIABLE
   var versionName;
@@ -20,16 +19,16 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   ///GLOBAL PROPS///
   
   showAlertSnackbar(String? label, bool? isSuccessful) =>
-    ScaffoldMessenger.of(context).showSnackBar(GeneralUtils.alertSnackbar(
+    ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
         label: label,
         color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
 
-  TextSpan? subtitleLabel({required String? label, required bool? isBold}) =>
+  TextSpan? subtitleLabel({required String? label, required String? isBold}) =>
       TextSpan(
         text: label,
         style: FontTheme.labelStyle1(
-            isBold: isBold, fontSize: 15, color: ColorsTheme.barStatusColor),
+            status: isBold!, fontSize: 15, color: ColorsTheme.barStatusColor),
       );
 
   @override
@@ -43,10 +42,10 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   initConstructor() {
     inputEditingController = TextEditingController();
     //config = MainConfig.of(context);
+    loginCtrl = Get.put(LoginController());
 
     versionName = "";
     roleStatusConfig = "Personal";
-
     alertStatus = "".obs;
   }
 
@@ -68,7 +67,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   void navigationMenu({String? loginType}) async {
     switch (loginType) {
       case "custom":
-        GeneralUtils.customProgressLoading(context);
+        GeneralUtils().customProgressLoading(context);
         await loginCtrl!.requestGoogleSignIn();
         break;
       case "general":
@@ -80,7 +79,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   Widget? handlingError() {
     alertStatus.value = loginCtrl!.resultStatus.value;
     var alertMessage = loginCtrl!.resultMsg.value;
-    var map = loginCtrl!.dataMap.value;
+    var map = loginCtrl!.dataMap!.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (alertStatus.value) {
@@ -113,12 +112,12 @@ class OnBoardingPageState extends State<OnBoardingPage> {
         bottom: 370.h,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Image.asset('assets/image/menu_title.png'),
-          GeneralUtils.verticalSpacer(10),
+          GeneralUtils().verticalSpacer(10),
           RichText(
               text: TextSpan(
             children: [
-              subtitleLabel(label: "Simpan Catatan", isBold: false)!,
-              subtitleLabel(label: " Keuanganmu disini", isBold: true)!,
+              subtitleLabel(label: "Simpan Catatan", isBold: "thin")!,
+              subtitleLabel(label: " Keuanganmu disini", isBold: "bold")!,
             ],
           ))
         ]));
@@ -141,7 +140,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
                     child: Text(
                       "Role : $roleStatusConfig",
                       style: FontTheme.labelStyle1(
-                          isBold: true, fontSize: 10, color: ColorsTheme.green),
+                          status: "bold", fontSize: 10, color: ColorsTheme.green),
                     ))
                 : Container(),
           ]),
@@ -156,18 +155,18 @@ class OnBoardingPageState extends State<OnBoardingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GeneralUtils.verticalSpacer(55),
+              GeneralUtils().verticalSpacer(55),
               CustomLoginFormButtonWidget(
                   status: "general",
                   actionCallback: (status) => navigationMenu(loginType: status),
                   label: "Login dengan Email / Telp"),
-              GeneralUtils.verticalSpacer(14),
+              GeneralUtils().verticalSpacer(14),
               Center(
                 child: Text("Atau",
                     style: FontTheme.labelStyle1(
-                        isBold: false, fontSize: 12, color: ColorsTheme.black)),
+                        status: "thin", fontSize: 12, color: ColorsTheme.black)),
               ),
-              GeneralUtils.verticalSpacer(14),
+              GeneralUtils().verticalSpacer(14),
               CustomLoginFormButtonWidget(
                   status: "custom",
                   actionCallback: (status) =>

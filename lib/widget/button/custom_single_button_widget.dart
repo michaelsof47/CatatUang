@@ -1,7 +1,7 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class CustomSingleButtonWidget extends StatelessWidget {
-  final Function()? actionCallback;
+  final VoidCallback? actionCallback;
   final String? hintLabel;
 
   CustomSingleButtonWidget({
@@ -13,16 +13,16 @@ class CustomSingleButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         elevation: 3.h,
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellow,
         child: InkWell(
           onTap: () => actionCallback!(),
           borderRadius: BorderRadius.circular(10.r),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 8.w),
+            padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 50.w),
             child: Text(
               hintLabel!,
-              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
             ),
           ),
         ));

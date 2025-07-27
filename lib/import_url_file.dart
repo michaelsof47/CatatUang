@@ -27,6 +27,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:shimmer/shimmer.dart';
 import 'firebase_options.dart';
 
 ////////////////////
@@ -65,6 +66,8 @@ part 'widget/general_widget/custom_border_form.dart';
 part 'widget/button/custom_upload_photo_button_widget.dart';
 part 'widget/button/custom_form_action_button_widget.dart';
 part 'widget/button/custom_login_form_button_widget.dart';
+part 'widget/shimmer/custom_shimmer_card_widget.dart';
+part 'widget/shimmer/custom_shimmer_profile_widget.dart';
 
 /////////////////
 ///MINI MODULE///
@@ -80,6 +83,7 @@ part 'database/local_manager.dart';
 ////////////////
 part 'controller/planner_controller.dart';
 part 'controller/login_controller.dart';
+part 'controller/dashboard_controller.dart';
 
 /////////////////////
 ///PACKAGE UTILITY///
@@ -92,17 +96,19 @@ part 'controller/login_controller.dart';
 //////////////
 //part 'package:catat_uang/database/transaction_database.dart';
 
-///////////
-///UTILS///
-///////////
+//UTILS//
 part 'utils/general_utils.dart';
-part 'utils/general_package.dart';
+part 'utils/currency_utils.dart';
 
 //MODEL//
 part 'model/login_model.dart';
+part 'model/account_model.dart';
+part 'model/balance_model.dart';
+part 'model/transaction_model.dart';
 
 //SERVICE//
 part 'service/user_service.dart';
+part 'service/dashboard_service.dart';
 
 /////////////////
 ///LINKED PAGE///

@@ -17,19 +17,13 @@ class LoginPageState extends State<LoginPage> {
   //Global Props
   showAlertSnackbar(String? label, bool? isSuccessful) =>
       ScaffoldMessenger.of(context).showSnackBar(
-          GeneralUtils.alertSnackbar(label: label, color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
+          GeneralUtils().alertSnackbar(label: label, color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
-  customLogin() async {
-    await loginCtrl!.storeLoginStatusController(true);
-    //await loginCtrl!.storeDevelopmentRoleStatusController(roleStatusConfig);
-    Navigator.pushReplacementNamed(context, '/home_navigation');
-  }
-
-  Text? singleLabel({String? label, int? size, bool? isBold, bool? isSocMed}) {
+  Text? singleLabel({String? label, int? size, String? isBold, bool? isSocMed}) {
     Color? labelColor = isSocMed! ? ColorsTheme.white : ColorsTheme.black;
 
     TextStyle? fontTheme = FontTheme.labelStyle1(
-        isBold: isBold, fontSize: size!, color: labelColor);
+        status: isBold!, fontSize: size!, color: labelColor);
 
     return Text(label!, style: fontTheme);
   }
@@ -57,82 +51,6 @@ class LoginPageState extends State<LoginPage> {
   moveIntoVerifyPage(verificationId) =>
       Navigator.pushNamed(context, '/verify_otp');
 
-  /*registerBottomSheet() {
-    contentText(isBold, desc) => TextSpan(
-        text: desc,
-        style: FontTheme.labelStyle1(
-            isBold: isBold, fontSize: 18, color: ColorsTheme.black));
-
-    itemRow1() => RichText(
-            text: TextSpan(children: [
-          contentText(false, "Pilih Akun Sesuai "),
-          contentText(true, "Kebutuhan"),
-        ]));
-
-    itemOnClick(label) => Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Card(
-              shape: LayoutTheme.allRoundedRect(radius: 10),
-              color: ColorsTheme.facebookColor,
-              child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    label == "WIRAUSAHA"
-                        ? Navigator.pushNamed(context, "/owner_register")
-                        : Navigator.pushNamed(context, "/register");
-                  },
-                  child: SizedBox(width: 71.w, height: 51.h)),
-            ),
-            SizedBox(height: 10.h),
-            Text(
-              label,
-              style: FontTheme.labelStyle1(
-                  isBold: false, fontSize: 14, color: ColorsTheme.black),
-            )
-          ],
-        );
-
-    itemRow2() => Padding(
-          padding:
-              EdgeInsets.only(left: 28.w, right: 28.w, top: 22.h, bottom: 20.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              itemOnClick("WIRAUSAHA"),
-              itemOnClick("PERSONAL"),
-            ],
-          ),
-        );
-
-    contentBottomSheet() => Container(
-          height: 215.h,
-          padding:
-              EdgeInsets.only(left: 10.w, right: 10.w, top: 15.h, bottom: 5.h),
-          child: Column(
-            children: [
-              itemRow1(),
-              itemRow2(),
-              InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Text("Kembali ke Halaman Login",
-                      style: FontTheme.labelStyle1(
-                          isBold: true,
-                          fontSize: 12,
-                          color: ColorsTheme.black)))
-            ],
-          ),
-        );
-
-    return showModalBottomSheet(
-      context: context,
-      shape: LayoutTheme.allRoundedRect(radius: 10),
-      builder: (context) => contentBottomSheet(),
-      isDismissible: true,
-      backgroundColor: ColorsTheme.yellowSoft,
-    );
-  }*/
-
   validateForm() {
     FocusScope.of(context).unfocus();
     if(emailphoneInputCtrl!.text.isEmpty) {
@@ -140,7 +58,7 @@ class LoginPageState extends State<LoginPage> {
     } else if (passwordInputCtrl!.text.isEmpty) {
       showAlertSnackbar("Masukkan Password terlebih dahulu", false);
     } else {
-      GeneralUtils.customProgressLoading(context);
+      GeneralUtils().customProgressLoading(context);
       loginCtrl!.requestEmailPhoneSignIn(email: emailphoneInputCtrl!.text, password: passwordInputCtrl!.text);
     }
   }
@@ -177,7 +95,7 @@ class LoginPageState extends State<LoginPage> {
     final double imageHeightCalculated = imageWidth / aspectRatioValue;
 
 
-    inputFormField(hint, controller, isPassword) => GeneralUtils.generalTextFormField(
+    inputFormField(hint, controller, isPassword) => GeneralUtils().generalTextFormField(
           controller: controller,
           label: hint,
           isFinalInput: true,
@@ -202,7 +120,7 @@ class LoginPageState extends State<LoginPage> {
                 child: singleLabel(
                     label: "Lupa Password",
                     size: 10,
-                    isBold: true,
+                    isBold: "bold",
                     isSocMed: false),
               )
             ],
@@ -226,14 +144,14 @@ class LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.fromLTRB(20.w, 15.h, 20.w, 10.h),
         child: Column(children: [
           inputFormField("Email / No. Telp", emailphoneInputCtrl,false),
-          GeneralUtils.verticalSpacer(10),
+          GeneralUtils().verticalSpacer(10),
           inputFormField("Password", passwordInputCtrl,true),
-          GeneralUtils.verticalSpacer(5),
+          GeneralUtils().verticalSpacer(5),
           forgotPasswordLabelAction(),
-          GeneralUtils.verticalSpacer(10),
+          GeneralUtils().verticalSpacer(10),
           CustomLoginFormButtonWidget(
               status: "general", actionCallback: (status) => validateForm(), label: "Login"),
-          GeneralUtils.verticalSpacer(10),
+          GeneralUtils().verticalSpacer(10),
           registerView(),
         ])),
     );

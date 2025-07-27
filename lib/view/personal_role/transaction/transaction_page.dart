@@ -34,7 +34,7 @@ class TransactionPageState extends State<TransactionPage> {
         isDismissible: true,
         context: context,
         backgroundColor: ColorsTheme.yellowSoft,
-        shape: GeneralUtils.customBottomSheet(),
+        shape: GeneralUtils().customBottomSheet(),
         builder: (context) => CustomBottomSheetTwoActionWidget(
           label1: "Tambah Kategori",
           label2: "Tambah Transaksi",
@@ -57,7 +57,7 @@ class TransactionPageState extends State<TransactionPage> {
 
     singleLineLabel({label, color, size}) => Text(
           label,
-          style: FontTheme.labelStyle1(isBold: true,fontSize: size,color: color),
+          style: FontTheme.labelStyle1(status: "bold",fontSize: size,color: color),
         );
 
     /////////////////////
@@ -101,13 +101,13 @@ class TransactionPageState extends State<TransactionPage> {
     contentCategoryComponent() => Column(
           children: [
             categoryHeaderLabel(),
-            GeneralUtils.verticalSpacer(11),
+            GeneralUtils().verticalSpacer(11),
             categoryItemList(),
           ],
         );
 
     categoryShortcutComponentCard() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
@@ -133,7 +133,7 @@ class TransactionPageState extends State<TransactionPage> {
                     .update((state) => value!);
                 print(value!);
               },*/
-            decoration: GeneralUtils.customBoxStyle1(),
+            decoration: GeneralUtils().customBoxStyle1(),
           ),
         );
 
@@ -153,7 +153,7 @@ class TransactionPageState extends State<TransactionPage> {
         );
 
     categoryFilterCardComponent() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.green,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 9.w),
@@ -168,7 +168,7 @@ class TransactionPageState extends State<TransactionPage> {
     /////////////////////
 
     btnAction() => Card(
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellowSoft,
         child: InkWell(
           onTap: () => showAddTransactionBottomSheet(),
@@ -213,7 +213,7 @@ class TransactionPageState extends State<TransactionPage> {
         );
 
     transactionListComponent() => Card(
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellowSoft,
         child: Container(
           width: ScreenUtil().screenWidth,
@@ -242,9 +242,9 @@ class TransactionPageState extends State<TransactionPage> {
     contentBody() => Column(
           children: [
             categoryShortcutComponentCard(),
-            GeneralUtils.verticalSpacer(12),
+            GeneralUtils().verticalSpacer(12),
             addTransactionComponent(),
-            GeneralUtils.verticalSpacer(8),
+            GeneralUtils().verticalSpacer(8),
             stackedView(),
           ],
         );

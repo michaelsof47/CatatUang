@@ -132,7 +132,7 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
     bool? isFinalInput,
     bool? isEnabled,
   }) =>
-      GeneralUtils.generalTextFormField(
+      GeneralUtils().generalTextFormField(
         controller: controller,
         label: label,
         isNumber: false,
@@ -144,7 +144,7 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
   itemTextSpan(label, isAction) => TextSpan(
         text: label,
         style: FontTheme.labelStyle1(
-            isBold: false,
+            status: "thin",
             fontSize: 12,
             color: isAction ? ColorsTheme.green : ColorsTheme.black),
         recognizer: !isAction ? null : TapGestureRecognizer()
@@ -212,7 +212,7 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
     contentTextSpan(row) => TextSpan(
         text: headerLabel(row),
         style: FontTheme.labelStyle1(
-            isBold: row == 1 ? false : true,
+            status: row == 1 ? "thin" : "bold",
             fontSize: 20,
             color: ColorsTheme.black));
 
@@ -261,21 +261,21 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
               isFinalInput: false,
               isEnabled: false,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Kategori Toko",
               controller: postalCodeInputController,
               isFinalInput: false,
               isEnabled: false,
             ),
-            GeneralUtils.verticalSpacer(10),
-            GeneralUtils.multiTextFormField(
+            GeneralUtils().verticalSpacer(10),
+            GeneralUtils().multiTextFormField(
               label: "Keterangan Produk Toko",
               controller: postalCodeInputController,
               isFinalInput: false,
               maxLines: 3,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             verifyCheckbox(),
           ],
         );
@@ -294,42 +294,42 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
               isNeedSubtitled: false,
               mode: 2,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Alamat Toko",
               controller: postalCodeInputController,
               isFinalInput: false,
               isEnabled: false,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Kelurahan",
               controller: postalCodeInputController,
               isFinalInput: false,
               isEnabled: false,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Kecamatan",
               controller: postalCodeInputController,
               isFinalInput: false,
               isEnabled: false,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Kabupaten/Kota",
               controller: postalCodeInputController,
               isFinalInput: false,
               isEnabled: false,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Kode Pos",
               controller: postalCodeInputController,
               isFinalInput: false,
               isEnabled: true,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Detail Lainnya",
               controller: postalCodeInputController,
@@ -354,29 +354,29 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
               isNeedSubtitled: true,
               mode: 1,
             ),
-            GeneralUtils.verticalSpacer(5),
+            GeneralUtils().verticalSpacer(5),
             inputFormField(
               label: "Nama Toko",
               controller: outletNameInputController,
               isFinalInput: false,
               isEnabled: true,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "Email Toko",
               controller: emailInputController,
               isFinalInput: false,
               isEnabled: true,
             ),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             inputFormField(
               label: "No. Telp Toko",
               controller: phoneNumberInputController,
               isFinalInput: false,
               isEnabled: true,
             ),
-            GeneralUtils.verticalSpacer(10),
-            GeneralUtils.multiTextFormField(
+            GeneralUtils().verticalSpacer(10),
+            GeneralUtils().multiTextFormField(
               controller: descriptionInputController,
               label: "Deskripsi",
               maxLines: 5,
@@ -403,7 +403,7 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
           child: Row(
             children: [
               isLeft ? iconNav(isLeft) : Container(),
-              GeneralUtils.horizontalSpacer(5),
+              GeneralUtils().horizontalSpacer(5),
               Text(
                 isLeft ? "Kembali" : "Lanjut",
                 style: FontTheme.navigationActionLabel(),
@@ -446,7 +446,7 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   customGroup(),
-                  GeneralUtils.verticalSpacer(20),
+                  GeneralUtils().verticalSpacer(20),
                   titleAppBar(),
                   formContent(),
                   systemNavigationBar(),

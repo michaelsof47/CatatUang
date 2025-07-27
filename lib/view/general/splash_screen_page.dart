@@ -7,7 +7,7 @@ class SplashScreenPage extends StatefulWidget {
 class SplashScreenPageState extends State<SplashScreenPage> {
   LoginController? loginController;
 
-  @override
+  @override 
   initState() {
     super.initState();
 

@@ -42,21 +42,21 @@ class PlannerPageState extends State<PlannerPage> {
         value: 10,
         color: ColorsTheme.yellow,
         titleStyle: FontTheme.labelStyle1(
-            isBold: true, fontSize: 12, color: ColorsTheme.black),
+            status: "bold", fontSize: 12, color: ColorsTheme.black),
         title: "Kebutuhan\nSehari-Hari",
       ),
       PieChartSectionData(
         value: 25,
         color: ColorsTheme.green,
         titleStyle: FontTheme.labelStyle1(
-            isBold: true, fontSize: 12, color: ColorsTheme.black),
+            status: "bold", fontSize: 12, color: ColorsTheme.black),
         title: "Tabungan",
       ),
       PieChartSectionData(
         value: 30,
         color: ColorsTheme.redSoft,
         titleStyle: FontTheme.labelStyle1(
-            isBold: true, fontSize: 12, color: ColorsTheme.black),
+            status: "bold", fontSize: 12, color: ColorsTheme.black),
         title: "Pinjaman",
       ),
     ];
@@ -83,9 +83,12 @@ class PlannerPageState extends State<PlannerPage> {
             initData();
           },
           inputController: inputController,
+          headerLabel: "Nama Buku Proyek",
+          hintLabel: "Masukkan Nama Buku Proyek",
+          isNumber: false,
         ),
         isScrollControlled: true,
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         barrierColor: ColorsTheme.black25,
         backgroundColor: ColorsTheme.yellowSoft,
       );
@@ -130,12 +133,12 @@ class PlannerPageState extends State<PlannerPage> {
         child: Text(
           "Ubah",
           style: FontTheme.labelStyle1(
-              isBold: true, fontSize: 14, color: ColorsTheme.greenNature),
+              status: "bold", fontSize: 14, color: ColorsTheme.greenNature),
         ));
 
     updatePlannerBookNameButton() => Card(
           elevation: 5,
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.green,
           child: InkWell(
             onTap: () async {
@@ -156,13 +159,13 @@ class PlannerPageState extends State<PlannerPage> {
           Text(
             "Nama Buku",
             style: FontTheme.labelStyle1(
-                isBold: false, fontSize: 10, color: ColorsTheme.black),
+                status: "thin", fontSize: 10, color: ColorsTheme.black),
           ),
-          GeneralUtils.verticalSpacer(1),
+          GeneralUtils().verticalSpacer(1),
           Text(
             bookName.value,
             style: FontTheme.labelStyle1(
-                isBold: true, fontSize: 18, color: ColorsTheme.black),
+                status: "bold", fontSize: 18, color: ColorsTheme.black),
           ),
         ]);
 
@@ -179,7 +182,7 @@ class PlannerPageState extends State<PlannerPage> {
     dropdownItem() => DropdownButtonHideUnderline(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
-            decoration: GeneralUtils.customBoxStyle1(),
+            decoration: GeneralUtils().customBoxStyle1(),
             child: CustomDropdownWidget(
               initialValue: "0",
               itemMenuLabelFilter: itemMenuLabelFilter,
@@ -193,13 +196,13 @@ class PlannerPageState extends State<PlannerPage> {
           Text(
             "Rencana Proyeksi",
             style: FontTheme.labelStyle1(
-                isBold: true, fontSize: 14, color: ColorsTheme.white),
+                status: "bold", fontSize: 14, color: ColorsTheme.white),
           ),
           dropdownItem(),
         ]);
 
     durationRangeFilterCardComponent() => Card(
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.green,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 9.w),
@@ -212,13 +215,13 @@ class PlannerPageState extends State<PlannerPage> {
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(label1,
               style: FontTheme.labelStyle1(
-                  isBold: isHeader,
+                  status: isHeader,
                   fontSize: 14,
                   color: isHeader ? ColorsTheme.black : ColorsTheme.green)),
-          GeneralUtils.verticalSpacer(5),
+          GeneralUtils().verticalSpacer(5),
           Text(label2,
               style: FontTheme.labelStyle1(
-                  isBold: isHeader,
+                  status: isHeader,
                   fontSize: 14,
                   color: isHeader ? ColorsTheme.black : ColorsTheme.redSoft)),
         ]);
@@ -227,17 +230,17 @@ class PlannerPageState extends State<PlannerPage> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
             width: 145.w,
-            child: contentItem("Proyeksi Dana", "Dana yang Tersedia", true),
+            child: contentItem("Proyeksi Dana", "Dana yang Tersedia", "bold"),
           ),
-          GeneralUtils.horizontalSpacer(5),
+          GeneralUtils().horizontalSpacer(5),
           SizedBox(
             width: 5.w,
             child: contentItem(":", ":", true),
           ),
-          GeneralUtils.horizontalSpacer(5),
+          GeneralUtils().horizontalSpacer(5),
           SizedBox(
             width: 110.w,
-            child: contentItem("Rp. 8.000.000", "Rp. 3.000.000", false),
+            child: contentItem("Rp. 8.000.000", "Rp. 3.000.000", "thin"),
           ),
         ]);
 
@@ -258,12 +261,12 @@ class PlannerPageState extends State<PlannerPage> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               "Preview Grafik Saat Ini",
-              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
             ),
-            GeneralUtils.horizontalSpacer(5),
+            GeneralUtils().horizontalSpacer(5),
             Tooltip(
               message: "Berikut ini merupakan grafik \nperkembangan saat ini",
-              textStyle: FontTheme.labelStyle1(isBold: false,fontSize: 10, color: ColorsTheme.white),
+              textStyle: FontTheme.labelStyle1(status: "thin",fontSize: 10, color: ColorsTheme.white),
               child: Icon(
                 Icons.info_rounded,
                 color: ColorsTheme.green,
@@ -281,9 +284,9 @@ class PlannerPageState extends State<PlannerPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 itemInfoRowLabel(),
-                GeneralUtils.verticalSpacer(20),
+                GeneralUtils().verticalSpacer(20),
                 pieChartHeader(),
-                GeneralUtils.verticalSpacer(5),
+                GeneralUtils().verticalSpacer(5),
                 pieChartInfoGraphic(),
               ],
             ),
@@ -291,7 +294,7 @@ class PlannerPageState extends State<PlannerPage> {
         );
 
     infoGraphicCardComponent() => Card(
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellowSoft,
         child: Padding(
           padding: EdgeInsets.fromLTRB(10.w, 19.h, 10.w, 0.h),
@@ -303,9 +306,9 @@ class PlannerPageState extends State<PlannerPage> {
     plannerDashboardComponent() => Stack(children: [
           Column(children: [
             plannerInfoBookName(),
-            GeneralUtils.verticalSpacer(20),
+            GeneralUtils().verticalSpacer(20),
             durationRangeFilterCardComponent(),
-            GeneralUtils.verticalSpacer(10),
+            GeneralUtils().verticalSpacer(10),
             infoGraphicCardComponent(),
           ]),
           Positioned(

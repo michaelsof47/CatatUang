@@ -24,16 +24,16 @@ class NewDocumentWidget extends StatelessWidget {
 
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       emptyDocument(),
-      GeneralUtils.verticalSpacer(10),
+      GeneralUtils().verticalSpacer(10),
       Text(
         headerLabel!,
-        style: FontTheme.labelStyle1(isBold: true,fontSize: 16,color: ColorsTheme.black),
+        style: FontTheme.labelStyle1(status: "thin",fontSize: 16,color: ColorsTheme.black),
         textAlign: TextAlign.center,
       ),
-      GeneralUtils.verticalSpacer(17),
+      GeneralUtils().verticalSpacer(17),
       Text(
         descLabel!,
-        style: FontTheme.labelStyle1(isBold: false,fontSize: 14,color: ColorsTheme.black),
+        style: FontTheme.labelStyle1(status: "thin",fontSize: 14,color: ColorsTheme.black),
         textAlign: TextAlign.center,
       ),
     ]);

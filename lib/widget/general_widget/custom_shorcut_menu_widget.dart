@@ -5,22 +5,18 @@ class CustomShortcutMenuWidget extends StatelessWidget {
   List<String>? itemMenuLabelList;
   List<String>? itemMenuActionList;
   int? itemMenuHeight;
+  Function(int index)? callback;
 
   CustomShortcutMenuWidget({
     required this.userInformation,
     required this.itemMenuLabelList,
     required this.itemMenuActionList,
     required this.itemMenuHeight,
+    required this.callback,
   });
 
   @override
   Widget build(BuildContext context) {
-    comingSoonAlert() => ScaffoldMessenger.of(context).showSnackBar(
-          GeneralUtils.alertSnackbar(
-            label: "Coming Soon",
-            color: ColorsTheme.grey,
-          ),
-        );
 
     itemMenuList() => SizedBox(
           height: itemMenuHeight!.h,
@@ -38,25 +34,20 @@ class CustomShortcutMenuWidget extends StatelessWidget {
               isRoundedShape: false,
               width: 51,
               height: 51,
-              action: () => itemMenuActionList![index] != ""
-                  ? Navigator.pushNamed(
-                      context,
-                      itemMenuActionList![index],
-                    )
-                  : comingSoonAlert(),
+              action: () => callback!(index)
             ),
           ),
         );
 
     return Card(
-      shape: GeneralUtils.customDecoration(),
+      shape: GeneralUtils().customDecoration(),
       color: ColorsTheme.yellowSoft,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
         child: Column(
           children: [
             userInformation!,
-            GeneralUtils.customCardLiner(
+            GeneralUtils().customCardLiner(
               color: ColorsTheme.green,
               verticalPad: 9.h,
               horizontalPad: 14.w,

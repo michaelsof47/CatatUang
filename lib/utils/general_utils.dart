@@ -1,29 +1,30 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
+  String baseUrl = "https://7e101cceab5d.ngrok-free.app";
 
-  static horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
+  horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 
-  static verticalSpacer(double? amount) => SizedBox(height: amount!.h);
+  verticalSpacer(double? amount) => SizedBox(height: amount!.h);
 
-  static allAroundPadding(double? verticalAmount, double? horizontalAmount) =>
+  allAroundPadding(double? verticalAmount, double? horizontalAmount) =>
       EdgeInsets.symmetric(
           vertical: verticalAmount!.h, horizontal: horizontalAmount!.w);
 
-  static fromHTBPadding({double? h, double? t, double? b}) =>
+  fromHTBPadding({double? h, double? t, double? b}) =>
       EdgeInsets.fromLTRB(h!.w, t!.h, h.w, b!.h);
 
-  static symmetricPadding({double? v, double? h}) =>
+  symmetricPadding({double? v, double? h}) =>
       EdgeInsets.symmetric(vertical: v!.h, horizontal: h!.w);
 
-  static underlineBorder() => UnderlineInputBorder(
+  underlineBorder() => UnderlineInputBorder(
         borderSide: BorderSide(
           color: ColorsTheme.green,
           width: 2.w,
         ),
       );
 
-  static outlineBorder(borderColor) => OutlineInputBorder(
+  outlineBorder(borderColor) => OutlineInputBorder(
         borderSide: BorderSide(
           color: borderColor,
           width: 2.w,
@@ -31,25 +32,27 @@ class GeneralUtils {
         borderRadius: BorderRadius.circular(10.r),
       );
 
-  static underlineDecorationType(label, bool? isPasswordVisible,
+  underlineDecorationType(label, bool? isPasswordVisible,
           VoidCallback? onPasswordVisible, bool? isPassword) =>
       InputDecoration(
-        border: GeneralUtils.underlineBorder(),
-        enabledBorder: GeneralUtils.underlineBorder(),
+        border: underlineBorder(),
+        enabledBorder: underlineBorder(),
         contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
         hintText: label,
         fillColor: ColorsTheme.white,
         hintStyle: FontTheme.labelHintStyle1(false),
-        suffixIcon: isPassword! ? IconButton(
-          icon: Icon(
-            isPasswordVisible! ? Icons.visibility_off : Icons.visibility,
-            color: ColorsTheme.green,
-          ),
-          onPressed: () => onPasswordVisible!(),
-        ) : null,
+        suffixIcon: isPassword!
+            ? IconButton(
+                icon: Icon(
+                  isPasswordVisible! ? Icons.visibility_off : Icons.visibility,
+                  color: ColorsTheme.green,
+                ),
+                onPressed: () => onPasswordVisible!(),
+              )
+            : null,
       );
 
-  static searchDecorationType(label, color) => InputDecoration(
+  searchDecorationType(label, color) => InputDecoration(
         border: InputBorder.none,
         contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
         hintText: label,
@@ -61,9 +64,9 @@ class GeneralUtils {
         ),
       );
 
-  static currencyUnderlineDecoType(label, currencyFormat) => InputDecoration(
-      border: GeneralUtils.underlineBorder(),
-      enabledBorder: GeneralUtils.underlineBorder(),
+  currencyUnderlineDecoType(label, currencyFormat) => InputDecoration(
+      border: underlineBorder(),
+      enabledBorder: underlineBorder(),
       contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
       hintText: label,
       hintStyle: FontTheme.labelHintStyle1(false),
@@ -73,13 +76,13 @@ class GeneralUtils {
         child: Text(
           currencyFormat,
           style: FontTheme.labelStyle1(
-              isBold: true, fontSize: 12, color: ColorsTheme.black),
+              status: "bold", fontSize: 12, color: ColorsTheme.black),
         ),
       ));
 
-  static borderedDecorationType(label) => InputDecoration(
-        border: GeneralUtils.outlineBorder(ColorsTheme.white),
-        enabledBorder: GeneralUtils.outlineBorder(ColorsTheme.white),
+  borderedDecorationType(label) => InputDecoration(
+        border: outlineBorder(ColorsTheme.white),
+        enabledBorder: outlineBorder(ColorsTheme.white),
         contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
         hintText: label,
         filled: true,
@@ -87,7 +90,7 @@ class GeneralUtils {
         hintStyle: FontTheme.labelHintStyle1(false),
       );
 
-  static generalTextFormField({
+  generalTextFormField({
     TextEditingController? controller,
     String? label,
     bool? isFinalInput,
@@ -105,12 +108,19 @@ class GeneralUtils {
         readOnly: isEnabled! ? false : true,
         decoration: decoType == "underline"
             ? underlineDecorationType(
-                label,
-                isPasswordVisible,
-                onPasswordVisible,
-                isPassword)
+                label, isPasswordVisible, onPasswordVisible, isPassword)
             : borderedDecorationType(label),
         style: FontTheme.labelHintStyle1(true),
+        inputFormatters: isNumber! ?
+        [FilteringTextInputFormatter.digitsOnly, CustomCurrencyFormat()] : [],
+        onChanged: (value) {
+          if(isNumber) {
+            String cleanValue = value.replaceAll(RegExp(r'[^0-9]'),'');
+            int? intValue = int.tryParse(cleanValue);
+          } else {
+            //do nothing
+          }
+        },
         maxLines: 1,
         onFieldSubmitted: (value) =>
             decoType == "underline" ? {} : callback!(value),
@@ -121,7 +131,7 @@ class GeneralUtils {
         obscureText: isPassword! ? !isPasswordVisible! : false,
       );
 
-  static filterTextFormField({
+  filterTextFormField({
     TextEditingController? controller,
     String? label,
     bool? isFinalInput,
@@ -143,7 +153,7 @@ class GeneralUtils {
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
       );
 
-  static currencyTextFormField({
+  currencyTextFormField({
     TextEditingController? controller,
     String? label,
     bool? isFinalInput,
@@ -166,7 +176,7 @@ class GeneralUtils {
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
       );
 
-  static generalClickableTextFormField({
+  generalClickableTextFormField({
     TextEditingController? controller,
     String? label,
     bool? isFinalInput,
@@ -184,7 +194,7 @@ class GeneralUtils {
         style: FontTheme.labelHintStyle1(true),
       );
 
-  static multiTextFormField({
+  multiTextFormField({
     TextEditingController? controller,
     String? label,
     int? maxLines,
@@ -194,8 +204,8 @@ class GeneralUtils {
         controller: controller,
         cursorColor: ColorsTheme.green,
         decoration: InputDecoration(
-          border: GeneralUtils.outlineBorder(ColorsTheme.green),
-          enabledBorder: GeneralUtils.outlineBorder(ColorsTheme.green),
+          border: outlineBorder(ColorsTheme.green),
+          enabledBorder: outlineBorder(ColorsTheme.green),
           contentPadding:
               EdgeInsets.only(left: 8.w, top: 10.h, bottom: 10.h, right: 5.w),
           hintText: label,
@@ -208,18 +218,17 @@ class GeneralUtils {
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
       );
 
-  static alertSnackbar({required String? label, required Color? color}) =>
-      SnackBar(
+  alertSnackbar({required String? label, required Color? color}) => SnackBar(
         content: Text(label!,
             style: FontTheme.labelStyle1(
-                isBold: false, fontSize: 12, color: ColorsTheme.white)),
+                status: "thin", fontSize: 12, color: ColorsTheme.white)),
         backgroundColor: color!,
         duration: const Duration(seconds: 3),
         dismissDirection: DismissDirection.down,
         behavior: SnackBarBehavior.floating,
       );
 
-  static customCardLiner({
+  customCardLiner({
     Color? color,
     double? horizontalPad,
     double? verticalPad,
@@ -240,7 +249,7 @@ class GeneralUtils {
         ),
       );
 
-  static customHCardLiner({
+  customHCardLiner({
     Color? color,
     double? horizontalPad,
     double? verticalPad,
@@ -260,36 +269,96 @@ class GeneralUtils {
         ),
       );
 
-  static customDecoration() => RoundedRectangleBorder(
+  customDecoration() => RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.r),
       );
 
-  static customBottomSheet() => RoundedRectangleBorder(
+  customBottomSheet() => RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.r),
           topRight: Radius.circular(20.r),
         ),
       );
 
-  static customBoxStyle1() => BoxDecoration(
+  customBoxStyle1() => BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
         color: ColorsTheme.white,
       );
 
-  static customBoxStyleOnlyBorder() => BoxDecoration(
+  customBoxStyleOnlyBorder() => BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: ColorsTheme.green, width: 2.w),
       );
 
-  static customProgressLoading(context) => showDialog(
-    context: context,
-    barrierDismissible: true, 
-    builder: (BuildContext context) => Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 250.h),
-      backgroundColor: Colors.transparent,
-      elevation: 0.h,
-      child: Card(
-        child: Center(child: CircularProgressIndicator()),
-      )
-    ));
+  customProgressLoading(context) => showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) => Dialog(
+          insetPadding:
+              EdgeInsets.symmetric(horizontal: 100.w, vertical: 250.h),
+          backgroundColor: ColorsTheme.white,
+          elevation: 0.h,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+            side: BorderSide(color: ColorsTheme.yellow, width: 2.w),
+          ),
+          child: Center(child: CircularProgressIndicator())));
+
+  customAlertDialog(context, VoidCallback? callback) {
+    infoLabel(label) => Text(label,
+        style: FontTheme.labelStyle1(
+            status: "bold", fontSize: 14, color: ColorsTheme.black));
+
+    actionLabel(label, isYes, color) => GestureDetector(
+          onTap: () => isYes ? callback!() : Navigator.pop(context),
+          child: Text(label,
+              style: FontTheme.labelStyle1(
+                  status: "bold", fontSize: 14, color: color)),
+        );
+
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => Dialog(
+            insetPadding:
+                EdgeInsets.symmetric(horizontal: 20.w, vertical: 200.h),
+            backgroundColor: ColorsTheme.white,
+            elevation: 0.h,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.r),
+              side: BorderSide(color: ColorsTheme.yellow, width: 2.w),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              child: Column(children: [
+                infoLabel("Pemberitahuan"),
+                GeneralUtils().verticalSpacer(10),
+                SvgPicture.asset(
+                  'assets/icon/ic_alert.svg',
+                  semanticsLabel: 'ic_alert',
+                  width: 100.w,
+                  height: 100.h,
+                ),
+                GeneralUtils().verticalSpacer(10),
+                infoLabel("Apakah Anda Yakin Untuk Keluar ?"),
+                GeneralUtils().verticalSpacer(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                  actionLabel("Batal", false,ColorsTheme.redSoft),
+                  GeneralUtils().horizontalSpacer(10),
+                  actionLabel("Ya", true, ColorsTheme.green)
+                ])
+              ]),
+            )));
+  }
+
+  currencyFormat(int? value) => NumberFormat.currency(
+        locale: 'id_ID',
+        symbol: 'Rp. ',
+        decimalDigits: 0,
+      ).format(value);
+
+  dateTimeFormat(String? date) =>
+      DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date!));
 }

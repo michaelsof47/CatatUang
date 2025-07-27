@@ -6,11 +6,49 @@ class HomeDashboardPage extends StatefulWidget {
 }
 
 class HomeDashboardPageState extends State<HomeDashboardPage> {
+  //Global Datasets
   List<String>? itemMenuLabelList;
   List<String>? itemMenuActionList;
 
-  //LocationPackage? locationPackage;
-  //DashboardMessagePackage? dashboardMessagePackage;
+  //Global Variable
+  DashboardController? controller;
+  TransactionModel? transactionModel;
+  TextEditingController? inputController;
+  var alertStatus;
+  var locationLabel;
+  var userId;
+  var fullName;
+  var balanceAmount;
+  var transactionCount;
+  var isLoading;
+
+  //Global Props
+  showAlertSnackbar(String? label, bool? isSuccessful) =>
+      ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
+          label: label,
+          color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
+
+  showTopupBottomSheet() => showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: ColorsTheme.greenNature,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r))),
+        builder: (buildContext) => CustomBottomSheetInputFieldWidget(
+            inputController: inputController, callback: (String value) {
+              Navigator.pop(context);
+              isLoading.value = true;
+              inputController!.text = "";
+
+              String formattedData = value.replaceAll("Rp. ","");
+              String formattedData2 = formattedData.replaceAll(".","");
+
+              controller!.fetchTopupCtrl(formattedData2);
+              initData();
+            }, headerLabel: "Tambah Saldo", hintLabel: "Jumlah Saldo",isNumber: true),
+      );
 
   @override
   initState() {
@@ -21,23 +59,136 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   }
 
   initConstructor() {
-    itemMenuLabelList = ["Atur Proyeksi", "Atur Transaksi", "Analisa Keuangan"];
-    itemMenuActionList = ["/planner_form", "/transaction_page", ""];
+    itemMenuLabelList = ["Atur Rencana", "Analisa Keuangan", "Top Up"];
+    itemMenuActionList = ["/planner_form", "", "topup"];
 
-    //dashboardMessagePackage = Get.put(DashboardMessagePackage());
-    //locationPackage = Get.put(LocationPackage());
+    controller = Get.put(DashboardController());
+    alertStatus = "".obs;
+    locationLabel = "".obs;
+    userId = "".obs;
+    fullName = "".obs;
+    balanceAmount = 0.obs;
+    transactionCount = 0.obs;
+    isLoading = true.obs;
+    inputController = TextEditingController();
   }
 
   initData() async {
-    //await dashboardMessagePackage!.statusTiming();
-    //await locationPackage!.requestPermissions();
+    await controller!.fetchDashboardDataCtrl();
+    await controller!.fetchTransactionDataCtrl();
+    getLocationData();
+  }
+
+  Future<Position?> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      showAlertSnackbar("Layanan lokasi tidak aktif", false);
+      return null;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        showAlertSnackbar("Izin lokasi ditolak", false);
+        return null;
+      }
+    }
+
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  getLocationData() async {
+    Position? position = await getCurrentLocation();
+    if (position != null) {
+      print("Latitude: ${position.latitude}, Longitude: ${position.longitude}");
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+        localeIdentifier: "id_ID",
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        locationLabel.value =
+            "${place.subAdministrativeArea}, ${place.administrativeArea}";
+      }
+    } else {
+      showAlertSnackbar("Gagal mendapatkan lokasi", false);
+    }
+  }
+
+  String? getGreeting() {
+    var now = DateTime.now();
+
+    if (now.hour >= 5 && now.hour < 11) {
+      return "Selamat Pagi";
+    } else if (now.hour >= 11 && now.hour < 15) {
+      return "Selamat Siang";
+    } else if (now.hour >= 15 && now.hour < 18) {
+      return "Selamat Sore";
+    } else {
+      return "Selamat Malam";
+    }
+  }
+
+  Future<void> onLoadData() async {
+    isLoading.value = true;
+    await controller!.fetchDashboardDataCtrl();
+    await controller!.fetchTransactionDataCtrl();
+  }
+
+  Widget? handlingError() {
+    alertStatus.value = controller!.resultStatus.value;
+    var alertMessage = controller!.resultMsg.value;
+    var dataMap = controller!.dashboardData!;
+    var transactionMap = controller!.transactionData!;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      switch (alertStatus.value) {
+        case "jwt_expired":
+          showAlertSnackbar(alertMessage, false);
+          controller!.resetAccountCtrl();
+          Navigator.pushReplacementNamed(context, "/onboarding");
+          break;
+        case "dashboard_failure":
+          showAlertSnackbar(alertMessage, false);
+          break;
+        case "dashboard_success":
+          AccountModel accountModel = AccountModel.fromJson(dataMap);
+          userId.value = accountModel.id.toString();
+          fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
+          print("Balance Amount: ${controller!.balanceAmount.value}");
+          balanceAmount.value = controller!.balanceAmount.value;
+          break;
+        case "transaction_success":
+          isLoading.value = false;
+          transactionModel = TransactionModel.fromJson(transactionMap);
+          transactionCount.value = transactionModel!.count;
+          break;
+        case "transaction_failure":
+          isLoading.value = false;
+          transactionCount.value = 0;
+          break;
+        case "topup_success":
+          showAlertSnackbar(alertMessage, true);
+          break;
+      }
+
+      controller!.resetResponse();
+    });
+
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
-    ////////////////////////////////////////////
     ///CUSTOM SHORCUT MENU + SUMMARY BALANCES///
-    ////////////////////////////////////////////
 
     rewardIconStatus() => Container(
           width: 59.w,
@@ -58,13 +209,13 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
             Text(
               "Total Saldo Hari Ini",
               style: FontTheme.labelStyle1(
-                  isBold: true, fontSize: 13, color: ColorsTheme.black),
+                  status: "bold", fontSize: 13, color: ColorsTheme.black),
             ),
-            GeneralUtils.verticalSpacer(6),
+            GeneralUtils().verticalSpacer(6),
             Text(
-              "Rp. 250.000,00",
+              GeneralUtils().currencyFormat(balanceAmount.value),
               style: FontTheme.labelStyle1(
-                  isBold: true, fontSize: 24, color: ColorsTheme.black),
+                  status: "bold", fontSize: 24, color: ColorsTheme.black),
             ),
           ],
         );
@@ -75,12 +226,12 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
             Text(
               "Rangkuman Transaksi Terbaru",
               style: FontTheme.labelStyle1(
-                  isBold: true, fontSize: 10, color: ColorsTheme.black),
+                  status: "bold", fontSize: 10, color: ColorsTheme.black),
             ),
             Text(
-              "5 Transaksi/Bulan",
+              "${transactionCount.value} Transaksi/Bulan",
               style: FontTheme.labelStyle1(
-                  isBold: true, fontSize: 10, color: ColorsTheme.black),
+                  status: "bold", fontSize: 10, color: ColorsTheme.black),
             ),
           ],
         );
@@ -91,23 +242,19 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 balancesInformation(),
-                rewardIconStatus(),
+                //rewardIconStatus(),
               ],
             ),
-            GeneralUtils.verticalSpacer(11),
+            GeneralUtils().verticalSpacer(11),
             userTransactionLabel(),
           ],
         );
 
-    //////////////////////////////////////////////
-
-    ////////////////////////////////
-    ///CUSTOM LASTEST TRANSACTION///
-    ////////////////////////////////
+    ///CUSTOM LATEST TRANSACTION///
 
     headerLabel() => Text("Transaksi Terbaru Saat Ini",
         style: FontTheme.labelStyle1(
-            isBold: true, fontSize: 14, color: ColorsTheme.white));
+            status: "bold", fontSize: 14, color: ColorsTheme.white));
 
     iconTransaction() => Container(
           width: 70.w,
@@ -129,20 +276,23 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
               width: 110.w,
               child: Text(
                 label1,
-                style: FontTheme.labelStyle1(isBold: true,fontSize: 11, color: ColorsTheme.white),
+                style: FontTheme.labelStyle1(
+                    status: "bold", fontSize: 11, color: ColorsTheme.white),
               ),
             ),
-            GeneralUtils.horizontalSpacer(4),
+            GeneralUtils().horizontalSpacer(4),
             Text(
               ":",
-              style: FontTheme.labelStyle1(isBold: false,fontSize: 11, color: ColorsTheme.white),
+              style: FontTheme.labelStyle1(
+                  status: "thin", fontSize: 11, color: ColorsTheme.white),
             ),
-            GeneralUtils.horizontalSpacer(2),
+            GeneralUtils().horizontalSpacer(2),
             SizedBox(
               width: 115.w,
               child: Text(
                 label2,
-                style: FontTheme.labelStyle1(isBold: false,fontSize: 11, color: ColorsTheme.white),
+                style: FontTheme.labelStyle1(
+                    status: "thin", fontSize: 11, color: ColorsTheme.white),
               ),
             ),
           ],
@@ -152,26 +302,27 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             itemRowLabel(
-              "Tanggal Transaksi",
-              "06 Okt 2023 19:00 WIB",
+              "Tgl Transaksi",
+              GeneralUtils()
+                  .dateTimeFormat(transactionModel!.detailsItem![0].createdAt),
             ),
-            GeneralUtils.verticalSpacer(1),
+            GeneralUtils().verticalSpacer(1),
             itemRowLabel(
               "Nama Outlet",
-              "Hokky Klampis Indah",
+              transactionModel!.detailsItem![0].outletName,
             ),
-            GeneralUtils.verticalSpacer(1),
+            GeneralUtils().verticalSpacer(1),
             itemRowLabel(
-              "Total Pengeluaran",
-              "Rp. 270.000",
-            ),
+                "Total Outcome",
+                GeneralUtils().currencyFormat(
+                    transactionModel!.detailsItem![0].totalPrice)),
           ],
         );
 
     transactionInformationRow() => Row(
           children: [
             iconTransaction(),
-            GeneralUtils.horizontalSpacer(8),
+            GeneralUtils().horizontalSpacer(8),
             contentDescriptionInformation(),
           ],
         );
@@ -180,20 +331,29 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             headerLabel(),
-            GeneralUtils.customCardLiner(
+            GeneralUtils().customCardLiner(
               color: ColorsTheme.white,
               horizontalPad: 0.w,
               verticalPad: 3.h,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 3.h),
-              child: transactionInformationRow(),
-            )
+                padding: EdgeInsets.symmetric(
+                    vertical: transactionCount.value > 0 ? 3.h : 10.h),
+                child: transactionCount.value > 0
+                    ? transactionInformationRow()
+                    : Center(
+                        child: Text(
+                        "Tidak ada transaksi yang ditemukan",
+                        style: FontTheme.labelStyle1(
+                            status: "bold",
+                            fontSize: 12,
+                            color: ColorsTheme.white),
+                      )))
           ],
         );
 
     lastestTransactionCardComponent() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.green,
           child: Container(
             width: ScreenUtil().screenWidth,
@@ -202,15 +362,11 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           ),
         );
 
-    ////////////////////////////////
-
-    /////////////////////////////
     ///CUSTOM TIPS TRANSACTION///
-    /////////////////////////////
 
     headerLabel1() => Text("Financial Tips",
         style: FontTheme.labelStyle1(
-            isBold: true, fontSize: 14, color: ColorsTheme.black));
+            status: "bold", fontSize: 14, color: ColorsTheme.black));
 
     iconFinancial() => Container(
           width: 70.w,
@@ -232,7 +388,8 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
               width: 180.w,
               child: Text(
                 "Tips untuk mengelola keuangan secara efektif ? ",
-                style: FontTheme.labelStyle1(isBold: true,fontSize: 12, color: ColorsTheme.black),
+                style: FontTheme.labelStyle1(
+                    status: "bold", fontSize: 12, color: ColorsTheme.black),
               ),
             )
           ],
@@ -251,7 +408,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             headerLabel1(),
-            GeneralUtils.customCardLiner(
+            GeneralUtils().customCardLiner(
               color: ColorsTheme.green,
               horizontalPad: 0.w,
               verticalPad: 3.h,
@@ -264,7 +421,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
         );
 
     lastestFinancialTipsCardComponent() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: Container(
             width: ScreenUtil().screenWidth,
@@ -275,50 +432,65 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
 
     ////////////////////////////////
 
-    contentBody() => Column(
-          children: [
-            /*Obx(
-              () => CustomHeaderWidget(
-                fullName: "Michael Fernando",
-                location: locationPackage!.itemAddress.value,
-                conditionStatus: dashboardMessagePackage!.messageStatus.value,
-              ),
-            ),*/
-            GeneralUtils.verticalSpacer(40),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 80.h, top: 0.h),
-                child: Column(
-                  children: [
-                    CustomShortcutMenuWidget(
-                      userInformation: userInformation(),
-                      itemMenuLabelList: itemMenuLabelList,
-                      itemMenuActionList: itemMenuActionList,
-                      itemMenuHeight: 80,
-                    ),
-                    GeneralUtils.verticalSpacer(10),
-                    lastestTransactionCardComponent(),
-                    GeneralUtils.verticalSpacer(15),
-                    lastestFinancialTipsCardComponent(),
-                  ],
-                ),
-              ),
+    bodyContent() =>
+        CustomScrollView(physics: AlwaysScrollableScrollPhysics(), slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                isLoading.value
+                    ? CustomShimmerCardWidget(height: 100.h)
+                    : CustomShortcutMenuWidget(
+                        userInformation: userInformation(),
+                        itemMenuLabelList: itemMenuLabelList,
+                        itemMenuActionList: itemMenuActionList,
+                        itemMenuHeight: 85,
+                        callback: (index) => itemMenuActionList![index] != "" &&
+                                itemMenuActionList![index] != "topup"
+                            ? Navigator.pushNamed(
+                                context,
+                                itemMenuActionList![index],
+                              )
+                            : itemMenuActionList![index] == "topup"
+                                ? showTopupBottomSheet()
+                                : showAlertSnackbar("Coming Soon", true),
+                      ),
+                GeneralUtils().verticalSpacer(10),
+                isLoading.value
+                    ? CustomShimmerCardWidget(height: 50.h)
+                    : lastestTransactionCardComponent(),
+                GeneralUtils().verticalSpacer(15),
+                //lastestFinancialTipsCardComponent(),
+              ],
             ),
+          )
+        ]);
+
+    headerAndBodyWidget() => Column(
+          children: [
+            isLoading.value
+                ? CustomShimmerProfileWidget()
+                : CustomHeaderWidget(
+                    fullName: fullName.value,
+                    userId: userId.value,
+                    location: locationLabel.value,
+                    greeting: getGreeting()!),
+            GeneralUtils().verticalSpacer(15),
+            Expanded(
+              child:
+                  RefreshIndicator(onRefresh: onLoadData, child: bodyContent()),
+            )
           ],
         );
 
-    baseBody() => SafeArea(
-          child: Scaffold(
-            backgroundColor: ColorsTheme.transparent,
-            body: Padding(
-              padding: EdgeInsets.all(10.w),
-              child: contentBody(),
-            ),
-          ),
-        );
-
-    return Container(
-      child: baseBody(),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: ColorsTheme.transparent,
+        body: Padding(
+          padding: EdgeInsets.all(10.w),
+          child: Obx(
+              () => Stack(children: [headerAndBodyWidget(), handlingError()!])),
+        ),
+      ),
     );
   }
 }

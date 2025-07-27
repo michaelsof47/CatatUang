@@ -19,7 +19,7 @@ class CustomBottomSheetTwoActionWidget extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: Text(
             "Batal",
-            style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.redSoft),
+            style: FontTheme.labelStyle1(status: "thin",fontSize: 14, color: ColorsTheme.redSoft),
           ),
         );
 
@@ -28,7 +28,7 @@ class CustomBottomSheetTwoActionWidget extends StatelessWidget {
           children: [
             Text(
               "Opsi Pilih Tambah Dokumen",
-              style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(status: "thin",fontSize: 14, color: ColorsTheme.black),
             ),
             exitBottomSheet(),
           ],
@@ -58,7 +58,7 @@ class CustomBottomSheetTwoActionWidget extends StatelessWidget {
     contentBody() => Column(
           children: [
             headerLabel(),
-            GeneralUtils.verticalSpacer(20),
+            GeneralUtils().verticalSpacer(20),
             itemRow(),
           ],
         );

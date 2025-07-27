@@ -20,13 +20,13 @@ class CustomTransactionListWidget extends StatelessWidget {
   Widget build(context) {
     singleLineLabel({label, size, color}) => Text(
           label,
-          style: FontTheme.labelStyle1(isBold: true,fontSize: size,color: color),
+          style: FontTheme.labelStyle1(status: "bold",fontSize: size,color: color),
         );
 
     itemInfoLabel({label, isHeader}) => Text(
           label,
           style: FontTheme.labelStyle1(
-            isBold: isHeader ? true : false,
+            status: isHeader ? "bold" : "thin",
             fontSize: 11,
             color: ColorsTheme.black,
           ),
@@ -38,12 +38,12 @@ class CustomTransactionListWidget extends StatelessWidget {
             width: 105.w,
             child: itemInfoLabel(label: label, isHeader: true),
           ),
-          GeneralUtils.verticalSpacer(2),
+          GeneralUtils().verticalSpacer(2),
           SizedBox(
             width: 5.w,
             child: itemInfoLabel(label: label2, isHeader: true),
           ),
-          GeneralUtils.verticalSpacer(2),
+          GeneralUtils().verticalSpacer(2),
           SizedBox(
             width: 100.w,
             child: itemInfoLabel(label: label3, isHeader: false),
@@ -58,7 +58,7 @@ class CustomTransactionListWidget extends StatelessWidget {
               size: 14,
               color: ColorsTheme.black,
             ),
-            GeneralUtils.verticalSpacer(2),
+            GeneralUtils().verticalSpacer(2),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -67,13 +67,13 @@ class CustomTransactionListWidget extends StatelessWidget {
                   label2: ":",
                   label3: "Rp. 250.000,00",
                 ),
-                GeneralUtils.horizontalSpacer(1),
+                GeneralUtils().horizontalSpacer(1),
                 itemRowGroup(
                   label: "Items Termahal",
                   label2: ":",
                   label3: "Daia Detergen 1 Kg",
                 ),
-                GeneralUtils.horizontalSpacer(2),
+                GeneralUtils().horizontalSpacer(2),
                 itemRowGroup(
                   label: "Outlet",
                   label2: ":",
@@ -91,14 +91,14 @@ class CustomTransactionListWidget extends StatelessWidget {
           children: [
             Image.asset('assets/image/ic_dummy_outlet.png',
                 width: 66.w, height: 57.h),
-            GeneralUtils.horizontalSpacer(7),
+            GeneralUtils().horizontalSpacer(7),
             contentItemLabel(),
           ],
         ),
       ),
       totalData == lastIndex
           ? Container()
-          : GeneralUtils.customCardLiner(
+          : GeneralUtils().customCardLiner(
               color: ColorsTheme.green,
               horizontalPad: 0.w,
               verticalPad: 0.w,

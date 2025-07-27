@@ -9,13 +9,25 @@ class ProfilePageState extends State<ProfilePage> {
   List<String>? menuLabelList;
   List<IconData>? menuIconList;
 
-  LoginController? loginController;
+  DashboardController? controller;
+
+  var userId;
+  var fullName;
+  var rewardStatus;
+  var alertStatus;
+  var isLoading;
+
+  showAlertSnackbar(String? label, bool? isSuccessful) =>
+      ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
+          label: label,
+          color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
   @override
   void initState() {
     super.initState();
 
     initConstructor();
+    initData();
   }
 
   initConstructor() {
@@ -37,20 +49,64 @@ class ProfilePageState extends State<ProfilePage> {
       Icons.logout,
     ];
 
-    loginController = Get.put(LoginController());
+    controller = Get.put(DashboardController());
+
+    alertStatus = "".obs;
+    userId = "".obs;
+    fullName = "".obs;
+    rewardStatus = "".obs;
+    isLoading = true.obs;
+  }
+
+  initData() async {
+    await controller!.fetchDashboardDataCtrl();
   }
 
   logout() async {
-    await loginController!.storeLoginStatusController(false);
-    await loginController!.clearDataController();
-    Navigator.popAndPushNamed(context, '/login');
+
+    GeneralUtils().customAlertDialog(context,() async {
+      Navigator.pop(context);
+      GeneralUtils().customProgressLoading(context);
+      await controller!.fetchLogoutCtrl();
+    });
+  }
+
+  Widget? handlingError() {
+    alertStatus.value = controller!.resultStatus.value;
+    var alertMessage = controller!.resultMsg.value;
+    var dataMap = controller!.dashboardData!;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      switch (alertStatus.value) {
+        case "jwt_expired":
+          showAlertSnackbar(alertMessage, false);
+          controller!.resetAccountCtrl();
+          Navigator.pushReplacementNamed(context, "/onboarding");
+          break;
+        case "dashboard_failure":
+          showAlertSnackbar(alertMessage, false);
+          break;
+        case "dashboard_success":
+          isLoading.value = false;
+          AccountModel accountModel = AccountModel.fromJson(dataMap);
+          userId.value = accountModel.id.toString();
+          fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
+          rewardStatus.value = accountModel.rewardStatus;
+          break;
+        case "logout_success":
+          showAlertSnackbar(alertMessage, true);
+          Navigator.pushNamedAndRemoveUntil(context, '/onboarding', (route) => false);
+          break;
+      }
+      controller!.resetResponse();
+    });
+
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
-    ////////////////////////////////
     ///CORE INFORMATION COMPONENT///
-    ////////////////////////////////
 
     updateProfilAction() =>
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -58,22 +114,24 @@ class ProfilePageState extends State<ProfilePage> {
             onTap: () {},
             child: Text(
               "Ubah Profil",
-              style: FontTheme.labelStyle1(isBold: true,fontSize: 10, color: ColorsTheme.green),
+              style: FontTheme.labelStyle1(
+                  status: "bold", fontSize: 10, color: ColorsTheme.green),
             ),
           )
         ]);
 
     contentInformation() => Column(children: [
           CustomHeaderNoInfoTimeWidget(
-            fullName: "Michael Fernando",
-            statusInformation: "Novice",
+            fullName: fullName.value,
+            rewardStatus: rewardStatus.value,
+            userId: userId.value,
           ),
-          GeneralUtils.verticalSpacer(11),
+          GeneralUtils().verticalSpacer(11),
           updateProfilAction(),
         ]);
 
     informationComponent() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           elevation: 5.h,
           child: Container(
@@ -93,7 +151,8 @@ class ProfilePageState extends State<ProfilePage> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
             "Statistik Masuk / Keluar Dana",
-            style: FontTheme.labelStyle1(isBold: true,fontSize: 14,color: ColorsTheme.white),
+            style: FontTheme.labelStyle1(
+                status: "bold", fontSize: 14, color: ColorsTheme.white),
           ),
           SvgPicture.asset(
             'assets/icon/planner.svg',
@@ -104,7 +163,7 @@ class ProfilePageState extends State<ProfilePage> {
         ]);
 
     statisticActionComponent() => Card(
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.green,
         elevation: 5.h,
         child: InkWell(
@@ -121,7 +180,7 @@ class ProfilePageState extends State<ProfilePage> {
     //////////////////////////////
 
     menuListComponent() => Card(
-        shape: GeneralUtils.customDecoration(),
+        shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellowSoft,
         child: Container(
           width: ScreenUtil().screenWidth,
@@ -141,16 +200,18 @@ class ProfilePageState extends State<ProfilePage> {
     //////////////////////////////
 
     appbar() => PreferredSize(
-          preferredSize: Size.fromHeight(61.h),
+          preferredSize: Size.fromHeight(50.h),
           child: CustomAppBar(appLabel: "Profil"),
         );
 
-    contentBody() => Column(
+    contentBody() => isLoading.value
+      ? CustomShimmerCardWidget(height: 60.h)
+      : Column(
           children: [
             informationComponent(),
-            GeneralUtils.verticalSpacer(15),
+            GeneralUtils().verticalSpacer(15),
             statisticActionComponent(),
-            GeneralUtils.verticalSpacer(22),
+            GeneralUtils().verticalSpacer(22),
             menuListComponent(),
           ],
         );
@@ -158,8 +219,8 @@ class ProfilePageState extends State<ProfilePage> {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 29.h),
-          child: contentBody(),
+          padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 10.h),
+          child: Obx(() => Stack(children: [contentBody(), handlingError()!])),
         ),
         appBar: appbar(),
       ),

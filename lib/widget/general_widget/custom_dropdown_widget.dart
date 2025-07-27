@@ -4,7 +4,7 @@ class CustomDropdownWidget extends StatelessWidget {
   List<String>? itemMenuLabelFilter;
   Function(String? value) callback;
   String? initialValue;
-  customStyle() => FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black);
+  customStyle() => FontTheme.labelStyle1(status:"thin",fontSize: 14, color: ColorsTheme.black);
 
   CustomDropdownWidget({
     required this.itemMenuLabelFilter,
@@ -27,7 +27,7 @@ class CustomDropdownWidget extends StatelessWidget {
         .map(
           (value) => Row(children: [
             Text(value, style: customStyle()),
-            GeneralUtils.horizontalSpacer(10.w),
+            GeneralUtils().horizontalSpacer(10.w),
           ]),
         )
         .toList();

@@ -10,7 +10,6 @@ class ColorsTheme {
   static Color yellow = const Color(0xffFDD835);
   static Color white = const Color(0xffFFFFFF);
   static Color grey = const Color(0xffBFBFBF);
-  static Color facebookColor = const Color(0xff1877F2);
   static Color googleColor = const Color(0xff4285F4);
   static Color yellowSoft = const Color(0xffF3F4CB);
   static Color yellowHard = const Color(0xffBBBC93);

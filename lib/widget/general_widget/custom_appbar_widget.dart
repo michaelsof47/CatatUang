@@ -13,7 +13,7 @@ class CustomAppBar extends StatelessWidget {
           width: 15.w,
           height: 25.h,
           child: InkWell(
-            onTap: () {},//=> HomeNavigationPage.of(context)!.backIntoHome(0),
+            onTap: () => HomeNavigationPage.of(context)!.backIntoHome(0),
             child: SvgPicture.asset(
               'assets/icon/ic_nav_back.svg',
               semanticsLabel: 'ic_nav_back',
@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget {
     normalNavBack() => Row(
           children: [
             iconNavBack(),
-            GeneralUtils.horizontalSpacer(13),
+            GeneralUtils().horizontalSpacer(13),
             Text(
               appLabel,
               style: FontTheme.navigationHeaderLabel(),
@@ -43,11 +43,11 @@ class CustomAppBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(Icons.money, color: ColorsTheme.black),
-              GeneralUtils.horizontalSpacer(7),
+              GeneralUtils().horizontalSpacer(7),
               Text(
                 "Rp. 250.000",
                 style: FontTheme.labelStyle1(
-                    isBold: true, fontSize: 12, color: ColorsTheme.black),
+                    status: "bold", fontSize: 12, color: ColorsTheme.black),
               )
             ],
           ),

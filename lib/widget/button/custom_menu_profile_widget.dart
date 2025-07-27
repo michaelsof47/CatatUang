@@ -28,10 +28,10 @@ class CustomMenuProfileWidget extends StatelessWidget {
 
     itemRow() => Row(children: [
           icon1(),
-          GeneralUtils.horizontalSpacer(7),
+          GeneralUtils().horizontalSpacer(7),
           Text(
             label,
-            style: FontTheme.labelStyle1(isBold: true,fontSize: 14,
+            style: FontTheme.labelStyle1(status: "bold",fontSize: 14,
                 color: label == "Keluar" ? ColorsTheme.redSoft : ColorsTheme.black),
           ),
         ]);
@@ -57,7 +57,7 @@ class CustomMenuProfileWidget extends StatelessWidget {
           child: contentItem(),
         ),
       ),
-      GeneralUtils.customCardLiner(
+      GeneralUtils().customCardLiner(
         color: ColorsTheme.grey,
         horizontalPad: 0.w,
         verticalPad: 0.h,

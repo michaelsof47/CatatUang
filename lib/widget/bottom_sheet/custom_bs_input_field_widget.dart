@@ -3,10 +3,16 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomBottomSheetInputFieldWidget extends StatelessWidget {
   TextEditingController? inputController;
   Function(String value)? callback;
+  String? headerLabel;
+  String? hintLabel;
+  bool? isNumber;
 
   CustomBottomSheetInputFieldWidget({
     required this.callback,
     required this.inputController,
+    required this.headerLabel,
+    required this.hintLabel,
+    required this.isNumber,
   });
 
   @override
@@ -15,16 +21,16 @@ class CustomBottomSheetInputFieldWidget extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: Text(
             "Batal",
-            style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.redSoft),
+            style: FontTheme.labelStyle1(status: "thin",fontSize: 14, color: ColorsTheme.redSoft),
           ),
         );
 
-    headerLabel() => Row(
+    headerContent() => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Tambah Buku Proyeksi",
-              style: FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black),
+              headerLabel!,
+              style: FontTheme.labelStyle1(status: "regular",fontSize: 14, color: ColorsTheme.black),
             ),
             exitBottomSheet(),
           ],
@@ -33,27 +39,27 @@ class CustomBottomSheetInputFieldWidget extends StatelessWidget {
     contentBody() => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            headerLabel(),
-            GeneralUtils.verticalSpacer(5),
+            headerContent(),
+            GeneralUtils().verticalSpacer(5),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 5.h),
-              child: GeneralUtils.generalTextFormField(
+              child: GeneralUtils().generalTextFormField(
                 controller: inputController,
-                label: "Nama Buku Proyeksi",
+                label: hintLabel,
                 isEnabled: true,
                 isFinalInput: true,
                 decoType: "bordered",
-                isNumber: false,
+                isNumber: isNumber,
                 callback: (value) {
-                  Navigator.pop(context);
-                  callback!(inputController!.text);
+                  print("data dari selesai : $value");
+                  callback!(value);
                 },
+                isPassword: false,
               ),
             ),
-            GeneralUtils.verticalSpacer(5),
+            GeneralUtils().verticalSpacer(5),
             CustomSingleButtonWidget(
                 actionCallback: () {
-                  Navigator.pop(context);
                   callback!(inputController!.text);
                 },
                 hintLabel: "Simpan"),
@@ -64,7 +70,7 @@ class CustomBottomSheetInputFieldWidget extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(
           12.w, 23.h, 20.w, MediaQuery.of(context).viewInsets.bottom),
       child: SizedBox(
-        height: 160.h,
+        height: 130.h,
         child: contentBody(),
       ),
     );

@@ -7,7 +7,7 @@ class LoginController extends GetxController {
 
   var resultMsg;
   var resultStatus;
-  RxMap<dynamic,dynamic> dataMap = {}.obs;
+  RxMap<dynamic,dynamic>? dataMap;
 
   LoginController() {
     firebaseAuth = FirebaseAuth.instance;
@@ -16,6 +16,7 @@ class LoginController extends GetxController {
 
     resultMsg = "".obs;
     resultStatus = "".obs;
+    dataMap = {}.obs;
   }
 
   void resetResponse() {
@@ -23,19 +24,8 @@ class LoginController extends GetxController {
     resultStatus.value = "";
   }
 
-  storeLoginStatusController(loginStatus) async =>
-      await localManager!.storedLoginStatusAccount(loginStatus);
-
   retrieveLoginStatusController() async =>
       await localManager!.retrieveLoginStatus();
-
-  storeDevelopmentRoleStatusController(roleStatus) async {}
-  //=> await localManager!.storedDevelopmentRoleStatus(roleStatus);
-
-  retrieveDevelopmentRoleStatusController() async {}
-  //=> await localManager!.retrieveDevelopmentRoleStatus();
-
-  clearDataController() async {} //=> await localManager!.clearData();
 
   //BUSINESS LOGIC SOCIAL MEDIA LOGIN//
   Future requestGoogleSignIn() async {
@@ -75,10 +65,19 @@ class LoginController extends GetxController {
 
     if(responseData["status_code"] == 200) {
       if(responseData["data"]["message"] == "Silahkan Masuk") {
+        LoginModel dataModel = LoginModel.fromJson(responseData["data"]);
+        
+        Map<String,dynamic>? dataUser = {
+          "user_id": dataModel.userId,
+          "token": dataModel.token,
+        };
+
+        localManager!.storedTokenAndUserIdAccount(map: dataUser);
+        localManager!.storedLoginStatusAccount(true);
         resultStatus.value = "success_login";
       } else {
         resultStatus.value = "success_register";
-        dataMap.value = data;
+        dataMap!.value = data;
       }
     } else {
       resultStatus.value = "failure_google";
@@ -92,8 +91,15 @@ class LoginController extends GetxController {
       if(responseData["status_code"] == 200) {
         LoginModel data = LoginModel.fromJson(responseData["data"]);
         print("data success : ${data.token}");
+
+        Map<String,dynamic>? dataUser = {
+          "user_id": data.userId,
+          "token": data.token,
+        };
+
+        localManager!.storedTokenAndUserIdAccount(map: dataUser);
+        localManager!.storedLoginStatusAccount(true);
         resultStatus.value = "success";
-        resultMsg.value = "Berhasil Login.";
       } else {
         print("data failure: ${responseData["data"]}");
         resultStatus.value = "failure";
@@ -108,6 +114,14 @@ class LoginController extends GetxController {
     if(responseData["status_code"] == 201) {
       LoginModel dataModel = LoginModel.fromJson(responseData["data"]);
       print("data success : ${dataModel.token}");
+
+      Map<String,dynamic>? dataUser = {
+        "user_id": dataModel.userId,
+        "token": dataModel.token,
+      };
+
+      localManager!.storedTokenAndUserIdAccount(map: dataUser);
+      localManager!.storedLoginStatusAccount(true);
       resultStatus.value = "success_register";
     } else {
       print("data failure: ${responseData["data"]}");

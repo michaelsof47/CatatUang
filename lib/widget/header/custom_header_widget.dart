@@ -3,82 +3,91 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomHeaderWidget extends StatefulWidget {
   final String? fullName;
   final String? location;
-  final String? conditionStatus;
+  final String? greeting;
+  final String? userId;
 
   CustomHeaderWidget({
     required this.fullName,
+    required this.userId,
     required this.location,
-    required this.conditionStatus,
+    required this.greeting,
   });
 
   State<CustomHeaderWidget> createState() => CustomHeaderWidgetState();
 }
 
 class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
+
+  var showGreeting = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration(seconds: 3), () {
+      if(mounted) {
+        setState(() => showGreeting = false);
+      }
+    });
+  }
+
   @override
   build(context) {
-    profileIcon() => Container(
-          width: 51.w,
-          height: 51.h,
-          decoration: BoxDecoration(
-            border: Border.all(color: ColorsTheme.yellowHard, width: 3.w),
-            image: const DecorationImage(
-              image: AssetImage('assets/image/icon2.jpg'),
-              fit: BoxFit.fill,
-            ),
-            shape: BoxShape.circle,
-          ),
-        );
 
-    userInformation() => Row(
-          children: [
-            profileIcon(),
-            GeneralUtils.horizontalSpacer(7),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 120.w,
-                  child: Text(
-                    "${widget.conditionStatus},",
-                    style:
-                        FontTheme.labelStyle1(isBold: false,fontSize: 14, color: ColorsTheme.black),
-                  ),
-                ),
-                SizedBox(
-                  width: 100.w,
-                  child: Text(
-                    "Michael Fernando",
-                    style:
-                        FontTheme.labelStyle1(isBold: true,fontSize: 16, color: ColorsTheme.black),
-                  ),
-                ),
-              ],
-            )
-          ],
-        );
+    String firstLetter = widget.fullName!.isNotEmpty ? widget.fullName![0].toUpperCase() : '';
+
+    emptyImageProfile() => Text(
+            firstLetter,
+            style: FontTheme.labelStyle1(status: "thin", fontSize: 20, color: ColorsTheme.white),
+          );
+
+    profileIcon() => CircleAvatar(
+      radius: 35.r,
+      backgroundColor: ColorsTheme.green,
+      child: widget.userId != null ? ClipOval(
+        child: Image.network(
+          "${GeneralUtils().baseUrl}/user/${widget.userId}/profile_picture",
+          width: 70.w,
+          height: 70.h,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => emptyImageProfile(),
+        ),
+      ) : emptyImageProfile(),
+    );
 
     currentTimeAndLocation() =>
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          SizedBox(
-            width: 135.w,
-            child: Text(
-              "${widget.location}",
-              style: FontTheme.labelStyle1(isBold: true,fontSize: 12, color: ColorsTheme.black),
-              textAlign: TextAlign.end,
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 5000),
+            transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+            child: SizedBox(
+              width: 200.w,
+              child: showGreeting ? Text(
+                key: const ValueKey<bool>(true),
+                widget.greeting!,
+                style: FontTheme.labelStyle1(status: "bold",fontSize: 15, color: ColorsTheme.black),
+                textAlign: TextAlign.end,
+              ) : Text(
+                key: const ValueKey<bool>(false),
+                widget.location!,
+                style: FontTheme.labelStyle1(status: "bold",fontSize: 15, color: ColorsTheme.black),
+                textAlign: TextAlign.end,
+              ),
             ),
           ),
           Text(
             DateFormat("HH:mm").format(DateTime.now()),
-            style: FontTheme.labelStyle1(isBold: true,fontSize: 30,color: ColorsTheme.black),
+            style: FontTheme.labelStyle1(status: "bold",fontSize: 35,color: ColorsTheme.black),
           ),
         ]);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        userInformation(),
+        Padding(
+          padding: EdgeInsets.only(left: 10.w, top: 10.h),
+          child: profileIcon(),
+        ),
         currentTimeAndLocation(),
       ],
     );

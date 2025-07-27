@@ -35,10 +35,10 @@ class CustomMenuButton extends StatelessWidget {
 
     contentBody() => Column(children: [
           contentIcon(),
-          GeneralUtils.verticalSpacer(5),
+          GeneralUtils().verticalSpacer(5),
           Text(
             menuLabel!,
-            style: FontTheme.labelStyle1(isBold: true,fontSize: 11,color: ColorsTheme.black),
+            style: FontTheme.labelStyle1(status: "bold",fontSize: 11,color: ColorsTheme.black),
             textAlign: TextAlign.center,
           ),
         ]);

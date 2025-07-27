@@ -10,19 +10,19 @@ class CustomBorderFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     baseHeader() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellow,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
             child: Text(
               "Informasi Utama",
-              style: FontTheme.labelStyle1(isBold: true,fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
             ),
           ),
         );
 
     baseBackground() => Card(
-          shape: GeneralUtils.customDecoration(),
+          shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: Padding(
             padding: EdgeInsets.fromLTRB(15.w, 24.h, 15.w, 5.h),

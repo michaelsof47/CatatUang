@@ -19,7 +19,7 @@ class CustomLoginFormButtonWidget extends StatelessWidget {
     Color? labelColor = isSocMed! ? ColorsTheme.white : ColorsTheme.black;
 
     TextStyle? fontTheme = FontTheme.labelStyle1(
-        isBold: isBold, fontSize: size!, color: labelColor);
+        status: "bold", fontSize: size!, color: labelColor);
 
     return Text(label!, style: fontTheme);
   }
@@ -51,7 +51,7 @@ class CustomLoginFormButtonWidget extends StatelessWidget {
       child: Row(children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(5.r), child: brandingLogo()),
-          GeneralUtils.horizontalSpacer(35),
+          GeneralUtils().horizontalSpacer(35),
           childLabelContent(
               label: "Masuk Dengan $socialmedLabel", isSocMed: true)!
         ]),
@@ -64,7 +64,7 @@ class CustomLoginFormButtonWidget extends StatelessWidget {
     buttonContent() => Container(
           width: ScreenUtil().screenWidth,
           height: 39.h,
-          padding: GeneralUtils.allAroundPadding(paddingWidth, 0),
+          padding: GeneralUtils().allAroundPadding(paddingWidth, 0),
           child: status == "custom" ? socialmedContent() : generalContent(),
         );
 

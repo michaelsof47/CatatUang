@@ -2,13 +2,17 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class FontTheme {
   static labelStyle1({
-    required bool? isBold,
+    required String status,
     required int? fontSize,
     required Color? color,
   }) =>
       GoogleFonts.mulish(
         fontSize: fontSize!.sp,
-        fontWeight: (isBold!) ? FontWeight.w800 : FontWeight.w300,
+        fontWeight: (status == "bold")
+            ? FontWeight.w800
+            : (status == "regular")
+                ? FontWeight.w500
+                : FontWeight.w300,
         color: color,
       );
 

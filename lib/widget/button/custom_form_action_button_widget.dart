@@ -16,7 +16,7 @@ class CustomFormActionButtonWidget extends StatelessWidget {
             actionCallback: () => Navigator.pop(context),
             hintLabel: "Batal",
           ),
-          GeneralUtils.horizontalSpacer(20),
+          GeneralUtils().horizontalSpacer(20),
           CustomSingleButtonWidget(
             actionCallback: () => callback!,
             hintLabel: labelAction,
