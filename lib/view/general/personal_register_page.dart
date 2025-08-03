@@ -30,78 +30,6 @@ class RegisterUserPageState extends State<RegisterUserPage> {
           label: label,
           color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
-  uploadProfileBottomSheet() {
-    contentText(isBold, desc) => TextSpan(
-        text: desc,
-        style: FontTheme.labelStyle1(
-            status: isBold, fontSize: 18, color: ColorsTheme.black));
-
-    itemOnClick(label) => Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Card(
-              shape: LayoutTheme.allRoundedRect(radius: 10),
-              color: ColorsTheme.googleColor,
-              child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImageFunction(label == "Camera");
-                  },
-                  child: SizedBox(
-                      width: 71.w,
-                      height: 51.h,
-                      child: Icon(
-                          label == "Camera" ? Icons.camera_alt : Icons.image,
-                          size: 30.w,
-                          color: ColorsTheme.white))),
-            ),
-            SizedBox(height: 10.h),
-            Text(
-              label,
-              style: FontTheme.labelStyle1(
-                  status: "thin", fontSize: 14, color: ColorsTheme.black),
-            )
-          ],
-        );
-
-    actionBottomSheet() => Padding(
-          padding: EdgeInsets.fromLTRB(28.w, 10.h, 28.w, 10.h),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [itemOnClick("Camera"), itemOnClick("Galeri")]),
-        );
-
-    contentBottomSheet() => Container(
-          height: 160.h,
-          padding: EdgeInsets.fromLTRB(10.w, 15.h, 10.w, 0.h),
-          child: Column(
-            children: [
-              RichText(
-                  text: TextSpan(children: [
-                contentText("thin", "Pilih opsi untuk upload "),
-                contentText("bold", "foto profilmu"),
-              ])),
-              actionBottomSheet(),
-              InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Text("Kembali",
-                      style: FontTheme.labelStyle1(
-                          status: "bold",
-                          fontSize: 12,
-                          color: ColorsTheme.black)))
-            ],
-          ),
-        );
-
-    return showModalBottomSheet(
-      context: context,
-      shape: LayoutTheme.allRoundedRect(radius: 10),
-      builder: (context) => contentBottomSheet(),
-      isDismissible: true,
-      backgroundColor: ColorsTheme.yellowSoft,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -114,8 +42,9 @@ class RegisterUserPageState extends State<RegisterUserPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if(ModalRoute.of(context)!.settings.arguments is Map<dynamic,dynamic>) {
-      final Map<dynamic,dynamic> data = ModalRoute.of(context)!.settings.arguments as Map<dynamic,dynamic>;
+    if (ModalRoute.of(context)!.settings.arguments is Map<dynamic, dynamic>) {
+      final Map<dynamic, dynamic> data =
+          ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
 
       emailInputCtrl!.text = data["email"];
       firstnameInputCtrl!.text = data["firstname"];
@@ -231,8 +160,9 @@ class RegisterUserPageState extends State<RegisterUserPage> {
         : const NeverScrollableScrollPhysics();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(wasKeyboardOpen.value && !isKeyboardOpen) {
-        scrollController!.animateTo(0.0,duration: const Duration(milliseconds: 100),curve: Curves.easeOut);
+      if (wasKeyboardOpen.value && !isKeyboardOpen) {
+        scrollController!.animateTo(0.0,
+            duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
       }
       wasKeyboardOpen.value = isKeyboardOpen;
     });
@@ -383,7 +313,9 @@ class RegisterUserPageState extends State<RegisterUserPage> {
                 borderRadius: BorderRadius.circular(10.r)),
             color: ColorsTheme.green,
             child: InkWell(
-                onTap: () => uploadProfileBottomSheet(),
+                onTap: () => GeneralUtils().uploadProfileBottomSheet(
+                    context: context,
+                    callback: (label) => pickImageFunction(label == "Camera")),
                 child: imageFile == null
                     ? Container(
                         width: 80.w,

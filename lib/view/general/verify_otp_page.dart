@@ -85,7 +85,7 @@ class VerifyOTPPageState extends State<VerifyOTPPage> {
             child: Container(
               width: ScreenUtil().screenWidth,
               height: 39.h,
-              padding: GeneralUtils().allAroundPadding(11, 0),
+              padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 0.h),
               child: Center(
                 child: Text(
                   "Lanjut",
@@ -113,7 +113,7 @@ class VerifyOTPPageState extends State<VerifyOTPPage> {
     contentBody() => SafeArea(
           child: Scaffold(
               body: Padding(
-            padding: GeneralUtils().allAroundPadding(15, 18),
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 18.h),
             child: contentWrapBody(),
           )),
         );

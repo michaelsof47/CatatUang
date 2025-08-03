@@ -3,12 +3,14 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
   final String? fullName;
   final String? rewardStatus;
-  final String? userId;
+  String? imageUrl;
+  Key? headerKey;
 
   CustomHeaderNoInfoTimeWidget({
     required this.fullName,
     required this.rewardStatus,
-    required this.userId,
+    required this.imageUrl,
+    required this.headerKey,
   });
 
   @override
@@ -22,13 +24,16 @@ class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
               status: "thin", fontSize: 20, color: ColorsTheme.white),
         );
 
-    profileIcon() => CircleAvatar(
+    profileIcon() => GeneralUtils().avatarBorder(
+      child: CircleAvatar(
           radius: 26.r,
           backgroundColor: ColorsTheme.green,
-          child: userId != null
-              ? ClipOval(
+          child: imageUrl != ""
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(26.r),
                   child: Image.network(
-                    "${GeneralUtils().baseUrl}/user/$userId/profile_picture",
+                    key: headerKey,
+                    imageUrl!,
                     width: 51.w,
                     height: 51.h,
                     fit: BoxFit.cover,
@@ -37,7 +42,8 @@ class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
                   ),
                 )
               : emptyImageProfile(),
-        );
+        )
+    );
 
     accountInformation() => Row(children: [
           Text(

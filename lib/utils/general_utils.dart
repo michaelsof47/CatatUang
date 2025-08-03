@@ -1,21 +1,23 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
-  String baseUrl = "https://7e101cceab5d.ngrok-free.app";
+  String baseUrl = "https://8079e154a022.ngrok-free.app";
 
   horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 
   verticalSpacer(double? amount) => SizedBox(height: amount!.h);
 
-  allAroundPadding(double? verticalAmount, double? horizontalAmount) =>
-      EdgeInsets.symmetric(
-          vertical: verticalAmount!.h, horizontal: horizontalAmount!.w);
-
   fromHTBPadding({double? h, double? t, double? b}) =>
       EdgeInsets.fromLTRB(h!.w, t!.h, h.w, b!.h);
 
-  symmetricPadding({double? v, double? h}) =>
-      EdgeInsets.symmetric(vertical: v!.h, horizontal: h!.w);
+  avatarBorder({Widget? child}) => Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: ColorsTheme.green,
+            width: 2.w,
+          )),
+      child: child);
 
   underlineBorder() => UnderlineInputBorder(
         borderSide: BorderSide(
@@ -111,11 +113,12 @@ class GeneralUtils {
                 label, isPasswordVisible, onPasswordVisible, isPassword)
             : borderedDecorationType(label),
         style: FontTheme.labelHintStyle1(true),
-        inputFormatters: isNumber! ?
-        [FilteringTextInputFormatter.digitsOnly, CustomCurrencyFormat()] : [],
+        inputFormatters: isNumber!
+            ? [FilteringTextInputFormatter.digitsOnly, CustomCurrencyFormat()]
+            : [],
         onChanged: (value) {
-          if(isNumber) {
-            String cleanValue = value.replaceAll(RegExp(r'[^0-9]'),'');
+          if (isNumber) {
+            String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
             int? intValue = int.tryParse(cleanValue);
           } else {
             //do nothing
@@ -342,10 +345,8 @@ class GeneralUtils {
                 GeneralUtils().verticalSpacer(10),
                 infoLabel("Apakah Anda Yakin Untuk Keluar ?"),
                 GeneralUtils().verticalSpacer(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                  actionLabel("Batal", false,ColorsTheme.redSoft),
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  actionLabel("Batal", false, ColorsTheme.redSoft),
                   GeneralUtils().horizontalSpacer(10),
                   actionLabel("Ya", true, ColorsTheme.green)
                 ])
@@ -361,4 +362,76 @@ class GeneralUtils {
 
   dateTimeFormat(String? date) =>
       DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date!));
+
+  uploadProfileBottomSheet({required BuildContext context,required Function(String)? callback}) {
+    contentText(isBold, desc) => TextSpan(
+        text: desc,
+        style: FontTheme.labelStyle1(
+            status: isBold, fontSize: 18, color: ColorsTheme.black));
+
+    itemOnClick(label) => Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Card(
+              shape: LayoutTheme.allRoundedRect(radius: 10),
+              color: ColorsTheme.googleColor,
+              child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    callback!(label);
+                  },
+                  child: SizedBox(
+                      width: 71.w,
+                      height: 51.h,
+                      child: Icon(
+                          label == "Camera" ? Icons.camera_alt : Icons.image,
+                          size: 30.w,
+                          color: ColorsTheme.white))),
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              label,
+              style: FontTheme.labelStyle1(
+                  status: "thin", fontSize: 14, color: ColorsTheme.black),
+            )
+          ],
+        );
+
+    actionBottomSheet() => Padding(
+          padding: EdgeInsets.fromLTRB(28.w, 10.h, 28.w, 10.h),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [itemOnClick("Camera"), itemOnClick("Galeri")]),
+        );
+
+    contentBottomSheet() => Container(
+          height: 160.h,
+          padding: EdgeInsets.fromLTRB(10.w, 15.h, 10.w, 0.h),
+          child: Column(
+            children: [
+              RichText(
+                  text: TextSpan(children: [
+                contentText("thin", "Pilih opsi untuk upload "),
+                contentText("bold", "foto profilmu"),
+              ])),
+              actionBottomSheet(),
+              InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Text("Kembali",
+                      style: FontTheme.labelStyle1(
+                          status: "bold",
+                          fontSize: 12,
+                          color: ColorsTheme.black)))
+            ],
+          ),
+        );
+
+    return showModalBottomSheet(
+      context: context,
+      shape: LayoutTheme.allRoundedRect(radius: 10),
+      builder: (context) => contentBottomSheet(),
+      isDismissible: true,
+      backgroundColor: ColorsTheme.yellowSoft,
+    );
+  }
 }

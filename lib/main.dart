@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
               '/category_transaction_form': (context) =>
                   CategoryTransactionForm(),
               '/transaction_page': (context) => TransactionPage(),
+              '/profile_form_page': (context) => ProfileFormPage(),
               /*'/owner_add_product': (context) => ProductPage(),
               '/owner_add_product_form': (context) => AddProductFormPage(),
               '/point_of_sales': (context) => POSPage(),

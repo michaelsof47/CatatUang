@@ -11,11 +11,11 @@ class ProfilePageState extends State<ProfilePage> {
 
   DashboardController? controller;
 
-  var userId;
   var fullName;
   var rewardStatus;
-  var alertStatus;
   var isLoading;
+  var imageUrl;
+  Map<String, dynamic>? temporaryMap;
 
   showAlertSnackbar(String? label, bool? isSuccessful) =>
       ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
@@ -51,20 +51,20 @@ class ProfilePageState extends State<ProfilePage> {
 
     controller = Get.put(DashboardController());
 
-    alertStatus = "".obs;
-    userId = "".obs;
     fullName = "".obs;
     rewardStatus = "".obs;
     isLoading = true.obs;
+    temporaryMap = {};
+    imageUrl = "".obs;
   }
 
   initData() async {
+    isLoading.value = true;
     await controller!.fetchDashboardDataCtrl();
   }
 
   logout() async {
-
-    GeneralUtils().customAlertDialog(context,() async {
+    GeneralUtils().customAlertDialog(context, () async {
       Navigator.pop(context);
       GeneralUtils().customProgressLoading(context);
       await controller!.fetchLogoutCtrl();
@@ -72,6 +72,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Widget? handlingError() {
+    var alertStatus = "".obs;
     alertStatus.value = controller!.resultStatus.value;
     var alertMessage = controller!.resultMsg.value;
     var dataMap = controller!.dashboardData!;
@@ -89,13 +90,28 @@ class ProfilePageState extends State<ProfilePage> {
         case "dashboard_success":
           isLoading.value = false;
           AccountModel accountModel = AccountModel.fromJson(dataMap);
-          userId.value = accountModel.id.toString();
+          var userId = accountModel.id.toString();
           fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
           rewardStatus.value = accountModel.rewardStatus;
+
+          imageUrl.value = userId == ""
+              ? ""
+              : "${GeneralUtils().baseUrl}/user/$userId/profile_picture?v=${DateTime.now().millisecondsSinceEpoch}";
+
+          temporaryMap = {
+            "userId": userId,
+            "firstName": accountModel.firstName,
+            "lastName": accountModel.lastName,
+            "email": accountModel.email,
+            "phone": accountModel.phone,
+            "url_image": imageUrl.value,
+          };
+
           break;
         case "logout_success":
           showAlertSnackbar(alertMessage, true);
-          Navigator.pushNamedAndRemoveUntil(context, '/onboarding', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/onboarding', (route) => false);
           break;
       }
       controller!.resetResponse();
@@ -111,7 +127,9 @@ class ProfilePageState extends State<ProfilePage> {
     updateProfilAction() =>
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           InkWell(
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(context, '/profile_form_page',
+                    arguments: temporaryMap)
+                .then((_) => initData()),
             child: Text(
               "Ubah Profil",
               style: FontTheme.labelStyle1(
@@ -124,7 +142,8 @@ class ProfilePageState extends State<ProfilePage> {
           CustomHeaderNoInfoTimeWidget(
             fullName: fullName.value,
             rewardStatus: rewardStatus.value,
-            userId: userId.value,
+            imageUrl: imageUrl.value,
+            headerKey: UniqueKey(),
           ),
           GeneralUtils().verticalSpacer(11),
           updateProfilAction(),
@@ -201,20 +220,23 @@ class ProfilePageState extends State<ProfilePage> {
 
     appbar() => PreferredSize(
           preferredSize: Size.fromHeight(50.h),
-          child: CustomAppBar(appLabel: "Profil"),
+          child: CustomAppBar(
+              appLabel: "Profil",
+              identifier: "profile",
+              callback: () => HomeNavigationPage.of(context)!.backIntoHome(0)),
         );
 
     contentBody() => isLoading.value
-      ? CustomShimmerCardWidget(height: 60.h)
-      : Column(
-          children: [
-            informationComponent(),
-            GeneralUtils().verticalSpacer(15),
-            statisticActionComponent(),
-            GeneralUtils().verticalSpacer(22),
-            menuListComponent(),
-          ],
-        );
+        ? CustomShimmerCardWidget(height: 60.h)
+        : Column(
+            children: [
+              informationComponent(),
+              GeneralUtils().verticalSpacer(15),
+              statisticActionComponent(),
+              GeneralUtils().verticalSpacer(22),
+              menuListComponent(),
+            ],
+          );
 
     return SafeArea(
       child: Scaffold(

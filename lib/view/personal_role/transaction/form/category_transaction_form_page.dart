@@ -11,7 +11,10 @@ class CategoryTransactionFormState extends State<CategoryTransactionForm> {
   Widget build(BuildContext context) {
     appbar() => PreferredSize(
           preferredSize: Size.fromHeight(61.h),
-          child: CustomAppBar(appLabel: "Tambah Kategori"),
+          child: CustomAppBar(
+              appLabel: "Tambah Kategori",
+              identifier: "category",
+              callback: () => HomeNavigationPage.of(context)!.backIntoHome(0)),
         );
 
     ////////////////////

@@ -44,7 +44,8 @@ class DashboardController extends GetxController {
       dashboardData!.value = responseData["data"];
       await fetchBalanceAmountCtrl(temporaryData["token"]);
     } else {
-      if (responseData["data"]["message"] == "jwt expired" || responseData["data"]["message"] == "Token is Blocked") {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
         resultStatus.value = "jwt_expired";
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
@@ -55,15 +56,16 @@ class DashboardController extends GetxController {
   }
 
   Future fetchBalanceAmountCtrl(String token) async {
-    Map<String, dynamic>? responseData = await dashboardService!
-        .fetchBalanceAmount(token: token);
+    Map<String, dynamic>? responseData =
+        await dashboardService!.fetchBalanceAmount(token: token);
 
     if (responseData["status_code"] == 200) {
       BalanceModel balanceModel = BalanceModel.fromJson(responseData["data"]);
       balanceAmount.value = balanceModel.balancesAmount;
       resultStatus.value = "dashboard_success";
     } else {
-      if (responseData["data"]["message"] == "jwt expired" || responseData["data"]["message"] == "Token is Blocked") {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
         resultStatus.value = "jwt_expired";
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
@@ -84,7 +86,8 @@ class DashboardController extends GetxController {
       transactionData!.value = responseData["data"];
       resultStatus.value = "transaction_success";
     } else {
-      if (responseData["data"]["message"] == "jwt expired" || responseData["data"]["message"] == "Token is Blocked") {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
         resultStatus.value = "jwt_expired";
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
@@ -99,15 +102,17 @@ class DashboardController extends GetxController {
   Future fetchLogoutCtrl() async {
     Map<String, dynamic>? temporaryData =
         await localManager!.retrieveTokenAndUserIdAccount();
-    
-    Map<String,dynamic>? responseData = await dashboardService!.fetchLogout(token: temporaryData!["token"]);
 
-    if(responseData["status_code"] == 200) {
+    Map<String, dynamic>? responseData =
+        await dashboardService!.fetchLogout(token: temporaryData!["token"]);
+
+    if (responseData["status_code"] == 200) {
       resultStatus.value = "logout_success";
       resultMsg.value = responseData["data"]["message"];
       await resetAccountCtrl();
     } else {
-      if (responseData["data"]["message"] == "jwt expired" || responseData["data"]["message"] == "Token is Blocked") {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
         resultStatus.value = "jwt_expired";
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
@@ -123,19 +128,95 @@ class DashboardController extends GetxController {
     Map<String, dynamic>? temporaryData =
         await localManager!.retrieveTokenAndUserIdAccount();
 
-    Map<String,dynamic> requestParams = {
+    Map<String, dynamic> requestParams = {
       "amount": amount,
       "user_id": temporaryData!["user_id"],
       "token": temporaryData["token"]
     };
 
-    Map<String,dynamic>? responseData = await dashboardService!.fetchTopup(map: requestParams);
+    Map<String, dynamic>? responseData =
+        await dashboardService!.fetchTopup(map: requestParams);
 
-    if(responseData["status_code"] == 200) {
+    if (responseData["status_code"] == 200) {
       resultStatus.value = "topup_success";
       resultMsg.value = responseData["data"]["message"];
     } else {
-      if (responseData["data"]["message"] == "jwt expired" || responseData["data"]["message"] == "Token is Blocked") {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
+        resultStatus.value = "jwt_expired";
+        resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
+      } else {
+        resultStatus.value = "transaction_failure";
+        transactionData!.value = {};
+        print("Error: ${responseData["data"]["error"]}");
+        resultMsg.value = responseData["data"]["error"];
+      }
+    }
+  }
+
+  Future fetchUpdateProfileCtrl(Map<String, dynamic> map) async {
+    Map<String, dynamic>? temporaryData =
+        await localManager!.retrieveTokenAndUserIdAccount();
+
+    Map<String, dynamic>? responseData = await dashboardService!
+        .fetchUpdateProfile(token: temporaryData!["token"], map: map);
+
+    if (responseData!["status_code"] == 200) {
+      resultStatus.value = "success_profile";
+      resultMsg.value = responseData["data"]["message"];
+    } else {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
+        resultStatus.value = "jwt_expired";
+        resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
+      } else {
+        resultStatus.value = "transaction_failure";
+        transactionData!.value = {};
+        print("Error: ${responseData["data"]["error"]}");
+        resultMsg.value = responseData["data"]["error"];
+      }
+    }
+  }
+
+  Future fetchUpdateImageProfileCtrl(File imageFile) async {
+    Map<String, dynamic>? temporaryData =
+        await localManager!.retrieveTokenAndUserIdAccount();
+
+    Map<String, dynamic>? responseData = await dashboardService!
+        .fetchUpdateImageProfile(
+            token: temporaryData!["token"], imageFile: imageFile);
+
+    if (responseData!["status_code"] == 200) {
+      resultStatus.value = "success_image_profile";
+      resultMsg.value = responseData["data"]["message"];
+    } else {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
+        resultStatus.value = "jwt_expired";
+        resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
+      } else {
+        resultStatus.value = "transaction_failure";
+        transactionData!.value = {};
+        print("Error: ${responseData["data"]["error"]}");
+        resultMsg.value = responseData["data"]["error"];
+      }
+    }
+  }
+
+  Future fetchUpdatePasswordCtrl(String newPassword) async {
+    Map<String, dynamic>? temporaryData =
+        await localManager!.retrieveTokenAndUserIdAccount();
+
+    Map<String, dynamic>? responseData = await dashboardService!
+        .fetchUpdatePassword(
+            token: temporaryData!["token"], newPassword: newPassword);
+
+    if(responseData!["status_code"] == 200) {
+      resultStatus.value = "success_password";
+      resultMsg.value = responseData["data"]["message"];
+    } else {
+      if (responseData["data"]["message"] == "jwt expired" ||
+          responseData["data"]["message"] == "Token is Blocked") {
         resultStatus.value = "jwt_expired";
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {

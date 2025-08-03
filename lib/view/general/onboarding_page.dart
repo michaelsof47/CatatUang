@@ -14,8 +14,6 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   var versionName;
   var roleStatusConfig;
 
-  var alertStatus;
-
   ///GLOBAL PROPS///
   
   showAlertSnackbar(String? label, bool? isSuccessful) =>
@@ -46,7 +44,6 @@ class OnBoardingPageState extends State<OnBoardingPage> {
 
     versionName = "";
     roleStatusConfig = "Personal";
-    alertStatus = "".obs;
   }
 
   retrieveVersion() =>
@@ -77,6 +74,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   Widget? handlingError() {
+    var alertStatus = "".obs;
     alertStatus.value = loginCtrl!.resultStatus.value;
     var alertMessage = loginCtrl!.resultMsg.value;
     var map = loginCtrl!.dataMap!.value;

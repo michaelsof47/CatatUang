@@ -46,7 +46,8 @@ class TransactionFormState extends State<TransactionForm> {
   }
 
   initData() {
-    transactionDateInputCtrl!.text = "";/*currentTimeFormat!.format(
+    transactionDateInputCtrl!.text =
+        ""; /*currentTimeFormat!.format(
       //ref.read(currentTime1),
     );*/
     categoryInputCtrl!.text = "Lain-Lain";
@@ -77,7 +78,10 @@ class TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     appbar() => PreferredSize(
           preferredSize: Size.fromHeight(61.h),
-          child: CustomAppBar(appLabel: "Tambah Transaksi"),
+          child: CustomAppBar(
+              appLabel: "Tambah Transaksi",
+              identifier: "transaction",
+              callback: () => HomeNavigationPage.of(context)!.backIntoHome(0)),
         );
 
     ////////////////////

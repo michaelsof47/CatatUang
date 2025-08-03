@@ -2,9 +2,15 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class CustomAppBar extends StatelessWidget {
   var appLabel;
+  VoidCallback? callback;
+  var identifier;
+  VoidCallback? actionCallback;
 
   CustomAppBar({
     required this.appLabel,
+    required this.identifier,
+    required this.callback,
+    this.actionCallback,
   });
 
   @override
@@ -13,7 +19,7 @@ class CustomAppBar extends StatelessWidget {
           width: 15.w,
           height: 25.h,
           child: InkWell(
-            onTap: () => HomeNavigationPage.of(context)!.backIntoHome(0),
+            onTap: () => callback!(),
             child: SvgPicture.asset(
               'assets/icon/ic_nav_back.svg',
               semanticsLabel: 'ic_nav_back',
@@ -31,6 +37,22 @@ class CustomAppBar extends StatelessWidget {
             ),
           ],
         );
+
+    saveButton() => Card(
+        shape: GeneralUtils().customDecoration(),
+        color: ColorsTheme.yellow,
+        elevation: 0.h,
+        child: InkWell(
+          onTap: () => actionCallback!(),
+          splashColor: ColorsTheme.white,
+          borderRadius: BorderRadius.circular(10.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 8.h),
+            child: Text("Simpan",
+                style: FontTheme.labelStyle1(
+                    status: "bold", fontSize: 12, color: ColorsTheme.black)),
+          ),
+        ));
 
     currentBalances() => Container(
           padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 7.w),
@@ -62,7 +84,11 @@ class CustomAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             normalNavBack(),
-            appLabel != "Transaksi" ? Container() : currentBalances(),
+            identifier == "transaction"
+                ? currentBalances()
+                : identifier == "profile_form"
+                    ? saveButton()
+                    : Container(),
           ],
         ),
       ),

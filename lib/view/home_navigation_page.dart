@@ -162,7 +162,7 @@ class HomeNavigationPageState extends State<HomeNavigationPage> {
           elevation: 6.h,
           child: Container(
               height: 58.h,
-              padding: GeneralUtils().symmetricPadding(v: 5, h: 10),
+              padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 10.h),
               child: itemMenu()),
         ));
 

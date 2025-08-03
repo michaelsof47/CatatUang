@@ -124,6 +124,7 @@ part 'view/home_navigation_page.dart';
 part 'view/general/owner_register_page.dart';
 part 'view/profile/profile_page.dart';
 //part 'view/general/camera_page.dart';
+part 'view/profile//profile_form_page.dart';
 
 //PERSONAL ROLE//
 part 'view/personal_role/home_dashboard_page.dart';

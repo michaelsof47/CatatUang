@@ -57,7 +57,8 @@ class TransactionPageState extends State<TransactionPage> {
 
     singleLineLabel({label, color, size}) => Text(
           label,
-          style: FontTheme.labelStyle1(status: "bold",fontSize: size,color: color),
+          style: FontTheme.labelStyle1(
+              status: "bold", fontSize: size, color: color),
         );
 
     /////////////////////
@@ -124,7 +125,8 @@ class TransactionPageState extends State<TransactionPage> {
     dropdownFilter() => DropdownButtonHideUnderline(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
-            child: Container(),/*CustomDropdownWidget(
+            child: Container(),
+            /*CustomDropdownWidget(
               initialValue: ref.watch(transactionItemDropdownValue),
               itemMenuLabelFilter: itemMenuLabelFilter,
               callback: (value) {
@@ -236,7 +238,10 @@ class TransactionPageState extends State<TransactionPage> {
 
     appbar() => PreferredSize(
           preferredSize: Size.fromHeight(61.h),
-          child: CustomAppBar(appLabel: "Transaksi"),
+          child: CustomAppBar(
+              appLabel: "Transaksi",
+              identifier: "transaction",
+              callback: () => HomeNavigationPage.of(context)!.backIntoHome(0)),
         );
 
     contentBody() => Column(

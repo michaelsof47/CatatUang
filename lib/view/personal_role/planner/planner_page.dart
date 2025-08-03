@@ -97,7 +97,10 @@ class PlannerPageState extends State<PlannerPage> {
   Widget build(BuildContext context) {
     appbar() => PreferredSize(
           preferredSize: Size.fromHeight(61.h),
-          child: CustomAppBar(appLabel: "Atur Proyeksi"),
+          child: CustomAppBar(
+              appLabel: "Atur Proyeksi",
+              identifier: "planner",
+              callback: () => Navigator.pop(context)),
         );
 
     ////////////////////////////
@@ -261,12 +264,14 @@ class PlannerPageState extends State<PlannerPage> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               "Preview Grafik Saat Ini",
-              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  status: "bold", fontSize: 14, color: ColorsTheme.black),
             ),
             GeneralUtils().horizontalSpacer(5),
             Tooltip(
               message: "Berikut ini merupakan grafik \nperkembangan saat ini",
-              textStyle: FontTheme.labelStyle1(status: "thin",fontSize: 10, color: ColorsTheme.white),
+              textStyle: FontTheme.labelStyle1(
+                  status: "thin", fontSize: 10, color: ColorsTheme.white),
               child: Icon(
                 Icons.info_rounded,
                 color: ColorsTheme.green,

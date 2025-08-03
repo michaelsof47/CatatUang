@@ -11,7 +11,6 @@ class LoginPageState extends State<LoginPage> {
 
   LoginController? loginCtrl;
 
-  var alertStatus;
   var isPasswordVisible;
 
   //Global Props
@@ -45,7 +44,6 @@ class LoginPageState extends State<LoginPage> {
 
     loginCtrl = Get.put(LoginController());
     isPasswordVisible = false.obs;
-    alertStatus = "".obs;
   }
 
   moveIntoVerifyPage(verificationId) =>
@@ -64,6 +62,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget? handlingError() {
+    var alertStatus = "".obs;
     alertStatus.value = loginCtrl!.resultStatus.value;
     var alertMessage = loginCtrl!.resultMsg.value;
 
@@ -72,7 +71,7 @@ class LoginPageState extends State<LoginPage> {
         case "success":
           Navigator.pop(context);
           showAlertSnackbar(alertMessage, true);
-          //Navigator.pushReplacementNamed(context, '/home_navigation');
+          Navigator.pushReplacementNamed(context, '/home_navigation');
           break;
         case "failure":
           Navigator.pop(context);

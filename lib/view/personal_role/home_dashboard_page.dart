@@ -14,7 +14,6 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   DashboardController? controller;
   TransactionModel? transactionModel;
   TextEditingController? inputController;
-  var alertStatus;
   var locationLabel;
   var userId;
   var fullName;
@@ -63,7 +62,6 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
     itemMenuActionList = ["/planner_form", "", "topup"];
 
     controller = Get.put(DashboardController());
-    alertStatus = "".obs;
     locationLabel = "".obs;
     userId = "".obs;
     fullName = "".obs;
@@ -144,6 +142,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   }
 
   Widget? handlingError() {
+    var alertStatus = "".obs;
     alertStatus.value = controller!.resultStatus.value;
     var alertMessage = controller!.resultMsg.value;
     var dataMap = controller!.dashboardData!;
@@ -162,6 +161,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
         case "dashboard_success":
           AccountModel accountModel = AccountModel.fromJson(dataMap);
           userId.value = accountModel.id.toString();
+          print("data_check ${userId.value}");
           fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
           print("Balance Amount: ${controller!.balanceAmount.value}");
           balanceAmount.value = controller!.balanceAmount.value;
