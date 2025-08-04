@@ -2,6 +2,7 @@ import 'package:catat_uang/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import 'import_url_file.dart';
 
@@ -11,7 +12,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    materialApp() => MaterialApp(
+    materialApp() => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: "/",
+          getPages: [
+            GetPage(name: "/", page: () => SplashScreenPage()),
+            GetPage(name: "/onboarding", page: () => OnBoardingPage()),
+            GetPage(
+                name: "/login",
+                page: () => LoginPage(),
+                binding: LoginBinding()),
+            GetPage(
+                name: "/register",
+                page: () => RegisterUserPage(),
+                binding: RegisterUserBinding()),
+            GetPage(name: "/home_navigation", page: () => HomeNavigationPage()),
+            GetPage(
+                name: "/profile_form_page",
+                page: () => ProfileFormPage(),
+                binding: ProfileFormBinding()),
+            GetPage(name: "/planner_form", page: () => PlannerPage())
+          ],
+        );
+
+    /*MaterialApp(
             title: 'Flutter Demo',
             theme: ThemeData(
               primarySwatch: Colors.blue,
@@ -35,7 +59,7 @@ class MyApp extends StatelessWidget {
               '/point_of_sales': (context) => POSPage(),
               '/hutang_piutang': (context) => DebtLoanBookPage(),
               '/camera': (context) => CameraPage(),*/
-            });
+            });*/
 
     return ScreenUtilInit(
       designSize: const Size(360, 640),

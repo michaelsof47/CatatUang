@@ -57,6 +57,13 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
     initData();
   }
 
+  @override
+  dispose() {
+    super.dispose();
+
+    Get.delete();
+  }
+
   initConstructor() {
     itemMenuLabelList = ["Atur Rencana", "Analisa Keuangan", "Top Up"];
     itemMenuActionList = ["/planner_form", "", "topup"];
@@ -72,7 +79,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   }
 
   initData() async {
-    await controller!.fetchDashboardDataCtrl();
+    await controller!.fetchDashboardDataCtrl(true);
     await controller!.fetchTransactionDataCtrl();
     getLocationData();
   }
@@ -137,7 +144,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
 
   Future<void> onLoadData() async {
     isLoading.value = true;
-    await controller!.fetchDashboardDataCtrl();
+    await controller!.fetchDashboardDataCtrl(true);
     await controller!.fetchTransactionDataCtrl();
   }
 
@@ -161,7 +168,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
         case "dashboard_success":
           AccountModel accountModel = AccountModel.fromJson(dataMap);
           userId.value = accountModel.id.toString();
-          print("data_check ${userId.value}");
+          print("data_check ${dataMap}");
           fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
           print("Balance Amount: ${controller!.balanceAmount.value}");
           balanceAmount.value = controller!.balanceAmount.value;

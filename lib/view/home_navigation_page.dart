@@ -21,7 +21,6 @@ class HomeNavigationPageState extends State<HomeNavigationPage> {
   var role;
 
   DateTime? currentBackPressed;
-  DashboardController? controller;
 
   backIntoHome(int i) => setState(() => currentIndex.value = i);
 

@@ -31,18 +31,20 @@ class DashboardController extends GetxController {
     await localManager!.storedLoginStatusAccount(false);
   }
 
-  Future fetchDashboardDataCtrl() async {
+  Future fetchDashboardDataCtrl(bool isNeedLoadBalance) async {
     Map<String, dynamic>? temporaryData =
         await localManager!.retrieveTokenAndUserIdAccount();
 
     Map<String, dynamic>? responseData = await dashboardService!
         .fetchDashboardData(token: temporaryData!["token"]);
 
-    print(responseData["data"]["message"]);
-
     if (responseData["status_code"] == 200) {
       dashboardData!.value = responseData["data"];
-      await fetchBalanceAmountCtrl(temporaryData["token"]);
+      if(isNeedLoadBalance) {
+        await fetchBalanceAmountCtrl(temporaryData["token"]);
+      } else {
+        resultStatus.value = "dashboard_success";
+      }
     } else {
       if (responseData["data"]["message"] == "jwt expired" ||
           responseData["data"]["message"] == "Token is Blocked") {
@@ -68,6 +70,9 @@ class DashboardController extends GetxController {
           responseData["data"]["message"] == "Token is Blocked") {
         resultStatus.value = "jwt_expired";
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
+      } else if(responseData["data"]["error"] == "Saldo tidak ditemukan") {
+        balanceAmount.value = 0;
+        resultStatus.value = "dashboard_success";
       } else {
         resultStatus.value = "dashboard_failure";
         resultMsg.value = responseData["data"]["error"];

@@ -30,6 +30,13 @@ class ProfilePageState extends State<ProfilePage> {
     initData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+
+    Get.delete();
+  }
+
   initConstructor() {
     menuLabelList = [
       "Pengaturan",
@@ -60,7 +67,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   initData() async {
     isLoading.value = true;
-    await controller!.fetchDashboardDataCtrl();
+    await controller!.fetchDashboardDataCtrl(false);
   }
 
   logout() async {

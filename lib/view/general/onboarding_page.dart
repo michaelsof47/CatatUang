@@ -1,5 +1,12 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class OnBoardingBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LoginController>(() => LoginController());
+  }
+}
+
 class OnBoardingPage extends StatefulWidget {
   State<OnBoardingPage> createState() => OnBoardingPageState();
 }
@@ -42,24 +49,25 @@ class OnBoardingPageState extends State<OnBoardingPage> {
     //config = MainConfig.of(context);
     loginCtrl = Get.put(LoginController());
 
-    versionName = "";
-    roleStatusConfig = "Personal";
+    versionName = "".obs;
+    roleStatusConfig = "Personal".obs;
   }
 
   retrieveVersion() =>
-      PackageInfo.fromPlatform().then((PackageInfo packageInfo) =>
-          setState(() => versionName = packageInfo.version));
+      PackageInfo.fromPlatform().then((PackageInfo packageInfo) => versionName.value = packageInfo.version);
 
   initData() {
     WidgetsBinding.instance
         .addPostFrameCallback((timeStamp) => retrieveVersion());
   }
 
-  onChangeRole() => setState(
-        () => roleStatusConfig == "Personal"
-            ? roleStatusConfig = "Owner"
-            : roleStatusConfig = "Personal",
-      );
+  onChangeRole() {
+    if(roleStatusConfig.value == "Personal") {
+      roleStatusConfig.value = "Owner";
+    } else {
+      roleStatusConfig.value = "Personal";
+    }
+  }
   
   void navigationMenu({String? loginType}) async {
     switch (loginType) {

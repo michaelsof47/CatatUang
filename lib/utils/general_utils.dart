@@ -1,7 +1,7 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
-  String baseUrl = "https://8079e154a022.ngrok-free.app";
+  String baseUrl = "https://06237c41ac3b.ngrok-free.app";
 
   horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 

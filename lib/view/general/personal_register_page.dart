@@ -1,5 +1,12 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class RegisterUserBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LoginController>(() => LoginController());
+  }
+}
+
 class RegisterUserPage extends StatefulWidget {
   @override
   State<RegisterUserPage> createState() => RegisterUserPageState();
@@ -14,7 +21,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
   TextEditingController? passwordInputCtrl;
   TextEditingController? rePasswordInputCtrl;
   ScrollController? scrollController;
-  LoginController? loginCtrl;
+  LoginController? controller;
 
   File? imageFile;
 
@@ -60,22 +67,20 @@ class RegisterUserPageState extends State<RegisterUserPage> {
     passwordInputCtrl = TextEditingController();
     rePasswordInputCtrl = TextEditingController();
     scrollController = ScrollController();
-    loginCtrl = Get.put(LoginController());
+    controller = Get.find<LoginController>();
 
     imageFile = null;
 
-    labelText = "";
-    isChecked = false;
+    labelText = "".obs;
+    isChecked = false.obs;
     isPasswordVisible = false.obs;
     isRePasswordVisible = false.obs;
     alertStatus = "".obs;
   }
 
   initData() {
-    setState(() {
-      labelText =
+    labelText.value =
           "Kamu setuju dengan Ketentuan Layanan dan Kebijakan Privasi Catat Uang";
-    });
   }
 
   //Take an image or Capture from camera (temporary)
@@ -111,7 +116,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
       showAlertSnackbar("Password minimal 8 karakter", false);
     } else if (rePasswordInputCtrl!.text.length < 8) {
       showAlertSnackbar("Ulang password minimal 8 karakter", false);
-    } else if (!isChecked!) {
+    } else if (!isChecked.value!) {
       showAlertSnackbar("Silahkan lakukan persetujuan terlebih dahulu", false);
     } else {
       GeneralUtils().customProgressLoading(context);
@@ -123,13 +128,13 @@ class RegisterUserPageState extends State<RegisterUserPage> {
         "phone": phoneInputCtrl!.text,
         "password": passwordInputCtrl!.text,
       };
-      loginCtrl!.requestRegisterData(data: collectMap);
+      controller!.requestRegisterData(data: collectMap);
     }
   }
 
   Widget? handlingError() {
-    alertStatus.value = loginCtrl!.resultStatus.value;
-    var alertMessage = loginCtrl!.resultMsg.value;
+    alertStatus.value = controller!.resultStatus.value;
+    var alertMessage = controller!.resultMsg.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (alertStatus.value) {
@@ -143,7 +148,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
           break;
       }
 
-      loginCtrl!.resetResponse();
+      controller!.resetResponse();
     });
 
     return Container();
@@ -193,8 +198,8 @@ class RegisterUserPageState extends State<RegisterUserPage> {
     verifyCheckbox() => Row(
           children: [
             Checkbox(
-              value: isChecked,
-              onChanged: (value) => setState(() => isChecked = value),
+              value: isChecked.value,
+              onChanged: (value) => setState(() => isChecked.value = value),
               activeColor: ColorsTheme.black,
             ),
             SizedBox(

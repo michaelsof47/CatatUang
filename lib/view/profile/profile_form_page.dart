@@ -1,5 +1,12 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class ProfileFormBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<DashboardController>(() => DashboardController());
+  }
+}
+
 class ProfileFormPage extends StatefulWidget {
   @override
   State<ProfileFormPage> createState() => ProfileFormPageState();
@@ -77,7 +84,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
     passwordInputCtrl = TextEditingController();
     repasswordInputCtrl = TextEditingController();
 
-    controller = Get.put(DashboardController());
+    controller = Get.find<DashboardController>();
 
     isAddingImage = false.obs;
   }

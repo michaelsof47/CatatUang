@@ -1,5 +1,12 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class LoginBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LoginController>(() => LoginController());
+  }
+}
+
 class LoginPage extends StatefulWidget {
   LoginPageState createState() => LoginPageState();
 }
@@ -9,7 +16,7 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController? emailphoneInputCtrl;
   TextEditingController? passwordInputCtrl;
 
-  LoginController? loginCtrl;
+  LoginController? controller;
 
   var isPasswordVisible;
 
@@ -31,21 +38,6 @@ class LoginPageState extends State<LoginPage> {
       Text(label!,
           style: FontTheme.registerAction(isRegisterAction!));
 
-  @override
-  initState() {
-    super.initState();
-
-    initConstructor();
-  }
-
-  initConstructor() {
-    emailphoneInputCtrl = TextEditingController();
-    passwordInputCtrl = TextEditingController();
-
-    loginCtrl = Get.put(LoginController());
-    isPasswordVisible = false.obs;
-  }
-
   moveIntoVerifyPage(verificationId) =>
       Navigator.pushNamed(context, '/verify_otp');
 
@@ -57,14 +49,30 @@ class LoginPageState extends State<LoginPage> {
       showAlertSnackbar("Masukkan Password terlebih dahulu", false);
     } else {
       GeneralUtils().customProgressLoading(context);
-      loginCtrl!.requestEmailPhoneSignIn(email: emailphoneInputCtrl!.text, password: passwordInputCtrl!.text);
+      controller!.requestEmailPhoneSignIn(email: emailphoneInputCtrl!.text, password: passwordInputCtrl!.text);
     }
+  }
+
+  @override
+  initState() {
+    super.initState();
+
+    initConstructor();
+  }
+
+  initConstructor() {
+    emailphoneInputCtrl = TextEditingController();
+    passwordInputCtrl = TextEditingController();
+
+    controller = Get.find<LoginController>();
+
+    isPasswordVisible = false.obs;
   }
 
   Widget? handlingError() {
     var alertStatus = "".obs;
-    alertStatus.value = loginCtrl!.resultStatus.value;
-    var alertMessage = loginCtrl!.resultMsg.value;
+    alertStatus.value = controller!.resultStatus.value;
+    var alertMessage = controller!.resultMsg.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (alertStatus.value) {
@@ -79,7 +87,7 @@ class LoginPageState extends State<LoginPage> {
           break;
       }
 
-      loginCtrl!.resetResponse();
+      controller!.resetResponse();
     });
 
     return Container();

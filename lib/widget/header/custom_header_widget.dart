@@ -46,7 +46,8 @@ class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
       backgroundColor: ColorsTheme.green,
       child: widget.userId != null ? ClipOval(
         child: Image.network(
-          "${GeneralUtils().baseUrl}/user/${widget.userId}/profile_picture",
+          key: UniqueKey(),
+          "${GeneralUtils().baseUrl}/user/${widget.userId}/profile_picture?v=${DateTime.now().millisecondsSinceEpoch}",
           width: 70.w,
           height: 70.h,
           fit: BoxFit.cover,
