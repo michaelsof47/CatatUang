@@ -12,9 +12,9 @@ class LoginModel {
     });
 
     factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
-        message: json["message"] != null ? json["message"] : "",
-        userId: json["userId"] != null ? json["userId"] : 0,
-        token: json["token"] != null ? json["token"] : "",
+        message: json["message"] ?? "",
+        userId: json["userId"] ?? 0,
+        token: json["token"] ?? "",
     );
 
     Map<String, dynamic> toJson() => {

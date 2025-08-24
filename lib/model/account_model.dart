@@ -7,6 +7,7 @@ class AccountModel {
     String? rewardStatus;
     String? email;
     String? phone;
+    String? profileImageUrl;
 
     AccountModel({
         this.id,
@@ -15,16 +16,17 @@ class AccountModel {
         this.rewardStatus,
         this.email,
         this.phone,
+        this.profileImageUrl,
     });
 
     factory AccountModel.fromJson(Map<dynamic, dynamic> json) => AccountModel(
-        id: json["id"] != null ? json["id"] : 0,
-        firstName: json["first_name"] != null ? json["first_name"] : "",
-        lastName: json["last_name"] != null ? json["last_name"] : "",
-        rewardStatus: json["reward_status"] != null ? json["reward_status"] : 
-        "",
-        email: json["email"] != null ? json["email"] : "",
-        phone: json["phone"] != null ? json["phone"] : "",
+        id: json["id"] ?? 0,
+        firstName: json["first_name"] ?? "",
+        lastName: json["last_name"] ?? "",
+        rewardStatus: json["reward_status"] ?? "",
+        email: json["email"] ?? "",
+        phone: json["phone"] ?? "",
+        profileImageUrl: json["profile_image_url"] ?? "",
     );
 
     Map<dynamic, dynamic> toJson() => {
@@ -34,5 +36,6 @@ class AccountModel {
         "reward_status": rewardStatus,
         "email": email,
         "phone": phone,
+        "profile_image_url": profileImageUrl,
     };
 }

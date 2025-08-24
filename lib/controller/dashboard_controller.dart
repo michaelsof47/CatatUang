@@ -40,6 +40,7 @@ class DashboardController extends GetxController {
 
     if (responseData["status_code"] == 200) {
       dashboardData!.value = responseData["data"];
+      print(responseData["data"]);
       if(isNeedLoadBalance) {
         await fetchBalanceAmountCtrl(temporaryData["token"]);
       } else {

@@ -3,7 +3,7 @@ part of 'package:catat_uang/import_url_file.dart';
 class DashboardService {
 
   Future<Map<String,dynamic>> fetchDashboardData({required String token}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user");
+    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile");
 
     var response = await http.get(uri, headers: {"Authorization": "Bearer $token"});
 
@@ -35,7 +35,7 @@ class DashboardService {
   }
 
   Future<Map<String, dynamic>> fetchTransactionData({required String token}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/get_transactions");
+    var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/");
 
     var response = await http.get(uri, headers: {"Authorization": "Bearer $token"});
 
@@ -90,8 +90,8 @@ class DashboardService {
   }
 
   Future<Map<String,dynamic>>? fetchUpdateProfile({required String token, required Map<String,dynamic> map}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/update_profile");
-    var request = http.MultipartRequest("POST", uri);
+    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile");
+    var request = http.MultipartRequest("PUT", uri);
 
     request.headers.addAll({"Authorization": "Bearer $token"});
 
@@ -115,8 +115,8 @@ class DashboardService {
   }
 
   Future<Map<String,dynamic>>? fetchUpdateImageProfile({required String token, required File imageFile}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/update_photo_profile");
-    var request = http.MultipartRequest("POST",uri);
+    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile/photo");
+    var request = http.MultipartRequest("PUT",uri);
 
     request.headers.addAll({"Authorization": "Bearer $token"});
 
@@ -142,8 +142,8 @@ class DashboardService {
   }
 
   Future<Map<String,dynamic>>? fetchUpdatePassword({required String token, required String newPassword}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/update_password");
-    var request = http.MultipartRequest("POST", uri);
+    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile/password");
+    var request = http.MultipartRequest("PUT", uri);
 
     request.headers.addAll({"Authorization": "Bearer $token"});
 

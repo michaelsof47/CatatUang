@@ -4,11 +4,11 @@ class CustomHeaderWidget extends StatefulWidget {
   final String? fullName;
   final String? location;
   final String? greeting;
-  final String? userId;
+  final String? profileImageUrl;
 
   CustomHeaderWidget({
     required this.fullName,
-    required this.userId,
+    required this.profileImageUrl,
     required this.location,
     required this.greeting,
   });
@@ -44,10 +44,10 @@ class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
     profileIcon() => CircleAvatar(
       radius: 35.r,
       backgroundColor: ColorsTheme.green,
-      child: widget.userId != null ? ClipOval(
+      child: widget.profileImageUrl != null ? ClipOval(
         child: Image.network(
           key: UniqueKey(),
-          "${GeneralUtils().baseUrl}/user/${widget.userId}/profile_picture?v=${DateTime.now().millisecondsSinceEpoch}",
+          "${GeneralUtils().baseUrl}/${widget.profileImageUrl}",
           width: 70.w,
           height: 70.h,
           fit: BoxFit.cover,

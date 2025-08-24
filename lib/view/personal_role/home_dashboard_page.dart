@@ -15,7 +15,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   TransactionModel? transactionModel;
   TextEditingController? inputController;
   var locationLabel;
-  var userId;
+  var profileImageUrl;
   var fullName;
   var balanceAmount;
   var transactionCount;
@@ -70,7 +70,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
 
     controller = Get.put(DashboardController());
     locationLabel = "".obs;
-    userId = "".obs;
+    profileImageUrl = "".obs;
     fullName = "".obs;
     balanceAmount = 0.obs;
     transactionCount = 0.obs;
@@ -167,7 +167,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           break;
         case "dashboard_success":
           AccountModel accountModel = AccountModel.fromJson(dataMap);
-          userId.value = accountModel.id.toString();
+          profileImageUrl.value = accountModel.profileImageUrl.toString();
           print("data_check ${dataMap}");
           fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
           print("Balance Amount: ${controller!.balanceAmount.value}");
@@ -478,7 +478,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
                 ? CustomShimmerProfileWidget()
                 : CustomHeaderWidget(
                     fullName: fullName.value,
-                    userId: userId.value,
+                    profileImageUrl: profileImageUrl.value,
                     location: locationLabel.value,
                     greeting: getGreeting()!),
             GeneralUtils().verticalSpacer(15),

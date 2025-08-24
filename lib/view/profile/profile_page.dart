@@ -103,7 +103,7 @@ class ProfilePageState extends State<ProfilePage> {
 
           imageUrl.value = userId == ""
               ? ""
-              : "${GeneralUtils().baseUrl}/user/$userId/profile_picture?v=${DateTime.now().millisecondsSinceEpoch}";
+              : "${GeneralUtils().baseUrl}/${accountModel.profileImageUrl}";
 
           temporaryMap = {
             "userId": userId,

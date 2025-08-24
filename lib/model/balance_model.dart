@@ -10,8 +10,8 @@ class BalanceModel {
     });
 
     factory BalanceModel.fromJson(Map<String, dynamic> json) => BalanceModel(
-        id: json["id"] != null ? json["id"] : 0,
-        balancesAmount: json["balances_amount"] != null ? json["balances_amount"] : 0,
+        id: json["id"] ?? 0,
+        balancesAmount: json["balances_amount"] ?? 0,
     );
 
     Map<String, dynamic> toJson() => {

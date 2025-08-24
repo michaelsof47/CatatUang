@@ -10,9 +10,13 @@ class TransactionModel {
     });
 
     factory TransactionModel.fromJson(Map<dynamic, dynamic> json) => TransactionModel(
-        count: json["count"],
-        detailsItem: json["details_item"] == null ? [] : List<DetailsItem>.from(json["details_item"]!.map((x) => DetailsItem.fromJson(x))),
-    );
+      count: json["count"] ?? 0,
+      detailsItem: json["details_item"] == null
+          ? []
+          : List<DetailsItem>.from(
+              (json["details_item"] as List<dynamic>).map((x) => DetailsItem.fromJson(x)),
+            ),
+  );
 
     Map<dynamic, dynamic> toJson() => {
         "count": count,
@@ -44,15 +48,15 @@ class DetailsItem {
     });
 
     factory DetailsItem.fromJson(Map<String, dynamic> json) => DetailsItem(
-        id: json["id"] != null ? json["id"] : 0,
-        name: json["name"] != null ? json["name"] : "",
-        amount: json["amount"] != null ? json["amount"] : 0,
-        outletName: json["outlet_name"] != null ? json["outlet_name"] : "",
-        price: json["price"] != null ? json["price"] : 0,
-        discPercent: json["disc_percent"] != null ? json["disc_percent"] : 0,
-        discRp: json["disc_rp"] != null ? json["disc_rp"] : 0,
-        totalPrice: json["total_price"] != null ? json["total_price"] : 0,
-        createdAt: json["created_at"] != null ? json["created_at"] : "",
+        id: json["id"] ?? 0,
+        name: json["name"] ?? "",
+        amount: json["amount"] ?? 0,
+        outletName: json["outlet_name"] ?? "",
+        price: json["price"] ?? 0,
+        discPercent: json["disc_percent"] ?? 0,
+        discRp: json["disc_rp"] ?? 0,
+        totalPrice: json["total_price"] ?? 0,
+        createdAt: json["created_at"] ?? "",
     );
 
     Map<String, dynamic> toJson() => {
