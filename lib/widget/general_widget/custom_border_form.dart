@@ -22,19 +22,19 @@ class CustomBorderFormWidget extends StatelessWidget {
         );
 
     baseBackground() => Card(
+          margin: EdgeInsets.zero,
+          elevation: 0,
           shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(15.w, 24.h, 15.w, 5.h),
+            padding: EdgeInsets.fromLTRB(15.w, 24.h, 15.w, 13.h),
             child: widgetCallback!(),
           ),
         );
 
     return Stack(children: [
-      Positioned(
-        top: 14.h,
-        left: 0.w,
-        right: 0.w,
+      Padding(
+        padding: EdgeInsets.only(top: 14.h),
         child: baseBackground(),
       ),
       Positioned(

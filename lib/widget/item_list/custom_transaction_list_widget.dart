@@ -2,18 +2,13 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class CustomTransactionListWidget extends StatelessWidget {
   List<String>? headerLabel = ["Jumlah Transaksi", "Items Termahal", "Outlet"];
-  List<String>? dummyLabel = [
-    "Rp.200.000",
-    "Daia Detergen 1 Kg",
-    "Hypermart PTC"
-  ];
+  DetailItems? transactionItem;
 
   int? lastIndex;
   int? totalData;
 
   CustomTransactionListWidget({
-    required this.totalData,
-    required this.lastIndex,
+    required this.transactionItem,
   });
 
   @override
@@ -54,7 +49,7 @@ class CustomTransactionListWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             singleLineLabel(
-              label: "Friday, 07 October 2022",
+              label: GeneralUtils().dateTimeFormat(transactionItem!.transactionDate),
               size: 14,
               color: ColorsTheme.black,
             ),
@@ -63,21 +58,21 @@ class CustomTransactionListWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 itemRowGroup(
-                  label: "Jumlah Transaksi",
+                  label: "Nama Transaksi",
                   label2: ":",
-                  label3: "Rp. 250.000,00",
+                  label3: transactionItem!.name,
                 ),
                 GeneralUtils().horizontalSpacer(1),
                 itemRowGroup(
-                  label: "Items Termahal",
+                  label: "Nama Outlet",
                   label2: ":",
-                  label3: "Daia Detergen 1 Kg",
+                  label3: transactionItem!.outletName,
                 ),
                 GeneralUtils().horizontalSpacer(2),
                 itemRowGroup(
-                  label: "Outlet",
+                  label: "Total Transaksi",
                   label2: ":",
-                  label3: "Hypermart PTC",
+                  label3: GeneralUtils().currencyFormat(transactionItem!.totalPrice),
                 ),
               ],
             ),
@@ -86,7 +81,7 @@ class CustomTransactionListWidget extends StatelessWidget {
 
     return Column(children: [
       Padding(
-        padding: EdgeInsets.only(bottom: 5.h, top: lastIndex == 1 ? 0.h : 10.h),
+        padding: EdgeInsets.only(bottom: 5.h, top: 10.h),
         child: Row(
           children: [
             Image.asset('assets/image/ic_dummy_outlet.png',
@@ -96,9 +91,7 @@ class CustomTransactionListWidget extends StatelessWidget {
           ],
         ),
       ),
-      totalData == lastIndex
-          ? Container()
-          : GeneralUtils().customCardLiner(
+      GeneralUtils().customCardLiner(
               color: ColorsTheme.green,
               horizontalPad: 0.w,
               verticalPad: 0.w,

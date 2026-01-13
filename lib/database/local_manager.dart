@@ -36,4 +36,14 @@ class LocalManager {
       return {};
     }
   }
+
+  storedBalanceId({required String balanceId}) async {
+    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
+    return sharedPref.setString("balance_id", balanceId);
+  }
+
+  retrieveBalanceId() async {
+    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
+    return sharedPref.getString("balance_id") ?? "";
+  }
 }

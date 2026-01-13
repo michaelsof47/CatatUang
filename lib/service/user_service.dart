@@ -2,7 +2,17 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class UserService {
 
-  Future<Map<String, dynamic>> fetchLogin(
+  Map<String, dynamic>? responseMap(response) {
+    print("status code: ${response.statusCode}");
+    print("status body: ${response.body}");
+
+    return {
+      "status_code": response.statusCode,
+      "data": json.decode(response.body),
+    };
+  }
+
+  Future<Map<String, dynamic>> postLogin(
       {required String? email, required String? password}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/login");
     var request = http.MultipartRequest("POST", uri);
@@ -12,18 +22,11 @@ class UserService {
 
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
-    print("status code: ${response.statusCode}");
-    print("status body: ${response.body}");
-
-    final Map<String, dynamic> data = {
-      "status_code": response.statusCode,
-      "data": json.decode(response.body),
-    };
-
-    return data;
+    
+    return responseMap(response)!;
   }
 
-  Future<Map<String, dynamic>> fetchRegister(
+  Future<Map<String, dynamic>> postRegister(
       {required Map<String, dynamic>? temporaryData}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/register");
     var request = http.MultipartRequest("POST", uri);
@@ -42,19 +45,11 @@ class UserService {
 
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
-
-    print("status code: ${response.statusCode}");
-    print("status body: ${response.body}");
-
-    final Map<String, dynamic> data = {
-      "status_code": response.statusCode,
-      "data": json.decode(response.body),
-    };
-
-    return data;
+    
+    return responseMap(response)!;
   }
 
-  Future<Map<String, dynamic>> checkEmail({required String email}) async {
+  Future<Map<String, dynamic>> postCheckEmail({required String email}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/check_email");
     var request = http.MultipartRequest("POST", uri);
 
@@ -63,14 +58,6 @@ class UserService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    print("status code: ${response.statusCode}");
-    print("status body: ${response.body}");
-
-    final Map<String, dynamic> data = {
-      "status_code": response.statusCode,
-      "data": json.decode(response.body),
-    };
-
-    return data;
+    return responseMap(response)!;
   }
 }

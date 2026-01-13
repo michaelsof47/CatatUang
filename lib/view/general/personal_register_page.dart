@@ -128,7 +128,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
         "phone": phoneInputCtrl!.text,
         "password": passwordInputCtrl!.text,
       };
-      controller!.requestRegisterData(data: collectMap);
+      controller!.registerUserCtrl(data: collectMap);
     }
   }
 

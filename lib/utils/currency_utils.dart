@@ -20,7 +20,7 @@ class CustomCurrencyFormat extends TextInputFormatter {
 
     final formatCurrency = NumberFormat.currency(
       locale: 'id_ID',
-      symbol: 'Rp. ',
+      symbol: '',
       decimalDigits: 0,
     );
 

@@ -49,7 +49,7 @@ class LoginPageState extends State<LoginPage> {
       showAlertSnackbar("Masukkan Password terlebih dahulu", false);
     } else {
       GeneralUtils().customProgressLoading(context);
-      controller!.requestEmailPhoneSignIn(email: emailphoneInputCtrl!.text, password: passwordInputCtrl!.text);
+      controller!.loginWithEmailPhoneCtrl(email: emailphoneInputCtrl!.text, password: passwordInputCtrl!.text);
     }
   }
 
@@ -78,7 +78,6 @@ class LoginPageState extends State<LoginPage> {
       switch (alertStatus.value) {
         case "success":
           Navigator.pop(context);
-          showAlertSnackbar(alertMessage, true);
           Navigator.pushReplacementNamed(context, '/home_navigation');
           break;
         case "failure":

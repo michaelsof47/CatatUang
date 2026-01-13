@@ -28,7 +28,7 @@ class LoginController extends GetxController {
       await localManager!.retrieveLoginStatus();
 
   //BUSINESS LOGIC SOCIAL MEDIA LOGIN//
-  Future requestGoogleSignIn() async {
+  Future loginWithGoogleCtrl() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     try {
@@ -61,7 +61,7 @@ class LoginController extends GetxController {
   }
 
   Future validateEmailFromDB(Map<String,dynamic> data) async {
-    Map<String,dynamic> responseData = await userService!.checkEmail(email: data['email']);
+    Map<String,dynamic> responseData = await userService!.postCheckEmail(email: data['email']);
 
     if(responseData["status_code"] == 200) {
       if(responseData["data"]["message"] == "Silahkan Masuk") {
@@ -85,12 +85,12 @@ class LoginController extends GetxController {
     }
   }
 
-  Future requestEmailPhoneSignIn({required String? email,required String? password}) async {
-      Map<String,dynamic> responseData = await userService!.fetchLogin(email: email, password: password);
+  Future loginWithEmailPhoneCtrl({required String? email,required String? password}) async {
+      Map<String,dynamic> responseData = await userService!.postLogin(email: email, password: password);
 
       if(responseData["status_code"] == 200) {
         LoginModel data = LoginModel.fromJson(responseData["data"]);
-        print("data success : ${data.token}");
+        print("data success : ${data.token}, ${data.message}");
 
         Map<String,dynamic>? dataUser = {
           "user_id": data.userId,
@@ -107,8 +107,8 @@ class LoginController extends GetxController {
       }
   }
 
-  Future requestRegisterData({required Map<String,dynamic>? data}) async {
-    Map<String,dynamic> responseData = await userService!.fetchRegister(temporaryData: data);
+  Future registerUserCtrl({required Map<String,dynamic>? data}) async {
+    Map<String,dynamic> responseData = await userService!.postRegister(temporaryData: data);
 
 
     if(responseData["status_code"] == 201) {
@@ -126,7 +126,7 @@ class LoginController extends GetxController {
     } else {
       print("data failure: ${responseData["data"]}");
       resultStatus.value = "failure_register";
-      resultMsg.value = responseData["data"]["error"];
+      resultMsg.value = responseData["data"]["message"];
     }
   }
 }

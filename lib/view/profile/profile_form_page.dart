@@ -30,6 +30,12 @@ class ProfileFormPageState extends State<ProfileFormPage> {
   var isAddingImage;
   var imageUrl;
   var headerKey;
+  var isTyping;
+
+  var firstNameDataLength;
+  var lastNameDataLength;
+  var emailDataLength;
+  var phoneDataLength;
 
   //Global Props
   showAlertSnackbar(String? label, bool? isSuccessful) =>
@@ -58,9 +64,13 @@ class ProfileFormPageState extends State<ProfileFormPage> {
 
     userId.value = data!["userId"];
     firstNameInputCtrl!.text = data["firstName"];
+    firstNameDataLength = data["firstName"].length;
     lastNameInputCtrl!.text = data["lastName"];
+    lastNameDataLength = data["lastName"].length;
     emailInputCtrl!.text = data["email"];
+    emailDataLength = data["email"].length;
     phoneInputCtrl!.text = data["phone"];
+    phoneDataLength = data["phone"].length;
     imageUrl = data["url_image"];
     headerKey = UniqueKey();
   }
@@ -87,6 +97,28 @@ class ProfileFormPageState extends State<ProfileFormPage> {
     controller = Get.find<DashboardController>();
 
     isAddingImage = false.obs;
+    isTyping = false.obs;
+
+    firstNameInputCtrl!.addListener(() => detectTyping());
+    lastNameInputCtrl!.addListener(() => detectTyping());
+    emailInputCtrl!.addListener(() => detectTyping());
+    phoneInputCtrl!.addListener(() => detectTyping());
+    passwordInputCtrl!.addListener(() => detectTyping());
+    repasswordInputCtrl!.addListener(() => detectTyping());
+  }
+
+  detectTyping() {
+    if (firstNameInputCtrl!.text.length > firstNameDataLength || 
+        lastNameInputCtrl!.text.length > lastNameDataLength ||
+        emailInputCtrl!.text.length > emailDataLength ||
+        phoneInputCtrl!.text.length > phoneDataLength ||
+        passwordInputCtrl!.text.length > 0 ||
+        repasswordInputCtrl!.text.length > 0 ||
+        imageFile != null) {
+      isTyping.value = true;
+    } else {
+      isTyping.value = false;
+    }
   }
 
   validateForm() {
@@ -100,7 +132,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
         showAlertSnackbar("Password Tidak Sama", false);
       } else {
         GeneralUtils().customProgressLoading(context);
-        controller!.fetchUpdatePasswordCtrl(passwordInputCtrl!.text);
+        controller!.updatePasswordCtrl(passwordInputCtrl!.text);
       }
     } else if (firstNameInputCtrl!.text.length > 1 ||
         lastNameInputCtrl!.text.length > 1 ||
@@ -125,9 +157,9 @@ class ProfileFormPageState extends State<ProfileFormPage> {
             "phone": phoneInputCtrl!.text,
           };
 
-          controller!.fetchUpdateProfileCtrl(datamap);
+          controller!.updateProfileCtrl(datamap);
         } else {
-          controller!.fetchUpdateImageProfileCtrl(imageFile!);
+          controller!.updateImageProfileCtrl(imageFile!);
         }
       }
     }
@@ -153,7 +185,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
             "email": emailInputCtrl!.text,
             "phone": phoneInputCtrl!.text,
           };
-          controller!.fetchUpdateProfileCtrl(datamap);
+          controller!.updateProfileCtrl(datamap);
           break;
         case "failure":
           Navigator.pop(context);
@@ -166,6 +198,11 @@ class ProfileFormPageState extends State<ProfileFormPage> {
 
     return Container();
   }
+
+  popScope() async => await GeneralUtils().customAlertDialog(context,"Apakah Anda Yakin Untuk Keluar ?", () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -351,21 +388,21 @@ class ProfileFormPageState extends State<ProfileFormPage> {
           child: CustomAppBar(
               appLabel: "Profil",
               identifier: "profile_form",
-              callback: () => Navigator.pop(context),
+              callback: () =>
+                  isTyping.value ? popScope() : Navigator.pop(context),
               actionCallback: () => validateForm()),
         );
 
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
+    contentBase() => Padding(
           padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 10.h),
           child: SingleChildScrollView(
-            child:
-                Obx(() => Stack(children: [contentBody(), handlingError()!])),
-          ),
-        ),
-        appBar: appbar(),
-      ),
-    );
+              child: Stack(children: [contentBody(), handlingError()!])),
+        );
+
+    return Obx(() => WillPopScope(
+        onWillPop: () async => isTyping.value ? popScope() : true,
+        child: SafeArea(
+          child: Scaffold(body: contentBase(), appBar: appbar()),
+        )));
   }
 }

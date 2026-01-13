@@ -2,6 +2,7 @@
 ///GENERAL BASE///
 //////////////////
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -40,6 +41,10 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:lottie/lottie.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:realm/realm.dart';
+
+//ARGUMENTS//
+import 'package:catat_uang/arguments/transaction_arguments.dart';
+
 
 ///////////////////////
 ///CUSTOM STYLE PAGE///
@@ -85,6 +90,7 @@ part 'database/local_manager.dart';
 part 'controller/planner_controller.dart';
 part 'controller/login_controller.dart';
 part 'controller/dashboard_controller.dart';
+part 'controller/transaction_controller.dart';
 
 /////////////////////
 ///PACKAGE UTILITY///
@@ -106,10 +112,12 @@ part 'model/login_model.dart';
 part 'model/account_model.dart';
 part 'model/balance_model.dart';
 part 'model/transaction_model.dart';
+part 'model/categories_model.dart';
 
 //SERVICE//
 part 'service/user_service.dart';
 part 'service/dashboard_service.dart';
+part 'service/transaction_service.dart';
 
 /////////////////
 ///LINKED PAGE///
@@ -131,7 +139,7 @@ part 'view/profile//profile_form_page.dart';
 part 'view/personal_role/home_dashboard_page.dart';
 part 'view/personal_role/transaction/transaction_page.dart';
 part 'view/personal_role/planner/planner_page.dart';
-part 'view/personal_role/transaction/form/category_transaction_form_page.dart';
+part 'view/personal_role/transaction/form/category_form_page.dart';
 part 'view/personal_role/transaction/form/transaction_form_page.dart';
 
 //OWNER ROLE//

@@ -1,53 +1,51 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class TransactionModel {
-    int? count;
-    List<DetailsItem>? detailsItem;
+    Pagination? pagination;
+    List<DetailItems>? data;
 
     TransactionModel({
-        this.count,
-        this.detailsItem,
+        required this.pagination,
+        required this.data,
     });
 
     factory TransactionModel.fromJson(Map<dynamic, dynamic> json) => TransactionModel(
-      count: json["count"] ?? 0,
-      detailsItem: json["details_item"] == null
-          ? []
-          : List<DetailsItem>.from(
-              (json["details_item"] as List<dynamic>).map((x) => DetailsItem.fromJson(x)),
-            ),
-  );
+        pagination: Pagination.fromJson(json["pagination"]),
+        data: json ["data"] == null ? [] :List<DetailItems>.from(json["data"].map((x) => DetailItems.fromJson(x))),
+    );
 
     Map<dynamic, dynamic> toJson() => {
-        "count": count,
-        "details_item": detailsItem == null ? [] : List<dynamic>.from(detailsItem!.map((x) => x.toJson())),
+        "pagination": pagination!.toJson(),
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
     };
 }
 
-class DetailsItem {
+class DetailItems {
     int? id;
     String? name;
     int? amount;
     String? outletName;
     int? price;
-    dynamic discPercent;
-    dynamic discRp;
+    int? discPercent;
+    int? discRp;
     int? totalPrice;
     String? createdAt;
+    String? transactionDate;
 
-    DetailsItem({
-        this.id,
-        this.name,
-        this.amount,
-        this.outletName,
-        this.price,
-        this.discPercent,
-        this.discRp,
-        this.totalPrice,
-        this.createdAt,
+    DetailItems({
+        required this.id,
+        required this.name,
+        required this.amount,
+        required this.outletName,
+        required this.price,
+        required this.discPercent,
+        required this.discRp,
+        required this.totalPrice,
+        required this.createdAt,
+        required this.transactionDate,
     });
 
-    factory DetailsItem.fromJson(Map<String, dynamic> json) => DetailsItem(
+    factory DetailItems.fromJson(Map<String, dynamic> json) => DetailItems(
         id: json["id"] ?? 0,
         name: json["name"] ?? "",
         amount: json["amount"] ?? 0,
@@ -57,6 +55,7 @@ class DetailsItem {
         discRp: json["disc_rp"] ?? 0,
         totalPrice: json["total_price"] ?? 0,
         createdAt: json["created_at"] ?? "",
+        transactionDate: json["transaction_date"] ?? "",
     );
 
     Map<String, dynamic> toJson() => {
@@ -68,6 +67,31 @@ class DetailsItem {
         "disc_percent": discPercent,
         "disc_rp": discRp,
         "total_price": totalPrice,
-        "create_at": createdAt,
+        "created_at": createdAt,
+        "transaction_date": transactionDate,
+    };
+}
+
+class Pagination {
+    int? currentPage;
+    int? pageSize;
+    int? totalItems;
+
+    Pagination({
+        required this.currentPage,
+        required this.pageSize,
+        required this.totalItems,
+    });
+
+    factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+        currentPage: json["currentPage"] ?? 0,
+        pageSize: json["pageSize"] ?? 0,
+        totalItems: json["totalItems"] ?? 0,
+    );
+
+    Map<String, dynamic> toJson() => {
+        "currentPage": currentPage,
+        "pageSize": pageSize,
+        "totalItems": totalItems,
     };
 }

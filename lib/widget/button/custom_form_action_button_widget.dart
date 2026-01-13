@@ -3,22 +3,24 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomFormActionButtonWidget extends StatelessWidget {
   String? labelAction;
   VoidCallback? callback;
+  VoidCallback? backCallback;
 
   CustomFormActionButtonWidget(
     this.labelAction,
     this.callback,
+    this.backCallback,
   );
 
   @override
   Widget build(BuildContext context) {
     itemContent() => Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           CustomSingleButtonWidget(
-            actionCallback: () => Navigator.pop(context),
+            actionCallback: () => backCallback!(),
             hintLabel: "Batal",
           ),
           GeneralUtils().horizontalSpacer(20),
           CustomSingleButtonWidget(
-            actionCallback: () => callback!,
+            actionCallback: () => callback!(),
             hintLabel: labelAction,
           ),
         ]);

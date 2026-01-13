@@ -186,11 +186,11 @@ class PlannerPageState extends State<PlannerPage> {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
             decoration: GeneralUtils().customBoxStyle1(),
-            child: CustomDropdownWidget(
+            child: Container(),/*CustomDropdownWidget(
               initialValue: "0",
               itemMenuLabelFilter: itemMenuLabelFilter,
               callback: (value) {},
-            ),
+            ),*/
           ),
         );
 

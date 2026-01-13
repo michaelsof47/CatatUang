@@ -39,6 +39,7 @@ class CustomBottomSheetTwoActionWidget extends StatelessWidget {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             CustomMenuButton(
+              isCategoryData: false,
               menuLabel: label1,
               isRoundedShape: true,
               width: 75.w,
@@ -46,6 +47,7 @@ class CustomBottomSheetTwoActionWidget extends StatelessWidget {
               action: () => categoryCallback!(),
             ),
             CustomMenuButton(
+              isCategoryData: false,
               menuLabel: label2,
               isRoundedShape: true,
               width: 75.w,

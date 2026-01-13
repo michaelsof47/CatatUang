@@ -2,9 +2,9 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class CustomDropdownWidget extends StatelessWidget {
   List<String>? itemMenuLabelFilter;
-  Function(String? value) callback;
+  Function(String value) callback;
   String? initialValue;
-  customStyle() => FontTheme.labelStyle1(status:"thin",fontSize: 14, color: ColorsTheme.black);
+  customStyle() => FontTheme.labelStyle1(status:"regular",fontSize: 14, color: ColorsTheme.black);
 
   CustomDropdownWidget({
     required this.itemMenuLabelFilter,
@@ -40,7 +40,7 @@ class CustomDropdownWidget extends StatelessWidget {
           semanticsLabel: 'ic_dropdown_nav'),
       borderRadius: BorderRadius.circular(10.r),
       onChanged: (value) {
-        callback(value);
+        callback(value!);
       },
       isDense: true,
       dropdownColor: ColorsTheme.white,

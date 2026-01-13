@@ -30,6 +30,7 @@ class CustomShortcutMenuWidget extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: itemMenuLabelList!.length,
             itemBuilder: (context, index) => CustomMenuButton(
+              isCategoryData: false,
               menuLabel: itemMenuLabelList![index],
               isRoundedShape: false,
               width: 51,

@@ -44,7 +44,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
               String formattedData = value.replaceAll("Rp. ","");
               String formattedData2 = formattedData.replaceAll(".","");
 
-              controller!.fetchTopupCtrl(formattedData2);
+              controller!.topupBalanceCtrl(formattedData2);
               initData();
             }, headerLabel: "Tambah Saldo", hintLabel: "Jumlah Saldo",isNumber: true),
       );
@@ -79,8 +79,8 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   }
 
   initData() async {
-    await controller!.fetchDashboardDataCtrl(true);
-    await controller!.fetchTransactionDataCtrl();
+    await controller!.getDashboardDataCtrl(true);
+    await controller!.getTransactionDataCtrl();
     getLocationData();
   }
 
@@ -144,8 +144,8 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
 
   Future<void> onLoadData() async {
     isLoading.value = true;
-    await controller!.fetchDashboardDataCtrl(true);
-    await controller!.fetchTransactionDataCtrl();
+    await controller!.getDashboardDataCtrl(true);
+    await controller!.getTransactionDataCtrl();
   }
 
   Widget? handlingError() {
@@ -176,7 +176,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
         case "transaction_success":
           isLoading.value = false;
           transactionModel = TransactionModel.fromJson(transactionMap);
-          transactionCount.value = transactionModel!.count;
+          transactionCount.value = transactionModel!.pagination!.totalItems!;
           break;
         case "transaction_failure":
           isLoading.value = false;
@@ -311,18 +311,18 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
             itemRowLabel(
               "Tgl Transaksi",
               GeneralUtils()
-                  .dateTimeFormat(transactionModel!.detailsItem![0].createdAt),
+                  .dateTimeFormat(transactionModel!.data![0].createdAt),
             ),
             GeneralUtils().verticalSpacer(1),
             itemRowLabel(
               "Nama Outlet",
-              transactionModel!.detailsItem![0].outletName,
+              transactionModel!.data![0].outletName,
             ),
             GeneralUtils().verticalSpacer(1),
             itemRowLabel(
                 "Total Outcome",
                 GeneralUtils().currencyFormat(
-                    transactionModel!.detailsItem![0].totalPrice)),
+                    transactionModel!.data![0].totalPrice)),
           ],
         );
 

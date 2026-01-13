@@ -67,14 +67,15 @@ class ProfilePageState extends State<ProfilePage> {
 
   initData() async {
     isLoading.value = true;
-    await controller!.fetchDashboardDataCtrl(false);
+    await controller!.getDashboardDataCtrl(false);
   }
 
   logout() async {
-    GeneralUtils().customAlertDialog(context, () async {
+    GeneralUtils().customAlertDialog(
+        context, "Apakah Anda Yakin Untuk Keluar ?", () async {
       Navigator.pop(context);
       GeneralUtils().customProgressLoading(context);
-      await controller!.fetchLogoutCtrl();
+      await controller!.logoutCtrl();
     });
   }
 

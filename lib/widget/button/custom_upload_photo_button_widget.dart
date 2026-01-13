@@ -2,21 +2,21 @@ part of 'package:catat_uang/import_url_file.dart';
 
 class CustomUploadPhotoButtonWidget extends StatelessWidget {
   String? headerTitle;
-  String? headerSubtitle;
   bool? isUploadedPhoto;
   Color? colors;
   Color? colors2;
-  bool? isNeedSubtitled;
   int? mode;
+  VoidCallback? callback;
+  File? imageFile;
 
   CustomUploadPhotoButtonWidget({
     required this.headerTitle,
-    required this.headerSubtitle,
     this.isUploadedPhoto,
     required this.colors,
     required this.colors2,
-    required this.isNeedSubtitled,
     required this.mode,
+    required this.callback,
+    required this.imageFile,
   });
 
   @override
@@ -26,9 +26,19 @@ class CustomUploadPhotoButtonWidget extends StatelessWidget {
           shape: GeneralUtils().customDecoration(),
           color: colors,
           child: InkWell(
-            onTap: () => Navigator.pushNamed(context, '/camera'),
+            onTap: () =>  callback!(),
             borderRadius: BorderRadius.circular(10.r),
-            child: Container(
+            child: imageFile != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(10.r),
+                child: Image.file(
+                  imageFile!,
+                  width: 69.w,
+                  height: 55.h,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Container(
               width: 69.w,
               height: 55.h,
               padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 17.w),
@@ -47,14 +57,16 @@ class CustomUploadPhotoButtonWidget extends StatelessWidget {
           children: [
             Text(
               headerLabel!,
-              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  status: "bold", fontSize: 14, color: ColorsTheme.black),
             ),
             GeneralUtils().verticalSpacer(5),
             SizedBox(
               width: 200.w,
               child: Text(
                 subtitleLabel!,
-                style: FontTheme.labelStyle1(status: "thin",fontSize: 10, color: ColorsTheme.black),
+                style: FontTheme.labelStyle1(
+                    status: "thin", fontSize: 10, color: ColorsTheme.black),
               ),
             ),
           ],
@@ -67,15 +79,11 @@ class CustomUploadPhotoButtonWidget extends StatelessWidget {
         mode == 1 ? addImageAction() : Container(),
         SizedBox(
           width: 200.w,
-          child: isNeedSubtitled!
-              ? outletImageDescriptionLabel(
-                  headerLabel: headerTitle,
-                  subtitleLabel: headerSubtitle,
-                )
-              : Text(
-                  headerTitle!,
-                  style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
-                ),
+          child: Text(
+            headerTitle!,
+            style: FontTheme.labelStyle1(
+                status: "bold", fontSize: 14, color: ColorsTheme.black),
+          ),
         ),
         mode == 2 ? addImageAction() : Container(),
       ],

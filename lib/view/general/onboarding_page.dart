@@ -73,7 +73,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
     switch (loginType) {
       case "custom":
         GeneralUtils().customProgressLoading(context);
-        await loginCtrl!.requestGoogleSignIn();
+        await loginCtrl!.loginWithGoogleCtrl();
         break;
       case "general":
         await Navigator.pushNamed(context, "/login");

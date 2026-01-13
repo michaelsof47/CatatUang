@@ -1,7 +1,7 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
-  String baseUrl = "https://ed2cd9f454f1.ngrok-free.app";
+  String baseUrl = "https://73ab3c441b80.ngrok-free.app";
 
   horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 
@@ -34,31 +34,42 @@ class GeneralUtils {
         borderRadius: BorderRadius.circular(10.r),
       );
 
-  underlineDecorationType(label, bool? isPasswordVisible,
-          VoidCallback? onPasswordVisible, bool? isPassword) =>
+  underlineDecorationType(
+          {required String? label,
+          VoidCallback? onPasswordVisible,
+          required bool? isNeedSuffixIcon,
+          IconData? iconData,
+          bool isPassword = false}) =>
       InputDecoration(
         border: underlineBorder(),
         enabledBorder: underlineBorder(),
+        focusedBorder: isPassword ? null : underlineBorder(),
         contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 6.w),
         hintText: label,
         fillColor: ColorsTheme.white,
         hintStyle: FontTheme.labelHintStyle1(false),
-        suffixIcon: isPassword!
-            ? IconButton(
-                icon: Icon(
-                  isPasswordVisible! ? Icons.visibility_off : Icons.visibility,
-                  color: ColorsTheme.green,
-                ),
-                onPressed: () => onPasswordVisible!(),
-              )
+        suffixIcon: isNeedSuffixIcon!
+            ? isPassword
+                ? IconButton(
+                    icon: Icon(
+                      iconData!,
+                      color: ColorsTheme.green,
+                    ),
+                    onPressed: () => onPasswordVisible!(),
+                  )
+                : Icon(
+                    iconData!,
+                    color: ColorsTheme.green,
+                  )
             : null,
       );
 
   searchDecorationType(label, color) => InputDecoration(
-        border: InputBorder.none,
+        border: outlineBorder(color),
         contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
         hintText: label,
         fillColor: color,
+        filled: true,
         hintStyle: FontTheme.labelHintStyle2(false),
         suffixIcon: Icon(
           Icons.search,
@@ -73,7 +84,8 @@ class GeneralUtils {
       hintText: label,
       hintStyle: FontTheme.labelHintStyle1(false),
       fillColor: ColorsTheme.white,
-      prefix: Padding(
+      prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+      prefixIcon: Padding(
         padding: EdgeInsets.only(right: 5.w),
         child: Text(
           currencyFormat,
@@ -93,13 +105,13 @@ class GeneralUtils {
       );
 
   generalTextFormField({
-    TextEditingController? controller,
-    String? label,
-    bool? isFinalInput,
-    bool? isEnabled,
-    String? decoType,
-    bool? isNumber,
-    bool? isPassword,
+    required TextEditingController? controller,
+    required String? label,
+    required bool? isFinalInput,
+    required bool? isEnabled,
+    required String? decoType,
+    required bool? isNumber,
+    required bool? isPassword,
     Function(String value)? callback,
     VoidCallback? onPasswordVisible,
     bool? isPasswordVisible,
@@ -110,7 +122,13 @@ class GeneralUtils {
         readOnly: isEnabled! ? false : true,
         decoration: decoType == "underline"
             ? underlineDecorationType(
-                label, isPasswordVisible, onPasswordVisible, isPassword)
+                label: label,
+                onPasswordVisible: onPasswordVisible,
+                isNeedSuffixIcon: isPassword,
+                iconData: isPasswordVisible!
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                isPassword: isPassword!)
             : borderedDecorationType(label),
         style: FontTheme.labelHintStyle1(true),
         inputFormatters: isNumber!
@@ -120,9 +138,7 @@ class GeneralUtils {
           if (isNumber) {
             String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
             int? intValue = int.tryParse(cleanValue);
-          } else {
-            //do nothing
-          }
+          } else {}
         },
         maxLines: 1,
         onFieldSubmitted: (value) =>
@@ -150,6 +166,7 @@ class GeneralUtils {
         decoration: searchDecorationType(label, color),
         style: FontTheme.labelHintStyle2(true),
         maxLines: 1,
+        onChanged: (value) => callback!(value),
         onFieldSubmitted: (value) => callback!(value),
         keyboardType: isNumber! ? TextInputType.number : TextInputType.text,
         textInputAction:
@@ -192,7 +209,11 @@ class GeneralUtils {
         readOnly: true,
         onTap: () => decoType == "underline" ? callback!() : {},
         decoration: decoType == "underline"
-            ? underlineDecorationType(label, false, () {}, false)
+            ? underlineDecorationType(
+                label: label,
+                onPasswordVisible: null,
+                isNeedSuffixIcon: icon != null,
+                iconData: icon)
             : borderedDecorationType(label),
         style: FontTheme.labelHintStyle1(true),
       );
@@ -202,6 +223,7 @@ class GeneralUtils {
     String? label,
     int? maxLines,
     bool? isFinalInput,
+    Function(String value)? callback,
   }) =>
       TextFormField(
         controller: controller,
@@ -217,6 +239,7 @@ class GeneralUtils {
         style: FontTheme.labelHintStyle1(true),
         maxLines: maxLines,
         keyboardType: TextInputType.text,
+        onChanged: (value) => callback!(value),
         textInputAction:
             isFinalInput! ? TextInputAction.done : TextInputAction.next,
       );
@@ -307,7 +330,7 @@ class GeneralUtils {
           ),
           child: Center(child: CircularProgressIndicator())));
 
-  customAlertDialog(context, VoidCallback? callback) {
+  customAlertDialog(context, String message, VoidCallback? callback) {
     infoLabel(label) => Text(label,
         style: FontTheme.labelStyle1(
             status: "bold", fontSize: 14, color: ColorsTheme.black));
@@ -324,7 +347,7 @@ class GeneralUtils {
         barrierDismissible: true,
         builder: (BuildContext context) => Dialog(
             insetPadding:
-                EdgeInsets.symmetric(horizontal: 20.w, vertical: 200.h),
+                EdgeInsets.symmetric(horizontal: 20.w, vertical: 180.h),
             backgroundColor: ColorsTheme.white,
             elevation: 0.h,
             shape: RoundedRectangleBorder(
@@ -333,7 +356,7 @@ class GeneralUtils {
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-              child: Column(children: [
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
                 infoLabel("Pemberitahuan"),
                 GeneralUtils().verticalSpacer(10),
                 SvgPicture.asset(
@@ -343,7 +366,7 @@ class GeneralUtils {
                   height: 100.h,
                 ),
                 GeneralUtils().verticalSpacer(10),
-                infoLabel("Apakah Anda Yakin Untuk Keluar ?"),
+                infoLabel(message),
                 GeneralUtils().verticalSpacer(20),
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   actionLabel("Batal", false, ColorsTheme.redSoft),
@@ -354,6 +377,89 @@ class GeneralUtils {
             )));
   }
 
+  customDialogList(context, String title, List<CategoryItem> list,
+      Function(CategoryItem)? callback) {
+    headerInfo(label) => Container(
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        child: Center(
+            child: Text(label,
+                style: FontTheme.labelStyle1(
+                    status: "bold", fontSize: 14, color: ColorsTheme.white))),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
+          color: ColorsTheme.green,
+        ));
+
+    itemClickableWidget(CategoryItem item, BuildContext dialogContext) =>
+        GestureDetector(
+            onTap: () {
+              Navigator.of(dialogContext).pop();
+              callback!(item);
+            },
+            child: Column(children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                child: Text(item.name!,
+                    style: FontTheme.labelStyle1(
+                        status: "regular",
+                        fontSize: 14,
+                        color: ColorsTheme.black)),
+              ),
+              Container(height: 2.h, color: ColorsTheme.grey),
+            ]));
+
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext dialogContext) {
+          RxList<CategoryItem> filteredList = List<CategoryItem>.from(list).obs;
+
+          return Obx(() => Dialog(
+              insetPadding:
+                  EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+              backgroundColor: ColorsTheme.greenNature,
+              elevation: 0.h,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r)),
+              child: SingleChildScrollView(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  headerInfo(title),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+                    child: Column(children: [
+                      filterTextFormField(
+                          label: "Pilih Kategori",
+                          isFinalInput: true,
+                          isEnabled: true,
+                          color: ColorsTheme.white,
+                          isNumber: false,
+                          callback: (value) => filteredList.assignAll(list
+                              .where((element) => element.name!
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
+                              .toList())),
+                      filteredList.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: filteredList.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return itemClickableWidget(
+                                    filteredList[index], dialogContext);
+                              })
+                          : Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5.h),
+                              child: Center(child: Text("Tidak ada data")),
+                            )
+                    ]),
+                  ),
+                ]),
+              )));
+        });
+  }
+
   currencyFormat(int? value) => NumberFormat.currency(
         locale: 'id_ID',
         symbol: 'Rp. ',
@@ -361,9 +467,16 @@ class GeneralUtils {
       ).format(value);
 
   dateTimeFormat(String? date) =>
-      DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date!));
+      DateFormat('dd MMM yyyy HH:mm', 'id_ID').format(DateTime.parse(date!));
 
-  uploadProfileBottomSheet({required BuildContext context,required Function(String)? callback}) {
+  dateFormat(String? date) =>
+      DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(date!));
+
+  dateAPIFormat(String? date) =>
+      DateFormat('yyyy-MM-dd').format(DateTime.parse(date!));
+
+  uploadProfileBottomSheet(
+      {required BuildContext context, required Function(String)? callback}) {
     contentText(isBold, desc) => TextSpan(
         text: desc,
         style: FontTheme.labelStyle1(
@@ -433,5 +546,14 @@ class GeneralUtils {
       isDismissible: true,
       backgroundColor: ColorsTheme.yellowSoft,
     );
+  }
+  
+  longPrint(Object? object) {
+    String str = object.toString();
+    while (str.length > 800) {
+      print(str.substring(0, 800));
+      str = str.substring(800);
+    }
+    print(str);
   }
 }

@@ -139,6 +139,7 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
         isFinalInput: isFinalInput,
         isEnabled: isEnabled,
         decoType: "underline",
+        isPassword: false,
       );
 
   itemTextSpan(label, isAction) => TextSpan(
@@ -288,11 +289,11 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
           children: [
             CustomUploadPhotoButtonWidget(
               headerTitle: "Tambah Lokasi Toko",
-              headerSubtitle: "",
               colors: ColorsTheme.green,
               colors2: ColorsTheme.white,
-              isNeedSubtitled: false,
               mode: 2,
+              callback: () {},
+              imageFile: null,
             ),
             GeneralUtils().verticalSpacer(10),
             inputFormField(
@@ -347,12 +348,11 @@ class OwnerRegisterPageState extends State<OwnerRegisterPage> {
           children: [
             CustomUploadPhotoButtonWidget(
               headerTitle: "Tambah Foto Profil Toko",
-              headerSubtitle:
-                  "Ketentuan : Minimal Foto yang di upload adalah 500 x 500 px",
               colors: ColorsTheme.green,
               colors2: ColorsTheme.white,
-              isNeedSubtitled: true,
               mode: 1,
+              callback: () {},
+              imageFile: null,
             ),
             GeneralUtils().verticalSpacer(5),
             inputFormField(

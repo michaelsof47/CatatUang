@@ -6,55 +6,152 @@ class TransactionPage extends StatefulWidget {
 }
 
 class TransactionPageState extends State<TransactionPage> {
-  List<String>? itemMenuLabel;
-  List<String>? itemMenuLabelFilter;
+  DashboardController? controller;
+
+  var balanceAmount;
+  RxList<CategoryItem>? categoriesList;
+  List<String>? dropdownList;
+  var isLoading;
+  var initialCategoryName;
+  RxList<DetailItems> transactionList = <DetailItems>[].obs;
+  ScrollController? scrollController;
+  var currentPage;
+  var hasMore;
+  var isLoadMore;
 
   @override
   void initState() {
     super.initState();
 
     initConstructor();
-    //initData();
+    initData();
   }
 
   initConstructor() {
-    itemMenuLabel = ["Sembako", "PLN", "Pendidikan", "Tabungan KPR"];
-    itemMenuLabelFilter = [
-      "Semua",
-      "Sembako",
-      "PLN",
-      "Pendidikan",
-      "Tabungan KPR"
-    ];
+    categoriesList = <CategoryItem>[].obs;
+    balanceAmount = 0.obs;
+    isLoading = false.obs;
+    controller = Get.put(DashboardController());
+    dropdownList = [];
+    initialCategoryName = "Semua".obs;
+    transactionList = <DetailItems>[].obs;
+    scrollController = ScrollController();
+    currentPage = 1.obs;
+    hasMore = true.obs;
+    isLoadMore = false.obs;
+
+    scrollController!.addListener(() {
+      if (scrollController!.position.pixels ==
+              scrollController!.position.maxScrollExtent &&
+          hasMore.value &&
+          !isLoadMore.value) {
+        onLoadMoreData();
+      }
+    });
   }
 
-  //CUSTOM UTILS
-  showAddTransactionBottomSheet() => showModalBottomSheet(
-        barrierColor: ColorsTheme.black25,
-        isDismissible: true,
-        context: context,
-        backgroundColor: ColorsTheme.yellowSoft,
-        shape: GeneralUtils().customBottomSheet(),
-        builder: (context) => CustomBottomSheetTwoActionWidget(
-          label1: "Tambah Kategori",
-          label2: "Tambah Transaksi",
-          transactionCallback: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/transaction_form');
-          },
-          categoryCallback: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/category_transaction_form');
-          },
-        ),
-      );
+  initData() async {
+    isLoading.value = true;
+    currentPage.value = 1;
+    hasMore.value = true;
+    await controller!.getBalanceAmountCtrl(true, token: null);
+  }
+
+  showAlertSnackbar(String? label, bool? isSuccessful) =>
+      ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
+          label: label,
+          color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
+
+  @override
+  void dispose() {
+    scrollController!.dispose();
+    super.dispose();
+    Get.delete();
+  }
+
+  Widget? handlingError() {
+    var alertStatus = "".obs;
+    alertStatus.value = controller!.resultStatus.value;
+    var alertMessage = controller!.resultMsg.value;
+    var categoriesMap = controller!.categoriesData!;
+    var transactionMap = controller!.transactionData!;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      switch (alertStatus.value) {
+        case "transaction_success":
+          isLoading.value = false;
+          balanceAmount.value = controller!.balanceAmount.value;
+
+          CategoriesModel datamodel = CategoriesModel.fromJson(categoriesMap);
+          categoriesList!.value = datamodel.detailsItem!;
+          dropdownList!.clear();
+          dropdownList!.add("Semua");
+          for(var item in datamodel.detailsItem!) {
+            dropdownList!.add(item.name!);
+          }
+
+          TransactionModel transactionModel = TransactionModel.fromJson(transactionMap);
+          GeneralUtils().longPrint('dari page : ${jsonEncode(transactionMap['data'])}');
+          
+          if (currentPage.value == 1) {
+            transactionList.clear();
+          }
+          
+          for(var item in transactionModel.data!) {
+            transactionList.add(item);
+          }
+
+          if (transactionList.length >= transactionModel.pagination!.totalItems!) {
+            hasMore.value = false;
+          } else {
+            hasMore.value = true;
+          }
+          isLoadMore.value = false;
+          break;
+        case "transaction_failure":
+          isLoading.value = false;
+          isLoadMore.value = false;
+          showAlertSnackbar(alertMessage, false);
+          break;
+        case "categories_remove_success":
+          isLoading.value = true;
+          Navigator.pop(context);
+          showAlertSnackbar(alertMessage, true);
+          initData();
+          break;
+        case "categories_remove_failure":
+          Navigator.pop(context);
+          showAlertSnackbar(alertMessage, false);
+          break;
+      }
+
+      controller!.resetResponse();
+    });
+
+    return Container();
+  }
+
+  doRemoveCategory(int? categoryId) {
+    Navigator.pop(context);
+    GeneralUtils().customProgressLoading(context);
+    controller!.removeCategoryCtrl(categoryId: categoryId);
+  }
+
+  Future<void> onLoadData() async {
+    isLoading.value = true;
+    currentPage.value = 1;
+    hasMore.value = true;
+    await controller!.getBalanceAmountCtrl(true, token: null);
+  }
+
+  Future<void> onLoadMoreData() async {
+    isLoadMore.value = true;
+    currentPage.value++;
+    await controller!.getTransactionDataCtrl(page: currentPage.value);
+  }
 
   @override
   Widget build(BuildContext context) {
-    //////////////////
-    ///CUSTOM UTILS///
-    //////////////////
-
     singleLineLabel({label, color, size}) => Text(
           label,
           style: FontTheme.labelStyle1(
@@ -73,31 +170,46 @@ class TransactionPageState extends State<TransactionPage> {
               size: 12,
               color: ColorsTheme.black,
             ),
-            singleLineLabel(
-              label: "Tambah Pintasan",
-              size: 12,
-              color: ColorsTheme.green,
-            ),
+            GestureDetector(
+              onTap: () =>
+                  Navigator.pushNamed(context, '/category_form').then((_) {
+                isLoading.value = true;
+                initData();
+              }),
+              child: singleLineLabel(
+                label: "Tambah Pintasan",
+                size: 12,
+                color: ColorsTheme.green,
+              ),
+            )
           ],
         );
 
     categoryItemList() => SizedBox(
-          height: 80.h,
-          child: ListView.builder(
-            itemCount: itemMenuLabel!.length,
+        height: 89.h,
+        child: Row(children: [
+          ListView.builder(
+            itemCount: categoriesList!.length,
+            shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => Padding(
               padding: EdgeInsets.only(right: 16.w),
               child: CustomMenuButton(
-                menuLabel: itemMenuLabel![index],
+                isCategoryData: true,
+                categoryItem: categoriesList![index],
                 isRoundedShape: true,
                 width: 80,
                 height: 60,
-                action: () {},
+                action: () => Navigator.pushNamed(context, '/transaction_form',arguments: TransactionArguments(categoriesList,categoriesList![index].name,categoriesList![index].id.toString(),balanceAmount.value)),
+                removeAction: (categoryId) => GeneralUtils().customAlertDialog(
+                    context,
+                    "Apakah Anda Yakin Untuk Melanjutkan Penghapusan ?",
+                    () => doRemoveCategory(categoryId)),
               ),
             ),
           ),
-        );
+          if (categoriesList!.length < 3) Spacer(),
+        ]));
 
     contentCategoryComponent() => Column(
           children: [
@@ -111,7 +223,7 @@ class TransactionPageState extends State<TransactionPage> {
           shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 13.h),
             child: contentCategoryComponent(),
           ),
         );
@@ -125,17 +237,14 @@ class TransactionPageState extends State<TransactionPage> {
     dropdownFilter() => DropdownButtonHideUnderline(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
-            child: Container(),
-            /*CustomDropdownWidget(
-              initialValue: ref.watch(transactionItemDropdownValue),
-              itemMenuLabelFilter: itemMenuLabelFilter,
+            child: CustomDropdownWidget(
+              initialValue: initialCategoryName.value,
+              itemMenuLabelFilter: dropdownList,
               callback: (value) {
-                ref
-                    .read(transactionItemDropdownValue.notifier)
-                    .update((state) => value!);
-                print(value!);
-              },*/
-            decoration: GeneralUtils().customBoxStyle1(),
+                initialCategoryName.value = value;
+              },
+          ),
+          decoration: GeneralUtils().customBoxStyle1(),
           ),
         );
 
@@ -173,7 +282,10 @@ class TransactionPageState extends State<TransactionPage> {
         shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellowSoft,
         child: InkWell(
-          onTap: () => showAddTransactionBottomSheet(),
+          onTap: () => Navigator.pushNamed(context, '/transaction_form',arguments: TransactionArguments(categoriesList,"Pilih Kategori","",balanceAmount.value)).then((_) {
+            isLoading.value = true;
+            initData();
+          }),
           borderRadius: BorderRadius.circular(10.r),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
@@ -205,13 +317,22 @@ class TransactionPageState extends State<TransactionPage> {
     //////////////////////
 
     itemList() => ListView.builder(
-          itemCount: 5,
+          controller: scrollController,
+          itemCount: transactionList.length + (hasMore.value ? 1 : 0),
           shrinkWrap: true,
           padding: EdgeInsets.only(bottom: 75.h),
-          itemBuilder: (context, index) => CustomTransactionListWidget(
-            totalData: 5,
-            lastIndex: index + 1,
-          ),
+          itemBuilder: (context, index) {
+            if (index < transactionList.length) {
+              return CustomTransactionListWidget(
+                transactionItem: transactionList[index],
+              );
+            } else {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.h),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+          },
         );
 
     transactionListComponent() => Card(
@@ -225,7 +346,7 @@ class TransactionPageState extends State<TransactionPage> {
         ));
 
     stackedView() => SizedBox(
-          height: 280.h,
+          height: 270.h,
           child: Stack(
             children: [
               transactionListComponent(),
@@ -241,27 +362,41 @@ class TransactionPageState extends State<TransactionPage> {
           child: CustomAppBar(
               appLabel: "Transaksi",
               identifier: "transaction",
+              balanceAmount: balanceAmount.value,
+              isLoading: isLoading.value,
               callback: () => HomeNavigationPage.of(context)!.backIntoHome(0)),
         );
 
-    contentBody() => Column(
-          children: [
-            categoryShortcutComponentCard(),
-            GeneralUtils().verticalSpacer(12),
-            addTransactionComponent(),
-            GeneralUtils().verticalSpacer(8),
-            stackedView(),
-          ],
-        );
+    contentBody() => CustomScrollView(slivers: [
+          SliverToBoxAdapter(
+              child: Column(
+            children: isLoading.value
+                ? [
+                    CustomShimmerCardWidget(height: 100.h),
+                    GeneralUtils().verticalSpacer(20),
+                    CustomShimmerCardWidget(height: 200.h),
+                  ]
+                : [
+                    categoryShortcutComponentCard(),
+                    GeneralUtils().verticalSpacer(20),
+                    addTransactionComponent(),
+                    GeneralUtils().verticalSpacer(10),
+                    stackedView(),
+                  ],
+          ))
+        ]);
 
     return SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 29.h),
-          child: contentBody(),
-        ),
-        appBar: appbar(),
-      ),
-    );
+        child: Obx(() => Stack(children: [
+              Scaffold(
+                body: Padding(
+                  padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 29.h),
+                  child: RefreshIndicator(
+                      child: contentBody(), onRefresh: onLoadData),
+                ),
+                appBar: appbar(),
+              ),
+              handlingError()!,
+            ])));
   }
 }
