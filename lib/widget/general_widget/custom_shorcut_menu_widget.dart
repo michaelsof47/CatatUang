@@ -22,9 +22,9 @@ class CustomShortcutMenuWidget extends StatelessWidget {
           height: itemMenuHeight!.h,
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 100.w,
+              maxCrossAxisExtent: 130.w,
               mainAxisSpacing: 5.w,
-              childAspectRatio: 1,
+              childAspectRatio: 0.7,
               crossAxisSpacing: 5.h,
             ),
             physics: const NeverScrollableScrollPhysics(),

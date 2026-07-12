@@ -3,7 +3,7 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
   final String? fullName;
   final String? rewardStatus;
-  String? imageUrl;
+  final Uint8List? imageUrl;
   Key? headerKey;
 
   CustomHeaderNoInfoTimeWidget({
@@ -15,8 +15,7 @@ class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-     String firstLetter = fullName!.isNotEmpty ? fullName![0].toUpperCase() : '';
+    String firstLetter = fullName!.isNotEmpty ? fullName![0].toUpperCase() : '';
 
     emptyImageProfile() => Text(
           firstLetter,
@@ -25,13 +24,13 @@ class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
         );
 
     profileIcon() => GeneralUtils().avatarBorder(
-      child: CircleAvatar(
+            child: CircleAvatar(
           radius: 26.r,
           backgroundColor: ColorsTheme.green,
           child: imageUrl != ""
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(26.r),
-                  child: Image.network(
+                  child: Image.memory(
                     key: headerKey,
                     imageUrl!,
                     width: 51.w,
@@ -42,8 +41,7 @@ class CustomHeaderNoInfoTimeWidget extends StatelessWidget {
                   ),
                 )
               : emptyImageProfile(),
-        )
-    );
+        ));
 
     accountInformation() => Row(children: [
           Text(

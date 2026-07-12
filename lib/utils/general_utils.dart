@@ -1,7 +1,7 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
-  String baseUrl = "https://73ab3c441b80.ngrok-free.app";
+  String baseUrl = "https://5064-182-8-99-163.ngrok-free.app";
 
   horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 
@@ -547,7 +547,7 @@ class GeneralUtils {
       backgroundColor: ColorsTheme.yellowSoft,
     );
   }
-  
+
   longPrint(Object? object) {
     String str = object.toString();
     while (str.length > 800) {
@@ -555,5 +555,59 @@ class GeneralUtils {
       str = str.substring(800);
     }
     print(str);
+  }
+
+  customDatePickerTheme(BuildContext context, Widget? child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+          datePickerTheme: DatePickerThemeData(
+              headerBackgroundColor: ColorsTheme.greenNature,
+              headerForegroundColor: ColorsTheme.green,
+              dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected))
+                  return ColorsTheme.green;
+                return null;
+              })),
+          colorScheme: ColorScheme.light(
+            primary: ColorsTheme.green,
+            onPrimary: ColorsTheme.white,
+            onSurface: ColorsTheme.black,
+          )),
+      child: child!,
+    );
+  }
+
+  customTimePickerTheme(BuildContext context, Widget? child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        timePickerTheme: TimePickerThemeData(
+          backgroundColor: ColorsTheme.white,
+          // Gunakan WidgetStateColor, bukan WidgetStateProperty
+          hourMinuteColor: WidgetStateColor.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) return ColorsTheme.green;
+            return ColorsTheme.greenNature;
+          }),
+          hourMinuteTextColor: WidgetStateColor.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) return ColorsTheme.white;
+            return ColorsTheme.green;
+          }),
+          dialHandColor: ColorsTheme.green,
+          dialBackgroundColor: ColorsTheme.greenNature,
+          dialTextColor: WidgetStateColor.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) return ColorsTheme.white;
+            return ColorsTheme.black;
+          }),
+          entryModeIconColor: ColorsTheme.green,
+          helpTextStyle: FontTheme.labelStyle1(
+              status: "bold", fontSize: 14, color: ColorsTheme.green),
+        ),
+        colorScheme: ColorScheme.light(
+          primary: ColorsTheme.green,
+          onPrimary: ColorsTheme.white,
+          onSurface: ColorsTheme.black,
+        ),
+      ),
+      child: child!,
+    );
   }
 }

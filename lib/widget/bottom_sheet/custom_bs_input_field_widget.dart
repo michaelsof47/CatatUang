@@ -21,7 +21,8 @@ class CustomBottomSheetInputFieldWidget extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: Text(
             "Batal",
-            style: FontTheme.labelStyle1(status: "thin",fontSize: 14, color: ColorsTheme.redSoft),
+            style: FontTheme.labelStyle1(
+                status: "thin", fontSize: 14, color: ColorsTheme.redSoft),
           ),
         );
 
@@ -30,7 +31,8 @@ class CustomBottomSheetInputFieldWidget extends StatelessWidget {
           children: [
             Text(
               headerLabel!,
-              style: FontTheme.labelStyle1(status: "regular",fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  status: "regular", fontSize: 14, color: ColorsTheme.black),
             ),
             exitBottomSheet(),
           ],
@@ -67,12 +69,10 @@ class CustomBottomSheetInputFieldWidget extends StatelessWidget {
         );
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-          12.w, 23.h, 20.w, MediaQuery.of(context).viewInsets.bottom),
-      child: SizedBox(
-        height: 130.h,
-        child: contentBody(),
-      ),
-    );
+        padding: EdgeInsets.fromLTRB(
+            12.w, 23.h, 20.w, MediaQuery.of(context).viewInsets.bottom + 20.h),
+        child: SingleChildScrollView(
+          child: contentBody(),
+        ));
   }
 }

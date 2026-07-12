@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:catat_uang/main_config.dart';
+import 'package:custom_shared_preference/custom_shared_preference.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:shimmer/shimmer.dart';
@@ -44,7 +44,6 @@ import 'package:realm/realm.dart';
 
 //ARGUMENTS//
 import 'package:catat_uang/arguments/transaction_arguments.dart';
-
 
 ///////////////////////
 ///CUSTOM STYLE PAGE///
@@ -74,6 +73,7 @@ part 'widget/button/custom_form_action_button_widget.dart';
 part 'widget/button/custom_login_form_button_widget.dart';
 part 'widget/shimmer/custom_shimmer_card_widget.dart';
 part 'widget/shimmer/custom_shimmer_profile_widget.dart';
+part 'widget/shimmer/custom_shimmer_card_list_widget.dart';
 
 /////////////////
 ///MINI MODULE///
@@ -113,11 +113,14 @@ part 'model/account_model.dart';
 part 'model/balance_model.dart';
 part 'model/transaction_model.dart';
 part 'model/categories_model.dart';
+part 'model/http_model.dart';
+part 'model/planner_book_list_model.dart';
 
 //SERVICE//
 part 'service/user_service.dart';
 part 'service/dashboard_service.dart';
 part 'service/transaction_service.dart';
+part 'service/planner_service.dart';
 
 /////////////////
 ///LINKED PAGE///

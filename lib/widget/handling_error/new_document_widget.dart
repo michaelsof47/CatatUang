@@ -22,20 +22,25 @@ class NewDocumentWidget extends StatelessWidget {
               : 'assets/animation/empty_state.json',
         ));
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      emptyDocument(),
-      GeneralUtils().verticalSpacer(10),
-      Text(
-        headerLabel!,
-        style: FontTheme.labelStyle1(status: "thin",fontSize: 16,color: ColorsTheme.black),
-        textAlign: TextAlign.center,
-      ),
-      GeneralUtils().verticalSpacer(17),
-      Text(
-        descLabel!,
-        style: FontTheme.labelStyle1(status: "thin",fontSize: 14,color: ColorsTheme.black),
-        textAlign: TextAlign.center,
-      ),
-    ]);
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          emptyDocument(),
+          //GeneralUtils().verticalSpacer(10),
+          Text(
+            headerLabel!,
+            style: FontTheme.labelStyle1(
+                status: "thin", fontSize: 16, color: ColorsTheme.black),
+            textAlign: TextAlign.center,
+          ),
+          //GeneralUtils().verticalSpacer(17),
+          Text(
+            descLabel!,
+            style: FontTheme.labelStyle1(
+                status: "thin", fontSize: 14, color: ColorsTheme.black),
+            textAlign: TextAlign.center,
+          ),
+        ]);
   }
 }

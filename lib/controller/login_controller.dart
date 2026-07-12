@@ -7,7 +7,7 @@ class LoginController extends GetxController {
 
   var resultMsg;
   var resultStatus;
-  RxMap<dynamic,dynamic>? dataMap;
+  RxMap<dynamic, dynamic>? dataMap;
 
   LoginController() {
     firebaseAuth = FirebaseAuth.instance;
@@ -41,15 +41,14 @@ class LoginController extends GetxController {
 
       var result = await firebaseAuth!.signInWithCredential(credential);
       print("data user : ${result.user!}");
-      if (result.user!.emailVerified) {        
-        Map<String,dynamic>? data = {
+      if (result.user!.emailVerified) {
+        Map<String, dynamic>? data = {
           "email": result.user!.email,
           "firstname": result.user!.displayName.toString().split(" ")[0],
           "lastname": result.user!.displayName.toString().split(" ")[1],
         };
 
         validateEmailFromDB(data);
-
       } else {
         resultStatus.value = "failure_google";
         resultMsg.value = "Akses Login dengan Google dibatalkan.";
@@ -60,14 +59,17 @@ class LoginController extends GetxController {
     }
   }
 
-  Future validateEmailFromDB(Map<String,dynamic> data) async {
-    Map<String,dynamic> responseData = await userService!.postCheckEmail(email: data['email']);
+  Future validateEmailFromDB(Map<String, dynamic> data) async {
+    HttpModel response =
+        await userService!.postCheckEmail(email: data['email']);
 
-    if(responseData["status_code"] == 200) {
-      if(responseData["data"]["message"] == "Silahkan Masuk") {
-        LoginModel dataModel = LoginModel.fromJson(responseData["data"]);
-        
-        Map<String,dynamic>? dataUser = {
+    var responseBody = json.decode(response.body!);
+
+    if (response.code == 200) {
+      if (responseBody["message"] == "Silahkan Masuk") {
+        LoginModel dataModel = LoginModel.fromJson(responseBody);
+
+        Map<String, dynamic>? dataUser = {
           "user_id": dataModel.userId,
           "token": dataModel.token,
         };
@@ -85,37 +87,42 @@ class LoginController extends GetxController {
     }
   }
 
-  Future loginWithEmailPhoneCtrl({required String? email,required String? password}) async {
-      Map<String,dynamic> responseData = await userService!.postLogin(email: email, password: password);
+  Future loginWithEmailPhoneCtrl(
+      {required String? email, required String? password}) async {
+    HttpModel response =
+        await userService!.postLogin(email: email, password: password);
 
-      if(responseData["status_code"] == 200) {
-        LoginModel data = LoginModel.fromJson(responseData["data"]);
-        print("data success : ${data.token}, ${data.message}");
+    var responseBody = json.decode(response.body!);
 
-        Map<String,dynamic>? dataUser = {
-          "user_id": data.userId,
-          "token": data.token,
-        };
+    if (response.code == 200) {
+      LoginModel data = LoginModel.fromJson(responseBody);
+      print("data success : ${data.token}, ${data.message}");
 
-        localManager!.storedTokenAndUserIdAccount(map: dataUser);
-        localManager!.storedLoginStatusAccount(true);
-        resultStatus.value = "success";
-      } else {
-        print("data failure: ${responseData["data"]}");
-        resultStatus.value = "failure";
-        resultMsg.value = "Gagal Login.";
-      }
+      Map<String, dynamic>? dataUser = {
+        "user_id": data.userId,
+        "token": data.token,
+      };
+
+      localManager!.storedTokenAndUserIdAccount(map: dataUser);
+      localManager!.storedLoginStatusAccount(true);
+      resultStatus.value = "success";
+    } else {
+      print("data failure: ${responseBody}");
+      resultStatus.value = "failure";
+      resultMsg.value = "Gagal Login.";
+    }
   }
 
-  Future registerUserCtrl({required Map<String,dynamic>? data}) async {
-    Map<String,dynamic> responseData = await userService!.postRegister(temporaryData: data);
+  Future registerUserCtrl({required Map<String, dynamic>? data}) async {
+    HttpModel response = await userService!.postRegister(temporaryData: data);
 
+    var responseBody = json.decode(response.body!);
 
-    if(responseData["status_code"] == 201) {
-      LoginModel dataModel = LoginModel.fromJson(responseData["data"]);
+    if (response.body == 201) {
+      LoginModel dataModel = LoginModel.fromJson(responseBody);
       print("data success : ${dataModel.token}");
 
-      Map<String,dynamic>? dataUser = {
+      Map<String, dynamic>? dataUser = {
         "user_id": dataModel.userId,
         "token": dataModel.token,
       };
@@ -124,9 +131,9 @@ class LoginController extends GetxController {
       localManager!.storedLoginStatusAccount(true);
       resultStatus.value = "success_register";
     } else {
-      print("data failure: ${responseData["data"]}");
+      print("data failure: ${responseBody}");
       resultStatus.value = "failure_register";
-      resultMsg.value = responseData["data"]["message"];
+      resultMsg.value = responseBody["message"];
     }
   }
 }

@@ -1,9 +1,9 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class CustomDropdownWidget extends StatelessWidget {
-  List<String>? itemMenuLabelFilter;
-  Function(String value) callback;
-  String? initialValue;
+  List<CategoryItem>? itemMenuLabelFilter;
+  Function(CategoryItem value) callback;
+  CategoryItem? initialValue;
   customStyle() => FontTheme.labelStyle1(status:"regular",fontSize: 14, color: ColorsTheme.black);
 
   CustomDropdownWidget({
@@ -14,25 +14,25 @@ class CustomDropdownWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    itemDropdown(String value) => DropdownMenuItem(
+    itemDropdown(CategoryItem value) => DropdownMenuItem<CategoryItem>(
           value: value,
-          child: Text(value, style: customStyle()),
+          child: Text(value.name!, style: customStyle()),
         );
 
     itemList() => itemMenuLabelFilter!
-        .map<DropdownMenuItem<String>>((value) => itemDropdown(value))
+        .map<DropdownMenuItem<CategoryItem>>((CategoryItem value) => itemDropdown(value))
         .toList();
 
     contentSetTextLabel() => itemMenuLabelFilter!
         .map(
           (value) => Row(children: [
-            Text(value, style: customStyle()),
+            Text(value.name!, style: customStyle()),
             GeneralUtils().horizontalSpacer(10.w),
           ]),
         )
         .toList();
 
-    return DropdownButton<String>(
+    return DropdownButton<CategoryItem>(
       value: initialValue,
       items: itemList(),
       underline: null,

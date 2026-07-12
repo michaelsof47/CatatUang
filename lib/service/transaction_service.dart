@@ -1,18 +1,8 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class TransactionService {
-
-  Map<String, dynamic>? responseMap(response) {
-    print("status code: ${response.statusCode}");
-    print("status body: ${response.body}");
-
-    return {
-      "status_code": response.statusCode,
-      "data": json.decode(response.body),
-    };
-  }
-
-  Future<Map<String,dynamic>>? postCreateCategory({required Map<String,dynamic> map, String? token}) async {
+  Future<HttpModel> postCreateCategory(
+      {required Map<String, dynamic> map, String? token}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/categories");
     var request = http.MultipartRequest("POST", uri);
 
@@ -31,10 +21,13 @@ class TransactionService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!; 
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String,dynamic>>? postCreateTransaction({required Map<String,dynamic> map, String? token,String? balanceId}) async {
+  Future<HttpModel> postCreateTransaction(
+      {required Map<String, dynamic> map,
+      String? token,
+      String? balanceId}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/");
     var request = http.MultipartRequest("POST", uri);
 
@@ -53,6 +46,6 @@ class TransactionService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!; 
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 }

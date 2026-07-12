@@ -14,8 +14,8 @@ class ProfilePageState extends State<ProfilePage> {
   var fullName;
   var rewardStatus;
   var isLoading;
-  var imageUrl;
-  Map<String, dynamic>? temporaryMap;
+  var profileImage;
+  RxMap<String, dynamic>? temporaryMap;
 
   showAlertSnackbar(String? label, bool? isSuccessful) =>
       ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
@@ -61,8 +61,8 @@ class ProfilePageState extends State<ProfilePage> {
     fullName = "".obs;
     rewardStatus = "".obs;
     isLoading = true.obs;
-    temporaryMap = {};
-    imageUrl = "".obs;
+    temporaryMap = <String, dynamic>{}.obs;
+    profileImage = Uint8List(0).obs;
   }
 
   initData() async {
@@ -96,24 +96,21 @@ class ProfilePageState extends State<ProfilePage> {
           showAlertSnackbar(alertMessage, false);
           break;
         case "dashboard_success":
-          isLoading.value = false;
           AccountModel accountModel = AccountModel.fromJson(dataMap);
           var userId = accountModel.id.toString();
           fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
           rewardStatus.value = accountModel.rewardStatus;
-
-          imageUrl.value = userId == ""
-              ? ""
-              : "${GeneralUtils().baseUrl}/${accountModel.profileImageUrl}";
-
-          temporaryMap = {
+          profileImage.value = controller!.profileImage!.value;
+          temporaryMap!.assignAll({
             "userId": userId,
             "firstName": accountModel.firstName,
             "lastName": accountModel.lastName,
             "email": accountModel.email,
             "phone": accountModel.phone,
-            "url_image": imageUrl.value,
-          };
+            "url_image": profileImage.value,
+          });
+
+          isLoading.value = false;
 
           break;
         case "logout_success":
@@ -136,7 +133,7 @@ class ProfilePageState extends State<ProfilePage> {
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           InkWell(
             onTap: () => Navigator.pushNamed(context, '/profile_form_page',
-                    arguments: temporaryMap)
+                    arguments: temporaryMap?.value)
                 .then((_) => initData()),
             child: Text(
               "Ubah Profil",
@@ -150,7 +147,7 @@ class ProfilePageState extends State<ProfilePage> {
           CustomHeaderNoInfoTimeWidget(
             fullName: fullName.value,
             rewardStatus: rewardStatus.value,
-            imageUrl: imageUrl.value,
+            imageUrl: profileImage.value,
             headerKey: UniqueKey(),
           ),
           GeneralUtils().verticalSpacer(11),

@@ -1,56 +1,63 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class DashboardService {
-  Map<String, dynamic>? responseMap(response) {
-    print("status code: ${response.statusCode}");
-    print("status body: ${response.body}");
-
-    return {
-      "status_code": response.statusCode,
-      "data": json.decode(response.body),
-    };
-  }
-
-  Future<Map<String, dynamic>> getDashboardData(
-      {required String token}) async {
+  Future<HttpModel> getDashboardData({required String token}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile");
 
     var response =
         await http.get(uri, headers: {"Authorization": "Bearer $token"});
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>> getBalanceAmount(
-      {required String token}) async {
+  Future<HttpModel> getBalanceAmount({required String token}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/balance");
 
     var response =
         await http.get(uri, headers: {"Authorization": "Bearer $token"});
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>> getTransactionData(
-      {required String token, int? page, int? pageSize}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/$page/$pageSize");
-    
+  Future<HttpModel> getTransactionData(
+      {required String token, int? page, int? categoryId}) async {
+    var uri;
+
+    print("category id: $categoryId");
+
+    if (categoryId == 0) {
+      uri = Uri.parse(
+          "${GeneralUtils().baseUrl}/transactions/?page=$page&limit=10");
+    } else {
+      uri = Uri.parse(
+          "${GeneralUtils().baseUrl}/transactions/?page=$page&limit=10&categoryId=$categoryId");
+    }
+
     var response =
         await http.get(uri, headers: {"Authorization": "Bearer $token"});
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>> postLogout({required String token}) async {
+  Future<Uint8List> getProfileImage({required String token}) async {
+    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile/picture");
+
+    var response =
+        await http.get(uri, headers: {"Authorization": "Bearer $token"});
+
+    return response.bodyBytes;
+  }
+
+  Future<HttpModel> postLogout({required String token}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/logout");
 
     var response =
         await http.post(uri, headers: {"Authorization": "Bearer $token"});
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>> patchTopupBalance(
+  Future<HttpModel> patchTopupBalance(
       {required Map<String, dynamic> map}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/balance/");
     var request = http.MultipartRequest("PATCH", uri);
@@ -63,10 +70,10 @@ class DashboardService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>>? putUpdateProfile(
+  Future<HttpModel> putUpdateProfile(
       {required String token, required Map<String, dynamic> map}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile");
     var request = http.MultipartRequest("PUT", uri);
@@ -81,10 +88,10 @@ class DashboardService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>>? putUpdateImageProfile(
+  Future<HttpModel> putUpdateImageProfile(
       {required String token, required File imageFile}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile/photo");
     var request = http.MultipartRequest("PUT", uri);
@@ -101,10 +108,10 @@ class DashboardService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>>? putUpdatePassword(
+  Future<HttpModel> putUpdatePassword(
       {required String token, required String newPassword}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/user/profile/password");
     var request = http.MultipartRequest("PUT", uri);
@@ -116,20 +123,22 @@ class DashboardService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String, dynamic>> getAllCategories({String? token}) async {
+  Future<HttpModel> getAllCategories({String? token}) async {
     var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/categories");
 
     var response =
         await http.get(uri, headers: {"Authorization": "Bearer $token"});
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 
-  Future<Map<String,dynamic>>? deleteCategory({required int? categoryId, required String? token}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/categories/$categoryId");
+  Future<HttpModel> deleteCategory(
+      {required int? categoryId, required String? token}) async {
+    var uri = Uri.parse(
+        "${GeneralUtils().baseUrl}/transactions/categories/$categoryId");
     var request = http.Request("DELETE", uri);
 
     request.headers.addAll({"Authorization": "Bearer $token"});
@@ -137,6 +146,6 @@ class DashboardService {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return responseMap(response)!;
+    return HttpModel(code: response.statusCode, body: response.body);
   }
 }

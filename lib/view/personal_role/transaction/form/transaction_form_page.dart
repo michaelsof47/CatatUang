@@ -29,6 +29,7 @@ class TransactionFormState extends State<TransactionForm> {
   var categoryId;
   var isTyping;
   var balanceAmount;
+  var isShowBudgetPrediction;
 
   RxList<CategoryItem> categoriesList = <CategoryItem>[].obs;
 
@@ -63,6 +64,7 @@ class TransactionFormState extends State<TransactionForm> {
     categoryId = "".obs;
     isTyping = false.obs;
     balanceAmount = 0.obs;
+    isShowBudgetPrediction = false.obs;
 
     outletNameInputCtrl!.addListener(() => detectTyping());
     productNameInputCtrl!.addListener(() => detectTyping());
@@ -102,7 +104,7 @@ class TransactionFormState extends State<TransactionForm> {
 
   initData() {
     String now = DateTime.now().toString();
-    transactionDateInputCtrl!.text = GeneralUtils().dateFormat(now);
+    transactionDateInputCtrl!.text = GeneralUtils().dateTimeFormat(now);
     transactionDate.value = now;
   }
 
@@ -113,12 +115,14 @@ class TransactionFormState extends State<TransactionForm> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       initialEntryMode: DatePickerEntryMode.calendar,
+      builder: (context, child) => GeneralUtils().customDatePickerTheme(context, child),
     );
 
     if (datepicker != null) {
       final TimeOfDay? timepicker = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
+        builder: (context, child) => GeneralUtils().customTimePickerTheme(context, child),
       );
 
       if (timepicker != null) {
@@ -167,6 +171,7 @@ class TransactionFormState extends State<TransactionForm> {
         productNameInputCtrl!.text.isNotEmpty ||
         itemAmountInputCtrl!.text.isNotEmpty ||
         productPriceInputCtrl!.text.isNotEmpty;
+    isShowBudgetPrediction.value = itemAmountInputCtrl!.text.isNotEmpty && productPriceInputCtrl!.text.isNotEmpty;
     setState(() {});
   }
 
@@ -363,7 +368,7 @@ class TransactionFormState extends State<TransactionForm> {
                 ),
               ),
               GeneralUtils().verticalSpacer(30.h),
-              budgetInfoCard(),
+              isShowBudgetPrediction.value ? budgetInfoCard() : Container(),
             ],
           ),
         );

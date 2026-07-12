@@ -4,7 +4,7 @@ class CustomHeaderWidget extends StatefulWidget {
   final String? fullName;
   final String? location;
   final String? greeting;
-  final String? profileImageUrl;
+  final Uint8List? profileImageUrl;
 
   CustomHeaderWidget({
     required this.fullName,
@@ -17,7 +17,6 @@ class CustomHeaderWidget extends StatefulWidget {
 }
 
 class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
-
   var showGreeting = true;
 
   @override
@@ -25,7 +24,7 @@ class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
     super.initState();
 
     Future.delayed(Duration(seconds: 3), () {
-      if(mounted) {
+      if (mounted) {
         setState(() => showGreeting = false);
       }
     });
@@ -33,52 +32,66 @@ class CustomHeaderWidgetState extends State<CustomHeaderWidget> {
 
   @override
   build(context) {
-
-    String firstLetter = widget.fullName!.isNotEmpty ? widget.fullName![0].toUpperCase() : '';
+    String firstLetter =
+        widget.fullName!.isNotEmpty ? widget.fullName![0].toUpperCase() : '';
 
     emptyImageProfile() => Text(
-            firstLetter,
-            style: FontTheme.labelStyle1(status: "thin", fontSize: 20, color: ColorsTheme.white),
-          );
+          firstLetter,
+          style: FontTheme.labelStyle1(
+              status: "thin", fontSize: 20, color: ColorsTheme.white),
+        );
 
     profileIcon() => CircleAvatar(
-      radius: 35.r,
-      backgroundColor: ColorsTheme.green,
-      child: widget.profileImageUrl != null ? ClipOval(
-        child: Image.network(
-          key: UniqueKey(),
-          "${GeneralUtils().baseUrl}/${widget.profileImageUrl}",
-          width: 70.w,
-          height: 70.h,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => emptyImageProfile(),
-        ),
-      ) : emptyImageProfile(),
-    );
+          radius: 35.r,
+          backgroundColor: ColorsTheme.green,
+          child: widget.profileImageUrl != null
+              ? ClipOval(
+                  child: Image.memory(
+                    key: UniqueKey(),
+                    widget.profileImageUrl!,
+                    width: 70.w,
+                    height: 70.h,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        emptyImageProfile(),
+                  ),
+                )
+              : emptyImageProfile(),
+        );
 
     currentTimeAndLocation() =>
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 5000),
-            transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
             child: SizedBox(
               width: 200.w,
-              child: showGreeting ? Text(
-                key: const ValueKey<bool>(true),
-                widget.greeting!,
-                style: FontTheme.labelStyle1(status: "bold",fontSize: 15, color: ColorsTheme.black),
-                textAlign: TextAlign.end,
-              ) : Text(
-                key: const ValueKey<bool>(false),
-                widget.location!,
-                style: FontTheme.labelStyle1(status: "bold",fontSize: 15, color: ColorsTheme.black),
-                textAlign: TextAlign.end,
-              ),
+              child: showGreeting
+                  ? Text(
+                      key: const ValueKey<bool>(true),
+                      widget.greeting!,
+                      style: FontTheme.labelStyle1(
+                          status: "bold",
+                          fontSize: 15,
+                          color: ColorsTheme.black),
+                      textAlign: TextAlign.end,
+                    )
+                  : Text(
+                      key: const ValueKey<bool>(false),
+                      widget.location!,
+                      style: FontTheme.labelStyle1(
+                          status: "bold",
+                          fontSize: 15,
+                          color: ColorsTheme.black),
+                      textAlign: TextAlign.end,
+                    ),
             ),
           ),
           Text(
             DateFormat("HH:mm").format(DateTime.now()),
-            style: FontTheme.labelStyle1(status: "bold",fontSize: 35,color: ColorsTheme.black),
+            style: FontTheme.labelStyle1(
+                status: "bold", fontSize: 35, color: ColorsTheme.black),
           ),
         ]);
 

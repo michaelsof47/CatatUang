@@ -28,14 +28,14 @@ class ProfileFormPageState extends State<ProfileFormPage> {
   File? imageFile;
   var userId = "".obs;
   var isAddingImage;
-  var imageUrl;
+  var profileImage;
   var headerKey;
   var isTyping;
 
-  var firstNameDataLength;
-  var lastNameDataLength;
-  var emailDataLength;
-  var phoneDataLength;
+  var firstNameDataLength = 0;
+  var lastNameDataLength = 0;
+  var emailDataLength = 0;
+  var phoneDataLength = 0;
 
   //Global Props
   showAlertSnackbar(String? label, bool? isSuccessful) =>
@@ -64,14 +64,14 @@ class ProfileFormPageState extends State<ProfileFormPage> {
 
     userId.value = data!["userId"];
     firstNameInputCtrl!.text = data["firstName"];
-    firstNameDataLength = data["firstName"].length;
+    firstNameDataLength = (data["firstName"] ?? "").length;
     lastNameInputCtrl!.text = data["lastName"];
-    lastNameDataLength = data["lastName"].length;
+    lastNameDataLength = (data["lastName"] ?? "").length;
     emailInputCtrl!.text = data["email"];
-    emailDataLength = data["email"].length;
+    emailDataLength = (data["email"] ?? "").length;
     phoneInputCtrl!.text = data["phone"];
-    phoneDataLength = data["phone"].length;
-    imageUrl = data["url_image"];
+    phoneDataLength = (data["phone"] ?? "").length;
+    profileImage = data["url_image"];
     headerKey = UniqueKey();
   }
 
@@ -83,9 +83,8 @@ class ProfileFormPageState extends State<ProfileFormPage> {
   }
 
   initConstructor() {
-    isPasswordVisible = false.obs;
     isRePasswordVisible = false.obs;
-
+    isPasswordVisible = false.obs;
     firstNameInputCtrl = TextEditingController();
     lastNameInputCtrl = TextEditingController();
     emailInputCtrl = TextEditingController();
@@ -108,7 +107,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
   }
 
   detectTyping() {
-    if (firstNameInputCtrl!.text.length > firstNameDataLength || 
+    if (firstNameInputCtrl!.text.length > firstNameDataLength ||
         lastNameInputCtrl!.text.length > lastNameDataLength ||
         emailInputCtrl!.text.length > emailDataLength ||
         phoneInputCtrl!.text.length > phoneDataLength ||
@@ -199,7 +198,8 @@ class ProfileFormPageState extends State<ProfileFormPage> {
     return Container();
   }
 
-  popScope() async => await GeneralUtils().customAlertDialog(context,"Apakah Anda Yakin Untuk Keluar ?", () {
+  popScope() async => await GeneralUtils()
+          .customAlertDialog(context, "Apakah Anda Yakin Untuk Keluar ?", () {
         Navigator.pop(context);
         Navigator.pop(context);
       });
@@ -231,8 +231,8 @@ class ProfileFormPageState extends State<ProfileFormPage> {
                   child: isAddingImage.value
                       ? Image.file(imageFile!,
                           width: 80.w, height: 80.h, fit: BoxFit.cover)
-                      : Image.network(
-                          imageUrl!,
+                      : Image.memory(
+                          profileImage!,
                           key: headerKey,
                           width: 80.w,
                           height: 80.h,
@@ -289,6 +289,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
             decoType: "underline",
             isNumber: false,
             isPassword: false,
+            isPasswordVisible: false,
           ),
           GeneralUtils().generalTextFormField(
             controller: lastNameInputCtrl,
@@ -298,6 +299,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
             decoType: "underline",
             isNumber: false,
             isPassword: false,
+            isPasswordVisible: false,
           ),
           GeneralUtils().generalTextFormField(
             controller: emailInputCtrl,
@@ -307,6 +309,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
             decoType: "underline",
             isNumber: false,
             isPassword: false,
+            isPasswordVisible: false,
           ),
           GeneralUtils().generalTextFormField(
             controller: phoneInputCtrl,
@@ -316,6 +319,7 @@ class ProfileFormPageState extends State<ProfileFormPage> {
             decoType: "underline",
             isNumber: false,
             isPassword: false,
+            isPasswordVisible: false,
           ),
         ]);
 

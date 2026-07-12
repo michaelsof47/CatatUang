@@ -19,10 +19,11 @@ class CustomSingleButtonWidget extends StatelessWidget {
           onTap: () => actionCallback!(),
           borderRadius: BorderRadius.circular(10.r),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 50.w),
+            padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 10.w),
             child: Text(
               hintLabel!,
-              style: FontTheme.labelStyle1(status: "bold",fontSize: 14, color: ColorsTheme.black),
+              style: FontTheme.labelStyle1(
+                  status: "bold", fontSize: 14, color: ColorsTheme.black),
             ),
           ),
         ));

@@ -15,11 +15,11 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   TransactionModel? transactionModel;
   TextEditingController? inputController;
   var locationLabel;
-  var profileImageUrl;
   var fullName;
   var balanceAmount;
   var transactionCount;
   var isLoading;
+  var profileImage;
 
   //Global Props
   showAlertSnackbar(String? label, bool? isSuccessful) =>
@@ -36,17 +36,21 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
                 topLeft: Radius.circular(20.r),
                 topRight: Radius.circular(20.r))),
         builder: (buildContext) => CustomBottomSheetInputFieldWidget(
-            inputController: inputController, callback: (String value) {
+            inputController: inputController,
+            callback: (String value) {
               Navigator.pop(context);
               isLoading.value = true;
               inputController!.text = "";
 
-              String formattedData = value.replaceAll("Rp. ","");
-              String formattedData2 = formattedData.replaceAll(".","");
+              String formattedData = value.replaceAll("Rp. ", "");
+              String formattedData2 = formattedData.replaceAll(".", "");
 
               controller!.topupBalanceCtrl(formattedData2);
               initData();
-            }, headerLabel: "Tambah Saldo", hintLabel: "Jumlah Saldo",isNumber: true),
+            },
+            headerLabel: "Tambah Saldo",
+            hintLabel: "Jumlah Saldo",
+            isNumber: true),
       );
 
   @override
@@ -70,17 +74,17 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
 
     controller = Get.put(DashboardController());
     locationLabel = "".obs;
-    profileImageUrl = "".obs;
     fullName = "".obs;
     balanceAmount = 0.obs;
     transactionCount = 0.obs;
     isLoading = true.obs;
+    profileImage = Uint8List(0).obs;
     inputController = TextEditingController();
   }
 
   initData() async {
     await controller!.getDashboardDataCtrl(true);
-    await controller!.getTransactionDataCtrl();
+    await controller!.getTransactionDataCtrl(page: 1, categoryId: 0);
     getLocationData();
   }
 
@@ -167,8 +171,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           break;
         case "dashboard_success":
           AccountModel accountModel = AccountModel.fromJson(dataMap);
-          profileImageUrl.value = accountModel.profileImageUrl.toString();
-          print("data_check ${dataMap}");
+          profileImage.value = controller!.profileImage!.value;
           fullName.value = "${accountModel.firstName} ${accountModel.lastName}";
           print("Balance Amount: ${controller!.balanceAmount.value}");
           balanceAmount.value = controller!.balanceAmount.value;
@@ -196,19 +199,6 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   @override
   Widget build(BuildContext context) {
     ///CUSTOM SHORCUT MENU + SUMMARY BALANCES///
-
-    rewardIconStatus() => Container(
-          width: 59.w,
-          height: 54.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.r),
-            color: ColorsTheme.white,
-            image: const DecorationImage(
-              image: AssetImage('assets/image/ic_dummy_reward.png'),
-              fit: BoxFit.scaleDown,
-            ),
-          ),
-        );
 
     balancesInformation() => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,10 +237,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                balancesInformation(),
-                //rewardIconStatus(),
-              ],
+              children: [balancesInformation()],
             ),
             GeneralUtils().verticalSpacer(11),
             userTransactionLabel(),
@@ -321,8 +308,8 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
             GeneralUtils().verticalSpacer(1),
             itemRowLabel(
                 "Total Outcome",
-                GeneralUtils().currencyFormat(
-                    transactionModel!.data![0].totalPrice)),
+                GeneralUtils()
+                    .currencyFormat(transactionModel!.data![0].totalPrice)),
           ],
         );
 
@@ -450,7 +437,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
                         userInformation: userInformation(),
                         itemMenuLabelList: itemMenuLabelList,
                         itemMenuActionList: itemMenuActionList,
-                        itemMenuHeight: 85,
+                        itemMenuHeight: 100,
                         callback: (index) => itemMenuActionList![index] != "" &&
                                 itemMenuActionList![index] != "topup"
                             ? Navigator.pushNamed(
@@ -478,7 +465,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
                 ? CustomShimmerProfileWidget()
                 : CustomHeaderWidget(
                     fullName: fullName.value,
-                    profileImageUrl: profileImageUrl.value,
+                    profileImageUrl: profileImage.value,
                     location: locationLabel.value,
                     greeting: getGreeting()!),
             GeneralUtils().verticalSpacer(15),

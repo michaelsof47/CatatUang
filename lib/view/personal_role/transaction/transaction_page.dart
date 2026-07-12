@@ -10,14 +10,16 @@ class TransactionPageState extends State<TransactionPage> {
 
   var balanceAmount;
   RxList<CategoryItem>? categoriesList;
-  List<String>? dropdownList;
+  List<CategoryItem>? dropdownList;
   var isLoading;
-  var initialCategoryName;
+  var initialCategoryItem;
   RxList<DetailItems> transactionList = <DetailItems>[].obs;
   ScrollController? scrollController;
   var currentPage;
   var hasMore;
   var isLoadMore;
+  var categoryId;
+  var isFiltered;
 
   @override
   void initState() {
@@ -33,12 +35,14 @@ class TransactionPageState extends State<TransactionPage> {
     isLoading = false.obs;
     controller = Get.put(DashboardController());
     dropdownList = [];
-    initialCategoryName = "Semua".obs;
+    initialCategoryItem = CategoryItem(id: 0, name: "Semua", description: "", categoryUrlImage: "").obs;
     transactionList = <DetailItems>[].obs;
     scrollController = ScrollController();
     currentPage = 1.obs;
     hasMore = true.obs;
     isLoadMore = false.obs;
+    categoryId = 0.obs;
+    isFiltered = false.obs;
 
     scrollController!.addListener(() {
       if (scrollController!.position.pixels ==
@@ -85,9 +89,9 @@ class TransactionPageState extends State<TransactionPage> {
           CategoriesModel datamodel = CategoriesModel.fromJson(categoriesMap);
           categoriesList!.value = datamodel.detailsItem!;
           dropdownList!.clear();
-          dropdownList!.add("Semua");
+          dropdownList!.add(CategoryItem(id: 0, name: "Semua", description: "", categoryUrlImage: ""));
           for(var item in datamodel.detailsItem!) {
-            dropdownList!.add(item.name!);
+            dropdownList!.add(item);
           }
 
           TransactionModel transactionModel = TransactionModel.fromJson(transactionMap);
@@ -107,6 +111,7 @@ class TransactionPageState extends State<TransactionPage> {
             hasMore.value = true;
           }
           isLoadMore.value = false;
+          isFiltered.value = false;
           break;
         case "transaction_failure":
           isLoading.value = false;
@@ -147,7 +152,16 @@ class TransactionPageState extends State<TransactionPage> {
   Future<void> onLoadMoreData() async {
     isLoadMore.value = true;
     currentPage.value++;
-    await controller!.getTransactionDataCtrl(page: currentPage.value);
+    await controller!.getTransactionDataCtrl(page: currentPage.value,categoryId: categoryId.value);
+  }
+
+  Future<void> categoryFiltered(CategoryItem? value) async {
+      initialCategoryItem.value = value;
+      transactionList.clear();
+      categoryId.value = value!.id;
+      currentPage.value = 1;
+      isFiltered.value = true;
+      controller!.getTransactionDataCtrl(page: 1, categoryId: categoryId.value);
   }
 
   @override
@@ -238,11 +252,9 @@ class TransactionPageState extends State<TransactionPage> {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.w),
             child: CustomDropdownWidget(
-              initialValue: initialCategoryName.value,
+              initialValue: initialCategoryItem.value,
               itemMenuLabelFilter: dropdownList,
-              callback: (value) {
-                initialCategoryName.value = value;
-              },
+              callback: (value) => categoryFiltered(value),
           ),
           decoration: GeneralUtils().customBoxStyle1(),
           ),
@@ -342,7 +354,7 @@ class TransactionPageState extends State<TransactionPage> {
           width: ScreenUtil().screenWidth,
           height: 270.h,
           padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 45.h),
-          child: itemList(),
+          child: isFiltered.value ? Center(child: CircularProgressIndicator()) : itemList(),
         ));
 
     stackedView() => SizedBox(

@@ -1,49 +1,36 @@
 part of 'package:catat_uang/import_url_file.dart';
 
 class LocalManager {
-  retrievePlannerBookTitle() async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.getString("book_name") ?? "";
-  }
+  final sharedPref = CustomSharedPreference();
 
-  storedPlannerTitleBook(bookName) async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.setString("book_name", bookName);
-  }
+  retrievePlannerBookTitle() async =>
+      await sharedPref.getString("book_name") ?? "";
 
-  retrieveLoginStatus() async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.getBool("is_login") ?? false;
-  }
+  storedPlannerTitleBook(bookName) async =>
+      await sharedPref.setString("book_name", bookName);
 
-  storedLoginStatusAccount(loginStatus) async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.setBool("is_login", loginStatus);
-  }
+  retrieveLoginStatus() async => await sharedPref.getBool("is_login") ?? false;
 
-  storedTokenAndUserIdAccount({required Map<String,dynamic> map}) async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
+  storedLoginStatusAccount(loginStatus) async =>
+      await sharedPref.setBool("is_login", loginStatus);
+
+  storedTokenAndUserIdAccount({required Map<String, dynamic> map}) async {
     String? dataMap = jsonEncode(map);
     return sharedPref.setString("token", dataMap);
   }
 
   retrieveTokenAndUserIdAccount() async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
     if (sharedPref.getString("token") != "") {
-      Map<String,dynamic>? dataMap = jsonDecode(sharedPref.getString("token")!);
+      Map<String, dynamic>? dataMap =
+          jsonDecode((await sharedPref.getString("token"))!);
       return dataMap;
     } else {
       return {};
     }
   }
 
-  storedBalanceId({required String balanceId}) async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.setString("balance_id", balanceId);
-  }
+  storedBalanceId({required String balanceId}) async =>
+      await sharedPref.setString("balance_id", balanceId);
 
-  retrieveBalanceId() async {
-    SharedPreferences? sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.getString("balance_id") ?? "";
-  }
+  retrieveBalanceId() async => await sharedPref.getString("balance_id") ?? "";
 }
