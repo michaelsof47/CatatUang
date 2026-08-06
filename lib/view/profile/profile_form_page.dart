@@ -3,7 +3,13 @@ part of 'package:catat_uang/import_url_file.dart';
 class ProfileFormBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DashboardController>(() => DashboardController());
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<DashboardServiceInterface>(() => DashboardService());
+
+    Get.lazyPut<DashboardController>(() => DashboardController(
+          localManager: Get.find<LocalManager>(),
+          dashboardService: Get.find<DashboardServiceInterface>(),
+        ));
   }
 }
 

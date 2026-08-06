@@ -3,7 +3,13 @@ part of 'package:catat_uang/import_url_file.dart';
 class TransactionFormBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TransactionController>(() => TransactionController());
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<TransactionServiceInterface>(() => TransactionService());
+
+    Get.lazyPut<TransactionController>(() => TransactionController(
+          localManager: Get.find<LocalManager>(),
+          service: Get.find<TransactionServiceInterface>(),
+        ));
   }
 }
 
@@ -104,7 +110,7 @@ class TransactionFormState extends State<TransactionForm> {
 
   initData() {
     String now = DateTime.now().toString();
-    transactionDateInputCtrl!.text = GeneralUtils().dateTimeFormat(now);
+    transactionDateInputCtrl!.text = FormatUtils().dateTimeFormat(now);
     transactionDate.value = now;
   }
 
@@ -115,14 +121,16 @@ class TransactionFormState extends State<TransactionForm> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       initialEntryMode: DatePickerEntryMode.calendar,
-      builder: (context, child) => GeneralUtils().customDatePickerTheme(context, child),
+      builder: (context, child) =>
+          GeneralUtils().customDatePickerTheme(context, child),
     );
 
     if (datepicker != null) {
       final TimeOfDay? timepicker = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
-        builder: (context, child) => GeneralUtils().customTimePickerTheme(context, child),
+        builder: (context, child) =>
+            GeneralUtils().customTimePickerTheme(context, child),
       );
 
       if (timepicker != null) {
@@ -136,7 +144,7 @@ class TransactionFormState extends State<TransactionForm> {
 
         transactionDate.value = combinedDateTime.toString();
         setState(() => transactionDateInputCtrl!.text =
-            GeneralUtils().dateTimeFormat(combinedDateTime.toString()));
+            FormatUtils().dateTimeFormat(combinedDateTime.toString()));
       }
     }
   }
@@ -171,7 +179,8 @@ class TransactionFormState extends State<TransactionForm> {
         productNameInputCtrl!.text.isNotEmpty ||
         itemAmountInputCtrl!.text.isNotEmpty ||
         productPriceInputCtrl!.text.isNotEmpty;
-    isShowBudgetPrediction.value = itemAmountInputCtrl!.text.isNotEmpty && productPriceInputCtrl!.text.isNotEmpty;
+    isShowBudgetPrediction.value = itemAmountInputCtrl!.text.isNotEmpty &&
+        productPriceInputCtrl!.text.isNotEmpty;
     setState(() {});
   }
 
@@ -302,7 +311,7 @@ class TransactionFormState extends State<TransactionForm> {
           Text(label!,
               style: FontTheme.labelStyle1(
                   status: "thin", fontSize: 12, color: ColorsTheme.black)),
-          Text(GeneralUtils().currencyFormat(amount),
+          Text(FormatUtils().currencyFormat(amount),
               style: FontTheme.labelStyle1(
                   status: "bold",
                   fontSize: 12,
@@ -351,7 +360,15 @@ class TransactionFormState extends State<TransactionForm> {
               GeneralUtils().verticalSpacer(10.h),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text("Sisa Budget"),
-                Text(GeneralUtils().currencyFormat(calculateBalance()),style: FontTheme.labelStyle1(status: "bold", fontSize: 14, color: calculateBalance() < 0 ? ColorsTheme.redSoft : ColorsTheme.green),)
+                Text(
+                  FormatUtils().currencyFormat(calculateBalance()),
+                  style: FontTheme.labelStyle1(
+                      status: "bold",
+                      fontSize: 14,
+                      color: calculateBalance() < 0
+                          ? ColorsTheme.redSoft
+                          : ColorsTheme.green),
+                )
               ])
             ],
           ),

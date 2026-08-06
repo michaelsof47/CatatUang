@@ -1,9 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class TransactionService {
+class TransactionService extends BaseService implements TransactionServiceInterface {
+
+  @override
   Future<HttpModel> postCreateCategory(
       {required Map<String, dynamic> map, String? token}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/categories");
+    var uri = Uri.parse("$baseUrl/transactions/categories");
     var request = http.MultipartRequest("POST", uri);
 
     request.headers.addAll({"Authorization": "Bearer $token"});
@@ -24,11 +26,12 @@ class TransactionService {
     return HttpModel(code: response.statusCode, body: response.body);
   }
 
+  @override
   Future<HttpModel> postCreateTransaction(
       {required Map<String, dynamic> map,
       String? token,
       String? balanceId}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/transactions/");
+    var uri = Uri.parse("$baseUrl/transactions/");
     var request = http.MultipartRequest("POST", uri);
 
     request.headers.addAll({"Authorization": "Bearer $token"});

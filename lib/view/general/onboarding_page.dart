@@ -3,7 +3,14 @@ part of 'package:catat_uang/import_url_file.dart';
 class OnBoardingBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LoginController>(() => LoginController());
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<LoginServiceInterfaces>(() => LoginService());
+
+    Get.lazyPut<LoginController>(() => LoginController(
+          firebaseAuth: FirebaseAuth.instance,
+          localManager: Get.find<LocalManager>(),
+          loginService: Get.find<LoginServiceInterfaces>(),
+        ));
   }
 }
 
@@ -22,12 +29,11 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   var roleStatusConfig;
 
   ///GLOBAL PROPS///
-  
-  showAlertSnackbar(String? label, bool? isSuccessful) =>
-    ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
-        label: label,
-        color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
+  showAlertSnackbar(String? label, bool? isSuccessful) =>
+      ScaffoldMessenger.of(context).showSnackBar(GeneralUtils().alertSnackbar(
+          label: label,
+          color: isSuccessful! ? ColorsTheme.green : ColorsTheme.redSoft));
 
   TextSpan? subtitleLabel({required String? label, required String? isBold}) =>
       TextSpan(
@@ -47,14 +53,14 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   initConstructor() {
     inputEditingController = TextEditingController();
     //config = MainConfig.of(context);
-    loginCtrl = Get.put(LoginController());
+    loginCtrl = Get.find<LoginController>();
 
     versionName = "".obs;
     roleStatusConfig = "Personal".obs;
   }
 
-  retrieveVersion() =>
-      PackageInfo.fromPlatform().then((PackageInfo packageInfo) => versionName.value = packageInfo.version);
+  retrieveVersion() => PackageInfo.fromPlatform().then(
+      (PackageInfo packageInfo) => versionName.value = packageInfo.version);
 
   initData() {
     WidgetsBinding.instance
@@ -62,13 +68,13 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   onChangeRole() {
-    if(roleStatusConfig.value == "Personal") {
+    if (roleStatusConfig.value == "Personal") {
       roleStatusConfig.value = "Owner";
     } else {
       roleStatusConfig.value = "Personal";
     }
   }
-  
+
   void navigationMenu({String? loginType}) async {
     switch (loginType) {
       case "custom":
@@ -91,11 +97,11 @@ class OnBoardingPageState extends State<OnBoardingPage> {
       switch (alertStatus.value) {
         case "success_login":
           Navigator.pop(context);
-          Navigator.pushReplacementNamed(context, "/home_navigation");
+          Get.offAllNamed("/home_navigation");
           break;
         case "success_register":
           Navigator.pop(context);
-          Navigator.pushNamed(context, "/register",arguments: map);
+          Navigator.pushNamed(context, "/register", arguments: map);
           break;
         case "failure_register":
           Navigator.pop(context);
@@ -108,7 +114,6 @@ class OnBoardingPageState extends State<OnBoardingPage> {
 
     return Container();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +151,9 @@ class OnBoardingPageState extends State<OnBoardingPage> {
                     child: Text(
                       "Role : $roleStatusConfig",
                       style: FontTheme.labelStyle1(
-                          status: "bold", fontSize: 10, color: ColorsTheme.green),
+                          status: "bold",
+                          fontSize: 10,
+                          color: ColorsTheme.green),
                     ))
                 : Container(),
           ]),
@@ -170,7 +177,9 @@ class OnBoardingPageState extends State<OnBoardingPage> {
               Center(
                 child: Text("Atau",
                     style: FontTheme.labelStyle1(
-                        status: "thin", fontSize: 12, color: ColorsTheme.black)),
+                        status: "thin",
+                        fontSize: 12,
+                        color: ColorsTheme.black)),
               ),
               GeneralUtils().verticalSpacer(14),
               CustomLoginFormButtonWidget(

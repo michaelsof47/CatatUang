@@ -1,5 +1,18 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class TransactionBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<DashboardServiceInterface>(() => DashboardService());
+
+    Get.lazyPut<DashboardController>(() => DashboardController(
+          dashboardService: Get.find<DashboardServiceInterface>(),
+          localManager: Get.find<LocalManager>(),
+        ));
+  }
+}
+
 class TransactionPage extends StatefulWidget {
   @override
   State<TransactionPage> createState() => TransactionPageState();
@@ -33,9 +46,11 @@ class TransactionPageState extends State<TransactionPage> {
     categoriesList = <CategoryItem>[].obs;
     balanceAmount = 0.obs;
     isLoading = false.obs;
-    controller = Get.put(DashboardController());
+    controller = Get.find<DashboardController>();
     dropdownList = [];
-    initialCategoryItem = CategoryItem(id: 0, name: "Semua", description: "", categoryUrlImage: "").obs;
+    initialCategoryItem = CategoryItem(
+            id: 0, name: "Semua", description: "", categoryUrlImage: "")
+        .obs;
     transactionList = <DetailItems>[].obs;
     scrollController = ScrollController();
     currentPage = 1.obs;
@@ -70,7 +85,7 @@ class TransactionPageState extends State<TransactionPage> {
   void dispose() {
     scrollController!.dispose();
     super.dispose();
-    Get.delete();
+    //Get.delete<DashboardController>();
   }
 
   Widget? handlingError() {
@@ -89,27 +104,32 @@ class TransactionPageState extends State<TransactionPage> {
           CategoriesModel datamodel = CategoriesModel.fromJson(categoriesMap);
           categoriesList!.value = datamodel.detailsItem!;
           dropdownList!.clear();
-          dropdownList!.add(CategoryItem(id: 0, name: "Semua", description: "", categoryUrlImage: ""));
-          for(var item in datamodel.detailsItem!) {
+          dropdownList!.add(CategoryItem(
+              id: 0, name: "Semua", description: "", categoryUrlImage: ""));
+          for (var item in datamodel.detailsItem!) {
             dropdownList!.add(item);
           }
 
-          TransactionModel transactionModel = TransactionModel.fromJson(transactionMap);
-          GeneralUtils().longPrint('dari page : ${jsonEncode(transactionMap['data'])}');
-          
+          TransactionModel transactionModel =
+              TransactionModel.fromJson(transactionMap);
+          GeneralUtils()
+              .longPrint('dari page : ${jsonEncode(transactionMap['data'])}');
+
           if (currentPage.value == 1) {
             transactionList.clear();
           }
-          
-          for(var item in transactionModel.data!) {
+
+          for (var item in transactionModel.data!) {
             transactionList.add(item);
           }
 
-          if (transactionList.length >= transactionModel.pagination!.totalItems!) {
-            hasMore.value = false;
+          if (transactionList.length < transactionModel.pagination!.totalItems!) {
+            hasMore.value = transactionList.length >=
+                transactionModel.pagination!.pageSize!;
           } else {
-            hasMore.value = true;
+            hasMore.value = false;
           }
+
           isLoadMore.value = false;
           isFiltered.value = false;
           break;
@@ -152,16 +172,17 @@ class TransactionPageState extends State<TransactionPage> {
   Future<void> onLoadMoreData() async {
     isLoadMore.value = true;
     currentPage.value++;
-    await controller!.getTransactionDataCtrl(page: currentPage.value,categoryId: categoryId.value);
+    await controller!.getTransactionDataCtrl(
+        page: currentPage.value, categoryId: categoryId.value);
   }
 
   Future<void> categoryFiltered(CategoryItem? value) async {
-      initialCategoryItem.value = value;
-      transactionList.clear();
-      categoryId.value = value!.id;
-      currentPage.value = 1;
-      isFiltered.value = true;
-      controller!.getTransactionDataCtrl(page: 1, categoryId: categoryId.value);
+    initialCategoryItem.value = value;
+    transactionList.clear();
+    categoryId.value = value!.id;
+    currentPage.value = 1;
+    isFiltered.value = true;
+    controller!.getTransactionDataCtrl(page: 1, categoryId: categoryId.value);
   }
 
   @override
@@ -214,7 +235,12 @@ class TransactionPageState extends State<TransactionPage> {
                 isRoundedShape: true,
                 width: 80,
                 height: 60,
-                action: () => Navigator.pushNamed(context, '/transaction_form',arguments: TransactionArguments(categoriesList,categoriesList![index].name,categoriesList![index].id.toString(),balanceAmount.value)),
+                action: () => Navigator.pushNamed(context, '/transaction_form',
+                    arguments: TransactionArguments(
+                        categoriesList,
+                        categoriesList![index].name,
+                        categoriesList![index].id.toString(),
+                        balanceAmount.value)),
                 removeAction: (categoryId) => GeneralUtils().customAlertDialog(
                     context,
                     "Apakah Anda Yakin Untuk Melanjutkan Penghapusan ?",
@@ -255,8 +281,8 @@ class TransactionPageState extends State<TransactionPage> {
               initialValue: initialCategoryItem.value,
               itemMenuLabelFilter: dropdownList,
               callback: (value) => categoryFiltered(value),
-          ),
-          decoration: GeneralUtils().customBoxStyle1(),
+            ),
+            decoration: GeneralUtils().customBoxStyle1(),
           ),
         );
 
@@ -294,7 +320,10 @@ class TransactionPageState extends State<TransactionPage> {
         shape: GeneralUtils().customDecoration(),
         color: ColorsTheme.yellowSoft,
         child: InkWell(
-          onTap: () => Navigator.pushNamed(context, '/transaction_form',arguments: TransactionArguments(categoriesList,"Pilih Kategori","",balanceAmount.value)).then((_) {
+          onTap: () => Navigator.pushNamed(context, '/transaction_form',
+                  arguments: TransactionArguments(categoriesList,
+                      "Pilih Kategori", "", balanceAmount.value))
+              .then((_) {
             isLoading.value = true;
             initData();
           }),
@@ -354,7 +383,9 @@ class TransactionPageState extends State<TransactionPage> {
           width: ScreenUtil().screenWidth,
           height: 270.h,
           padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 45.h),
-          child: isFiltered.value ? Center(child: CircularProgressIndicator()) : itemList(),
+          child: isFiltered.value
+              ? Center(child: CircularProgressIndicator())
+              : itemList(),
         ));
 
     stackedView() => SizedBox(

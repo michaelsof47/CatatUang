@@ -1,24 +1,25 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class LoginController extends GetxController {
+class LoginController extends BaseController {
   FirebaseAuth? firebaseAuth;
   LocalManager? localManager;
-  UserService? userService;
+  LoginServiceInterfaces? loginService;
 
-  var resultMsg;
-  var resultStatus;
-  RxMap<dynamic, dynamic>? dataMap;
+  late RxString resultMsg;
+  late RxString resultStatus;
+  late RxMap<dynamic, dynamic> dataMap;
 
-  LoginController() {
-    firebaseAuth = FirebaseAuth.instance;
-    localManager = Get.put(LocalManager());
-    userService = Get.put(UserService());
-
+  LoginController({
+    required this.firebaseAuth,
+    required this.localManager,
+    required this.loginService,
+  }) {
     resultMsg = "".obs;
     resultStatus = "".obs;
     dataMap = {}.obs;
   }
 
+  @override
   void resetResponse() {
     resultMsg.value = "";
     resultStatus.value = "";
@@ -61,7 +62,7 @@ class LoginController extends GetxController {
 
   Future validateEmailFromDB(Map<String, dynamic> data) async {
     HttpModel response =
-        await userService!.postCheckEmail(email: data['email']);
+        await loginService!.postCheckEmail(email: data['email']);
 
     var responseBody = json.decode(response.body!);
 
@@ -79,7 +80,7 @@ class LoginController extends GetxController {
         resultStatus.value = "success_login";
       } else {
         resultStatus.value = "success_register";
-        dataMap!.value = data;
+        dataMap.value = data;
       }
     } else {
       resultStatus.value = "failure_google";
@@ -90,7 +91,7 @@ class LoginController extends GetxController {
   Future loginWithEmailPhoneCtrl(
       {required String? email, required String? password}) async {
     HttpModel response =
-        await userService!.postLogin(email: email, password: password);
+        await loginService!.postLogin(email: email, password: password);
 
     var responseBody = json.decode(response.body!);
 
@@ -114,7 +115,7 @@ class LoginController extends GetxController {
   }
 
   Future registerUserCtrl({required Map<String, dynamic>? data}) async {
-    HttpModel response = await userService!.postRegister(temporaryData: data);
+    HttpModel response = await loginService!.postRegister(temporaryData: data);
 
     var responseBody = json.decode(response.body!);
 

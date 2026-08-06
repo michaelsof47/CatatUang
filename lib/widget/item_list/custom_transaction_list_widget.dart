@@ -15,7 +15,8 @@ class CustomTransactionListWidget extends StatelessWidget {
   Widget build(context) {
     singleLineLabel({label, size, color}) => Text(
           label,
-          style: FontTheme.labelStyle1(status: "bold",fontSize: size,color: color),
+          style: FontTheme.labelStyle1(
+              status: "bold", fontSize: size, color: color),
         );
 
     itemInfoLabel({label, isHeader}) => Text(
@@ -49,7 +50,8 @@ class CustomTransactionListWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             singleLineLabel(
-              label: GeneralUtils().dateTimeFormat(transactionItem!.transactionDate),
+              label: FormatUtils()
+                  .dateTimeFormat(transactionItem!.transactionDate),
               size: 14,
               color: ColorsTheme.black,
             ),
@@ -72,7 +74,8 @@ class CustomTransactionListWidget extends StatelessWidget {
                 itemRowGroup(
                   label: "Total Transaksi",
                   label2: ":",
-                  label3: GeneralUtils().currencyFormat(transactionItem!.totalPrice),
+                  label3:
+                      FormatUtils().currencyFormat(transactionItem!.totalPrice),
                 ),
               ],
             ),
@@ -92,10 +95,10 @@ class CustomTransactionListWidget extends StatelessWidget {
         ),
       ),
       GeneralUtils().customCardLiner(
-              color: ColorsTheme.green,
-              horizontalPad: 0.w,
-              verticalPad: 0.w,
-            ),
+        color: ColorsTheme.green,
+        horizontalPad: 0.w,
+        verticalPad: 0.w,
+      ),
     ]);
   }
 }

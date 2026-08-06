@@ -1,10 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class CategoriesModel {
-  int? count;
-  List<CategoryItem>? detailsItem;
+  final int? count;
+  final List<CategoryItem>? detailsItem;
 
-  CategoriesModel({
+  const CategoriesModel({
     required this.count,
     required this.detailsItem,
   });

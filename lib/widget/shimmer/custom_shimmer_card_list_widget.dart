@@ -9,7 +9,7 @@ class CustomShimmerCardListWidget extends StatelessWidget {
       ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: 7,
+          itemCount: 4,
           itemBuilder: (context, index) {
             return Column(children: [
               CustomShimmerCardWidget(height: 50.h),

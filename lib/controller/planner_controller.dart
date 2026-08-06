@@ -1,33 +1,35 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class PlannerController extends GetxController {
-  PlannerService? service;
+class PlannerController extends BaseController {
+  PlannerServiceInterface? service;
   LocalManager? localManager;
 
   RxMap<dynamic, dynamic>? bookList;
 
-  var resultMessage;
-  var resultStatus;
+  late RxString resultMessage;
+  late RxString resultStatus;
 
-  PlannerController() {
-    service = Get.put(PlannerService());
-    localManager = Get.put(LocalManager());
+  PlannerController({
+    required this.service,
+    required this.localManager,
+  }) {
     resultMessage = "".obs;
     resultStatus = "".obs;
     bookList = {}.obs;
   }
 
+  @override
   resetResponse() {
     resultMessage.value = "";
     resultStatus.value = "";
   }
 
-  Future retrieveBookList() async {
+  Future retrieveBookList({required int currentPage, required String filter}) async {
     Map<String, dynamic> temporaryData =
         await localManager!.retrieveTokenAndUserIdAccount();
 
     HttpModel response =
-        await service!.getBookList(token: temporaryData["token"]);
+        await service!.getBookList(currentPage: currentPage,filter: filter, token: temporaryData["token"]);
 
     var responseBody = json.decode(response.body!);
 

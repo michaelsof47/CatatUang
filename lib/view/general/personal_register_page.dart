@@ -3,7 +3,14 @@ part of 'package:catat_uang/import_url_file.dart';
 class RegisterUserBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LoginController>(() => LoginController());
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<LoginServiceInterfaces>(() => LoginService());
+
+    Get.lazyPut<LoginController>(() => LoginController(
+          firebaseAuth: FirebaseAuth.instance,
+          localManager: Get.find<LocalManager>(),
+          loginService: Get.find<LoginServiceInterfaces>(),
+        ));
   }
 }
 
@@ -80,7 +87,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
 
   initData() {
     labelText.value =
-          "Kamu setuju dengan Ketentuan Layanan dan Kebijakan Privasi Catat Uang";
+        "Kamu setuju dengan Ketentuan Layanan dan Kebijakan Privasi Catat Uang";
   }
 
   //Take an image or Capture from camera (temporary)
@@ -140,7 +147,7 @@ class RegisterUserPageState extends State<RegisterUserPage> {
       switch (alertStatus.value) {
         case "success_register":
           Navigator.pop(context);
-          Navigator.pushReplacementNamed(context, '/home_navigation');
+          Get.offAllNamed('/home_navigation');
           break;
         case "failure_register":
           Navigator.pop(context);

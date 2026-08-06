@@ -1,8 +1,6 @@
 part of '../import_url_file.dart';
 
 class GeneralUtils {
-  String baseUrl = "https://5064-182-8-99-163.ngrok-free.app";
-
   horizontalSpacer(double? amount) => SizedBox(width: amount!.w);
 
   verticalSpacer(double? amount) => SizedBox(height: amount!.h);
@@ -166,7 +164,6 @@ class GeneralUtils {
         decoration: searchDecorationType(label, color),
         style: FontTheme.labelHintStyle2(true),
         maxLines: 1,
-        onChanged: (value) => callback!(value),
         onFieldSubmitted: (value) => callback!(value),
         keyboardType: isNumber! ? TextInputType.number : TextInputType.text,
         textInputAction:
@@ -459,21 +456,6 @@ class GeneralUtils {
               )));
         });
   }
-
-  currencyFormat(int? value) => NumberFormat.currency(
-        locale: 'id_ID',
-        symbol: 'Rp. ',
-        decimalDigits: 0,
-      ).format(value);
-
-  dateTimeFormat(String? date) =>
-      DateFormat('dd MMM yyyy HH:mm', 'id_ID').format(DateTime.parse(date!));
-
-  dateFormat(String? date) =>
-      DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(date!));
-
-  dateAPIFormat(String? date) =>
-      DateFormat('yyyy-MM-dd').format(DateTime.parse(date!));
 
   uploadProfileBottomSheet(
       {required BuildContext context, required Function(String)? callback}) {

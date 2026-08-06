@@ -1,8 +1,9 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class HttpModel {
-  int? code;
-  String? body;
+  final int? code;
+  final String? body;
 
-  HttpModel({this.code, this.body});
+  const HttpModel({this.code, this.body});
 }

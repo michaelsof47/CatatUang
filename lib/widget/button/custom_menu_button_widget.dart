@@ -42,7 +42,7 @@ class CustomMenuButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.r),
                   child: CachedNetworkImage(
                     imageUrl:
-                        "${GeneralUtils().baseUrl}/${categoryItem!.categoryUrlImage}",
+                        "${AppConfig().baseUrl}/${categoryItem!.categoryUrlImage}",
                     width: 32.w,
                     height: 32.h,
                     fit: BoxFit.cover,

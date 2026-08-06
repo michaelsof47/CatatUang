@@ -1,5 +1,19 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class SplashScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<LoginServiceInterfaces>(() => LoginService());
+
+    Get.lazyPut<LoginController>(() => LoginController(
+          firebaseAuth: FirebaseAuth.instance,
+          localManager: Get.find<LocalManager>(),
+          loginService: Get.find<LoginServiceInterfaces>(),
+        ));
+  }
+}
+
 class SplashScreenPage extends StatefulWidget {
   SplashScreenPageState createState() => SplashScreenPageState();
 }
@@ -7,11 +21,11 @@ class SplashScreenPage extends StatefulWidget {
 class SplashScreenPageState extends State<SplashScreenPage> {
   LoginController? loginController;
 
-  @override 
+  @override
   initState() {
     super.initState();
 
-    loginController = Get.put(LoginController());
+    loginController = Get.find<LoginController>();
 
     initData();
   }
@@ -23,7 +37,7 @@ class SplashScreenPageState extends State<SplashScreenPage> {
       const Duration(seconds: 4),
       () async => await !condition
           ? Navigator.pushReplacementNamed(context, '/onboarding')
-          : Navigator.pushReplacementNamed(context, '/home_navigation'),
+          : Get.offAllNamed('/home_navigation'),
     );
   }
 

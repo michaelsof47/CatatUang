@@ -71,7 +71,7 @@ class CustomAppBar extends StatelessWidget {
               Icon(Icons.money, color: ColorsTheme.black),
               GeneralUtils().horizontalSpacer(7),
               Text(
-                GeneralUtils().currencyFormat(balanceAmount),
+                FormatUtils().currencyFormat(balanceAmount),
                 style: FontTheme.labelStyle1(
                     status: "bold", fontSize: 12, color: ColorsTheme.black),
               )
@@ -90,11 +90,11 @@ class CustomAppBar extends StatelessWidget {
             normalNavBack(),
             identifier == "transaction"
                 ? isLoading
-                  ? Container()
-                  : currentBalances()
-            : identifier == "profile_form"
-                  ? saveButton()
-                  : Container(),
+                    ? Container()
+                    : currentBalances()
+                : identifier == "profile_form"
+                    ? saveButton()
+                    : Container(),
           ],
         ),
       ),

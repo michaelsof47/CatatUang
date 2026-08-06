@@ -74,6 +74,7 @@ part 'widget/button/custom_login_form_button_widget.dart';
 part 'widget/shimmer/custom_shimmer_card_widget.dart';
 part 'widget/shimmer/custom_shimmer_profile_widget.dart';
 part 'widget/shimmer/custom_shimmer_card_list_widget.dart';
+part 'widget/item_list/custom_planner_list_widget.dart';
 
 /////////////////
 ///MINI MODULE///
@@ -87,6 +88,7 @@ part 'database/local_manager.dart';
 ////////////////
 ///CONTROLLER///
 ////////////////
+part 'controller/base_controller.dart';
 part 'controller/planner_controller.dart';
 part 'controller/login_controller.dart';
 part 'controller/dashboard_controller.dart';
@@ -106,6 +108,15 @@ part 'controller/transaction_controller.dart';
 //UTILS//
 part 'utils/general_utils.dart';
 part 'utils/currency_utils.dart';
+part 'utils/app_config.dart';
+part 'utils/format_utils.dart';
+part 'utils/base_service_config.dart';
+
+//INTERFACE//
+part 'interfaces/dasboardservice_interfaces.dart';
+part 'interfaces/loginservice_interfaces.dart';
+part 'interfaces/transactionservice_interfaces.dart';
+part 'interfaces/plannerservice_interfaces.dart';
 
 //MODEL//
 part 'model/login_model.dart';
@@ -115,9 +126,10 @@ part 'model/transaction_model.dart';
 part 'model/categories_model.dart';
 part 'model/http_model.dart';
 part 'model/planner_book_list_model.dart';
+part 'model/pagination_model.dart';
 
 //SERVICE//
-part 'service/user_service.dart';
+part 'service/login_service.dart';
 part 'service/dashboard_service.dart';
 part 'service/transaction_service.dart';
 part 'service/planner_service.dart';

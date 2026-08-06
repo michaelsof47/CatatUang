@@ -1,11 +1,12 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class LoginModel {
-    String? message;
-    int? userId;
-    String? token;
+    final String? message;
+    final int? userId;
+    final String? token;
 
-    LoginModel({
+    const LoginModel({
         required this.message,
         required this.userId,
         required this.token,

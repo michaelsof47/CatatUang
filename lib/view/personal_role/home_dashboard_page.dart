@@ -1,5 +1,18 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class HomeDashboardBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<DashboardServiceInterface>(() => DashboardService());
+
+    Get.lazyPut<DashboardController>(() => DashboardController(
+          localManager: Get.find<LocalManager>(),
+          dashboardService: Get.find<DashboardServiceInterface>(),
+        ));
+  }
+}
+
 class HomeDashboardPage extends StatefulWidget {
   @override
   State<HomeDashboardPage> createState() => HomeDashboardPageState();
@@ -64,15 +77,14 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
   @override
   dispose() {
     super.dispose();
-
-    Get.delete();
+    //Get.delete<DashboardController>();
   }
 
   initConstructor() {
     itemMenuLabelList = ["Atur Rencana", "Analisa Keuangan", "Top Up"];
     itemMenuActionList = ["/planner_form", "", "topup"];
 
-    controller = Get.put(DashboardController());
+    controller = Get.find<DashboardController>();
     locationLabel = "".obs;
     fullName = "".obs;
     balanceAmount = 0.obs;
@@ -210,7 +222,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
             ),
             GeneralUtils().verticalSpacer(6),
             Text(
-              GeneralUtils().currencyFormat(balanceAmount.value),
+              FormatUtils().currencyFormat(balanceAmount.value),
               style: FontTheme.labelStyle1(
                   status: "bold", fontSize: 24, color: ColorsTheme.black),
             ),
@@ -297,7 +309,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
           children: [
             itemRowLabel(
               "Tgl Transaksi",
-              GeneralUtils()
+              FormatUtils()
                   .dateTimeFormat(transactionModel!.data![0].createdAt),
             ),
             GeneralUtils().verticalSpacer(1),
@@ -308,7 +320,7 @@ class HomeDashboardPageState extends State<HomeDashboardPage> {
             GeneralUtils().verticalSpacer(1),
             itemRowLabel(
                 "Total Outcome",
-                GeneralUtils()
+                FormatUtils()
                     .currencyFormat(transactionModel!.data![0].totalPrice)),
           ],
         );

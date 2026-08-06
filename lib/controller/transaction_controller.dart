@@ -1,19 +1,21 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class TransactionController extends GetxController {
-  TransactionService? service;
+class TransactionController extends BaseController {
+  TransactionServiceInterface? service;
   LocalManager? localManager;
 
-  var resultMessage;
-  var resultStatus;
+  late RxString resultMessage;
+  late RxString resultStatus;
 
-  TransactionController() {
-    service = Get.put(TransactionService());
-    localManager = Get.put(LocalManager());
+  TransactionController({
+    required this.service,
+    required this.localManager,
+  }) {
     resultMessage = "".obs;
     resultStatus = "".obs;
   }
 
+  @override
   resetResponse() {
     resultMessage.value = "";
     resultStatus.value = "";
@@ -29,7 +31,7 @@ class TransactionController extends GetxController {
     var responseBody = json.decode(response.body!);
 
     if (response.code == 201) {
-      resultStatus.value = "cetegories_success";
+      resultStatus.value = "categories_success";
       resultMessage.value = "Kategori berhasil ditambahkan";
     } else {
       if (responseBody["message"] == "Token is Blocked" ||

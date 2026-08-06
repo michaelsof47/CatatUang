@@ -1,20 +1,32 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class PlannerBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<PlannerServiceInterface>(() => PlannerService());
+
+    Get.lazyPut<PlannerController>(() => PlannerController(
+          service: Get.find<PlannerServiceInterface>(),
+          localManager: Get.find<LocalManager>(),
+        ));
+  }
+}
+
 class PlannerPage extends StatefulWidget {
   @override
   State<PlannerPage> createState() => PlannerPageState();
 }
 
 class PlannerPageState extends State<PlannerPage> {
-  PlannerController? controller;
-
-  TextEditingController? inputController;
-  LocalManager? localManager;
-
-  List<String>? itemMenuLabelFilter;
-  List<PieChartSectionData>? itemPieChartList;
-
-  var bookName;
+  late PlannerController controller;
+  late TextEditingController inputController;
+  late LocalManager localManager;
+  late List<BooksItem> bookList;
+  late ScrollController scrollCtrl;
+  var currentPage;
+  var isLoadMore;
+  var hasMore;
   var isAddedBook;
   var isLoading;
 
@@ -27,53 +39,29 @@ class PlannerPageState extends State<PlannerPage> {
   }
 
   initConstructor() {
-    controller = Get.put(PlannerController());
+    controller = Get.find<PlannerController>();
     inputController = TextEditingController();
+    scrollCtrl = ScrollController();
 
-    itemMenuLabelFilter = [
-      "3 Bulan",
-      "6 Bulan",
-      "9 Bulan",
-      "1 Tahun",
-      "Custom"
-    ];
-
-    itemPieChartList = [
-      PieChartSectionData(
-        value: 10,
-        color: ColorsTheme.yellow,
-        titleStyle: FontTheme.labelStyle1(
-            status: "bold", fontSize: 12, color: ColorsTheme.black),
-        title: "Kebutuhan\nSehari-Hari",
-      ),
-      PieChartSectionData(
-        value: 25,
-        color: ColorsTheme.green,
-        titleStyle: FontTheme.labelStyle1(
-            status: "bold", fontSize: 12, color: ColorsTheme.black),
-        title: "Tabungan",
-      ),
-      PieChartSectionData(
-        value: 30,
-        color: ColorsTheme.redSoft,
-        titleStyle: FontTheme.labelStyle1(
-            status: "bold", fontSize: 12, color: ColorsTheme.black),
-        title: "Pinjaman",
-      ),
-    ];
-
-    bookName = "".obs;
     isAddedBook = false.obs;
     isLoading = false.obs;
+    bookList = [];
+    currentPage = 1.obs;
+    hasMore = true.obs;
+    isLoadMore = false.obs;
+
+    scrollCtrl.addListener(() {
+      if (scrollCtrl.position.pixels == scrollCtrl.position.maxScrollExtent &&
+          hasMore.value &&
+          !isLoadMore.value) {
+        onLoadMoreData();
+      }
+    });
   }
 
   initData() async {
-    bookName.value = "";
     isLoading.value = true;
-
-    controller!.retrieveBookList();
-
-    //isAddedBook.value = bookName.value != "";
+    controller.retrieveBookList(currentPage: currentPage.value, filter: "");
   }
 
   showAlertSnackbar(String? label, bool? isSuccessful) =>
@@ -83,27 +71,67 @@ class PlannerPageState extends State<PlannerPage> {
 
   Widget? handlingError() {
     var alertStatus = "".obs;
-    alertStatus.value = controller!.resultStatus.value;
-    var alertMessage = controller!.resultMessage.value;
+    alertStatus.value = controller.resultStatus.value;
+    var alertMessage = controller.resultMessage.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (alertStatus.value) {
         case "retrieve_book_success":
           isLoading.value = false;
           isAddedBook.value = true;
-          print("data: ${controller!.bookList}");
+
+          if (currentPage.value == 1) {
+            bookList.clear();
+          }
+
+          PlannerBookListModel tempBookList =
+              PlannerBookListModel.fromJson(controller.bookList!);
+          for (var book in tempBookList.booksItem!) {
+            bookList.add(book);
+          }
+
+          if(bookList.length < tempBookList.pagination!.totalItems!) {
+            hasMore.value = bookList.length >= tempBookList.pagination!.pageSize!;
+          } else {
+            hasMore.value = false;
+          };
+          isLoadMore.value = false;
           break;
         case "retrieve_book_failure":
           isLoading.value = false;
           isAddedBook.value = false;
+          isLoadMore.value = false;
           showAlertSnackbar(alertMessage, false);
           break;
       }
 
-      controller!.resetResponse();
+      controller.resetResponse();
     });
 
     return Container();
+  }
+
+  Future<void> onRefreshList() async {
+    isLoading.value = true;
+    isAddedBook.value = false;
+    currentPage.value = 1;
+    bookList.clear();
+    controller.retrieveBookList(currentPage: currentPage.value, filter: inputController.text);
+  }
+
+  Future<void> onLoadMoreData() async {
+    isLoadMore.value = true;
+    currentPage.value++;
+    print("masuk sini");
+    controller.retrieveBookList(currentPage: currentPage.value, filter: inputController.text);
+  }
+
+  Future<void> onFilteredData(String value) async {
+    isLoading.value = true;
+    isAddedBook.value = false;
+    currentPage.value = 1;
+    bookList.clear();
+    controller.retrieveBookList(currentPage: currentPage.value, filter: value);
   }
 
   contentBottomSheet() => showModalBottomSheet(
@@ -149,9 +177,37 @@ class PlannerPageState extends State<PlannerPage> {
               callback: () => Navigator.pop(context)),
         );
 
-    ////////////////////////////
-    ///NEW DOCUMENT COMPONENT///
-    ////////////////////////////
+    bookListComponent() {
+      return Column(children: [
+        GeneralUtils().filterTextFormField(
+            controller: inputController,
+            label: "Cari Buku Proyeksi",
+            isFinalInput: true,
+            isEnabled: true,
+            color: ColorsTheme.yellow,
+            isNumber: false,
+            callback: (value) => onFilteredData(value)),
+        GeneralUtils().verticalSpacer(20.h),
+        Expanded(
+            child: RefreshIndicator(
+                onRefresh: () async => onRefreshList(),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: scrollCtrl,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemCount: bookList.length + (hasMore.value ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index < bookList.length) {
+                        return CustomPlannerListWidget(book: bookList[index]);
+                      } else {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                    })))
+      ]);
+    }
 
     newDocumentComponent() => Stack(
           children: [
@@ -175,8 +231,6 @@ class PlannerPageState extends State<PlannerPage> {
           ],
         );
 
-    ////////////////////////////
-
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -186,8 +240,9 @@ class PlannerPageState extends State<PlannerPage> {
                   isLoading.value
                       ? CustomShimmerCardListWidget()
                       : isAddedBook.value
-                          ? Text("Ada Data")
+                          ? bookListComponent()
                           : newDocumentComponent(),
+                  handlingError()!,
                 ],
               )),
         ),

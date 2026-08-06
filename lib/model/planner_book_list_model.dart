@@ -1,25 +1,26 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class PlannerBookListModel {
-  int? count;
-  List<BooksItem>? booksItem;
+  final Pagination? pagination;
+  final List<BooksItem>? booksItem;
 
-  PlannerBookListModel({
-    required this.count,
+  const PlannerBookListModel({
+    required this.pagination,
     required this.booksItem,
   });
 
-  factory PlannerBookListModel.fromJson(Map<String, dynamic> json) =>
+  factory PlannerBookListModel.fromJson(Map<dynamic, dynamic> json) =>
       PlannerBookListModel(
-        count: json["count"] ?? 0,
-        booksItem: json["books_item"] != null
+        pagination: Pagination.fromJson(json["pagination"]),
+        booksItem: json["data"] != null
             ? List<BooksItem>.from(
-                json["books_item"].map((x) => BooksItem.fromJson(x)))
+                json["data"].map((x) => BooksItem.fromJson(x)))
             : [],
       );
 
   Map<String, dynamic> toJson() => {
-        "count": count,
+        "pagination": pagination!.toJson(),
         "books_item": List<dynamic>.from(booksItem!.map((x) => x.toJson())),
       };
 }

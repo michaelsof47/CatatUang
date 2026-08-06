@@ -1,9 +1,10 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class UserService {
+class LoginService extends BaseService implements LoginServiceInterfaces {
+  @override
   Future<HttpModel> postLogin(
       {required String? email, required String? password}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/login");
+    var uri = Uri.parse("$baseUrl/user/login");
     var request = http.MultipartRequest("POST", uri);
 
     request.fields['emailorphone'] = email!;
@@ -15,9 +16,10 @@ class UserService {
     return HttpModel(code: response.statusCode, body: response.body);
   }
 
+  @override
   Future<HttpModel> postRegister(
       {required Map<String, dynamic>? temporaryData}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/register");
+    var uri = Uri.parse("$baseUrl/user/register");
     var request = http.MultipartRequest("POST", uri);
 
     request.fields['first_name'] = temporaryData!['firstname'];
@@ -38,8 +40,9 @@ class UserService {
     return HttpModel(code: response.statusCode, body: response.body);
   }
 
+  @override
   Future<HttpModel> postCheckEmail({required String email}) async {
-    var uri = Uri.parse("${GeneralUtils().baseUrl}/user/check_email");
+    var uri = Uri.parse("$baseUrl/user/check_email");
     var request = http.MultipartRequest("POST", uri);
 
     request.fields['email'] = email;

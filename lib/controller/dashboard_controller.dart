@@ -1,21 +1,21 @@
 part of 'package:catat_uang/import_url_file.dart';
 
-class DashboardController extends GetxController {
+class DashboardController extends BaseController {
   LocalManager? localManager;
-  DashboardService? dashboardService;
+  DashboardServiceInterface? dashboardService;
 
-  var resultMsg;
-  var resultStatus;
-  RxMap<dynamic, dynamic>? dashboardData;
-  RxMap<dynamic, dynamic>? transactionData;
-  RxMap<dynamic, dynamic>? categoriesData;
-  Rx<Uint8List>? profileImage;
+  late RxString resultMsg;
+  late RxString resultStatus;
+  late RxMap<dynamic, dynamic> dashboardData;
+  late RxMap<dynamic, dynamic> transactionData;
+  late RxMap<dynamic, dynamic> categoriesData;
+  late Rx<Uint8List>? profileImage;
   var balanceAmount;
 
-  DashboardController() {
-    localManager = Get.put(LocalManager());
-    dashboardService = Get.put(DashboardService());
-
+  DashboardController({
+    required this.localManager,
+    required this.dashboardService,
+  }) {
     resultMsg = "".obs;
     resultStatus = "".obs;
     dashboardData = {}.obs;
@@ -25,6 +25,7 @@ class DashboardController extends GetxController {
     profileImage = Uint8List(0).obs;
   }
 
+  @override
   void resetResponse() {
     resultMsg.value = "";
     resultStatus.value = "";
@@ -45,7 +46,7 @@ class DashboardController extends GetxController {
     var responseBody = json.decode(response.body!);
 
     if (response.code == 200) {
-      dashboardData!.value = responseBody;
+      dashboardData.value = responseBody;
       profileImage!.value = await dashboardService!
           .getProfileImage(token: temporaryData["token"]);
 
@@ -114,7 +115,7 @@ class DashboardController extends GetxController {
     var responseBody = json.decode(response.body!);
 
     if (response.code == 200) {
-      transactionData!.value = responseBody;
+      transactionData.value = responseBody;
       resultStatus.value = "transaction_success";
     } else {
       if (responseBody["message"] == "Token is Blocked" ||
@@ -123,7 +124,7 @@ class DashboardController extends GetxController {
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
         resultStatus.value = "transaction_failure";
-        transactionData!.value = {};
+        transactionData.value = {};
         print("Error: ${responseBody["message"]}");
         resultMsg.value = responseBody["message"];
       }
@@ -150,7 +151,7 @@ class DashboardController extends GetxController {
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
         resultStatus.value = "transaction_failure";
-        transactionData!.value = {};
+        transactionData.value = {};
         print("Error: ${responseBody["message"]}");
         resultMsg.value = responseBody["message"];
       }
@@ -182,7 +183,7 @@ class DashboardController extends GetxController {
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
         resultStatus.value = "transaction_failure";
-        transactionData!.value = {};
+        transactionData.value = {};
         print("Error: ${responseBody["message"]}");
         resultMsg.value = responseBody["message"];
       }
@@ -208,7 +209,7 @@ class DashboardController extends GetxController {
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
         resultStatus.value = "transaction_failure";
-        transactionData!.value = {};
+        transactionData.value = {};
         print("Error: ${responseBody["message"]}");
         resultMsg.value = responseBody["message"];
       }
@@ -234,7 +235,7 @@ class DashboardController extends GetxController {
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
         resultStatus.value = "transaction_failure";
-        transactionData!.value = {};
+        transactionData.value = {};
         print("Error: ${responseBody["message"]}");
         resultMsg.value = responseBody["message"];
       }
@@ -260,7 +261,7 @@ class DashboardController extends GetxController {
         resultMsg.value = "Sesi anda telah berakhir, silahkan login kembali";
       } else {
         resultStatus.value = "transaction_failure";
-        transactionData!.value = {};
+        transactionData.value = {};
         print("Error: ${responseBody["message"]}");
         resultMsg.value = responseBody["message"];
       }
@@ -277,7 +278,7 @@ class DashboardController extends GetxController {
     var responseBody = json.decode(response.body!);
 
     if (response.code == 200) {
-      categoriesData!.value = responseBody;
+      categoriesData.value = responseBody;
       await getTransactionDataCtrl(page: 1, categoryId: 0);
     } else {
       if (responseBody["message"] == "Token is Blocked" ||

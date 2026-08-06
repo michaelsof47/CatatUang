@@ -1,10 +1,11 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class TransactionModel {
-    Pagination? pagination;
-    List<DetailItems>? data;
+    final Pagination? pagination;
+    final List<DetailItems>? data;
 
-    TransactionModel({
+    const TransactionModel({
         required this.pagination,
         required this.data,
     });
@@ -69,29 +70,5 @@ class DetailItems {
         "total_price": totalPrice,
         "created_at": createdAt,
         "transaction_date": transactionDate,
-    };
-}
-
-class Pagination {
-    int? currentPage;
-    int? pageSize;
-    int? totalItems;
-
-    Pagination({
-        required this.currentPage,
-        required this.pageSize,
-        required this.totalItems,
-    });
-
-    factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        currentPage: json["currentPage"] ?? 0,
-        pageSize: json["pageSize"] ?? 0,
-        totalItems: json["totalItems"] ?? 0,
-    );
-
-    Map<String, dynamic> toJson() => {
-        "currentPage": currentPage,
-        "pageSize": pageSize,
-        "totalItems": totalItems,
     };
 }

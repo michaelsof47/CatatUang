@@ -1,8 +1,9 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class BalanceModel {
-    int? id;
-    int? balancesAmount;
+    final int? id;
+    final int? balancesAmount;
 
     BalanceModel({
         this.id,

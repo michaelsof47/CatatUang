@@ -3,7 +3,13 @@ part of 'package:catat_uang/import_url_file.dart';
 class CategoryFormBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TransactionController>(() => TransactionController());
+    Get.lazyPut<TransactionServiceInterface>(() => TransactionService());
+    Get.lazyPut<LocalManager>(() => LocalManager());
+
+    Get.lazyPut<TransactionController>(() => TransactionController(
+          localManager: Get.find<LocalManager>(),
+          service: Get.find<TransactionServiceInterface>(),
+        ));
   }
 }
 
@@ -90,7 +96,7 @@ class CategoryFormState extends State<CategoryForm> {
         case "categories_failure":
           showAlertSnackbar(alertMessage, false);
           break;
-        case "cetegories_success":
+        case "categories_success":
           showAlertSnackbar(alertMessage, true);
           Navigator.pop(context);
           Navigator.pop(context);

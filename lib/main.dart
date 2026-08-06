@@ -27,8 +27,14 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: "/",
           getPages: [
-            GetPage(name: "/", page: () => SplashScreenPage()),
-            GetPage(name: "/onboarding", page: () => OnBoardingPage()),
+            GetPage(
+                name: "/",
+                page: () => SplashScreenPage(),
+                binding: SplashScreenBinding()),
+            GetPage(
+                name: "/onboarding",
+                page: () => OnBoardingPage(),
+                binding: OnBoardingBinding()),
             GetPage(
                 name: "/login",
                 page: () => LoginPage(),
@@ -37,11 +43,20 @@ class MyApp extends StatelessWidget {
                 name: "/register",
                 page: () => RegisterUserPage(),
                 binding: RegisterUserBinding()),
-            GetPage(name: "/home_navigation", page: () => HomeNavigationPage()),
             GetPage(
                 name: "/profile_form_page",
                 page: () => ProfileFormPage(),
                 binding: ProfileFormBinding()),
+            GetPage(
+                name: "/profile_page",
+                page: () => ProfilePage(),
+                binding: ProfileBinding(),
+            ),
+            GetPage(
+                name: "/transaction_page",
+                page: () => TransactionPage(),
+                binding: TransactionBinding(),
+            ),
             GetPage(
                 name: "/category_form",
                 page: () => CategoryForm(),
@@ -50,7 +65,15 @@ class MyApp extends StatelessWidget {
                 name: "/transaction_form",
                 page: () => TransactionForm(),
                 binding: TransactionFormBinding()),
-            GetPage(name: "/planner_form", page: () => PlannerPage())
+            GetPage(
+                name: "/planner_form",
+                page: () => PlannerPage(),
+                binding: PlannerBinding()),
+            GetPage(
+              name: "/home_navigation",
+              page: () => HomeNavigationPage(),
+              binding: HomeDashboardBinding(),
+            )
           ],
         );
 

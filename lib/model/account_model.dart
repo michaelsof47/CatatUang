@@ -1,15 +1,16 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+@immutable
 class AccountModel {
-    int? id;
-    String? firstName;
-    String? lastName;
-    String? rewardStatus;
-    String? email;
-    String? phone;
-    String? profileImageUrl;
+    final int? id;
+    final String? firstName;
+    final String? lastName;
+    final String? rewardStatus;
+    final String? email;
+    final String? phone;
+    final String? profileImageUrl;
 
-    AccountModel({
+    const AccountModel({
         this.id,
         this.firstName,
         this.lastName,

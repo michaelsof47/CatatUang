@@ -1,5 +1,18 @@
 part of 'package:catat_uang/import_url_file.dart';
 
+class ProfileBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<LocalManager>(() => LocalManager());
+    Get.lazyPut<DashboardServiceInterface>(() => DashboardService());
+
+    Get.lazyPut<DashboardController>(() => DashboardController(
+          localManager: Get.find<LocalManager>(),
+          dashboardService: Get.find<DashboardServiceInterface>(),
+        ));
+  }
+}
+
 class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => ProfilePageState();
@@ -34,7 +47,7 @@ class ProfilePageState extends State<ProfilePage> {
   void dispose() {
     super.dispose();
 
-    Get.delete();
+    //Get.delete<DashboardController>();
   }
 
   initConstructor() {
@@ -56,7 +69,7 @@ class ProfilePageState extends State<ProfilePage> {
       Icons.logout,
     ];
 
-    controller = Get.put(DashboardController());
+    controller = Get.find<DashboardController>();
 
     fullName = "".obs;
     rewardStatus = "".obs;
