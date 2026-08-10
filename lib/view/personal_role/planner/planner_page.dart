@@ -27,8 +27,9 @@ class PlannerPageState extends State<PlannerPage> {
   var currentPage;
   var isLoadMore;
   var hasMore;
-  var isAddedBook;
+  var isEmptyBook;
   var isLoading;
+  var isSearchNotFound;
 
   @override
   void initState() {
@@ -43,12 +44,13 @@ class PlannerPageState extends State<PlannerPage> {
     inputController = TextEditingController();
     scrollCtrl = ScrollController();
 
-    isAddedBook = false.obs;
     isLoading = false.obs;
     bookList = [];
     currentPage = 1.obs;
     hasMore = true.obs;
     isLoadMore = false.obs;
+    isEmptyBook = true.obs;
+    isSearchNotFound = false.obs;
 
     scrollCtrl.addListener(() {
       if (scrollCtrl.position.pixels == scrollCtrl.position.maxScrollExtent &&
@@ -78,7 +80,6 @@ class PlannerPageState extends State<PlannerPage> {
       switch (alertStatus.value) {
         case "retrieve_book_success":
           isLoading.value = false;
-          isAddedBook.value = true;
 
           if (currentPage.value == 1) {
             bookList.clear();
@@ -90,17 +91,22 @@ class PlannerPageState extends State<PlannerPage> {
             bookList.add(book);
           }
 
-          if(bookList.length < tempBookList.pagination!.totalItems!) {
-            hasMore.value = bookList.length >= tempBookList.pagination!.pageSize!;
+          if (bookList.length < tempBookList.pagination!.totalItems!) {
+            hasMore.value =
+                bookList.length >= tempBookList.pagination!.pageSize!;
           } else {
             hasMore.value = false;
-          };
+          }
+
           isLoadMore.value = false;
+          isSearchNotFound.value = false;
+          isEmptyBook.value = false;
           break;
         case "retrieve_book_failure":
           isLoading.value = false;
-          isAddedBook.value = false;
           isLoadMore.value = false;
+          isSearchNotFound.value = true;
+          isEmptyBook.value = false;
           showAlertSnackbar(alertMessage, false);
           break;
       }
@@ -113,22 +119,22 @@ class PlannerPageState extends State<PlannerPage> {
 
   Future<void> onRefreshList() async {
     isLoading.value = true;
-    isAddedBook.value = false;
     currentPage.value = 1;
     bookList.clear();
-    controller.retrieveBookList(currentPage: currentPage.value, filter: inputController.text);
+    controller.retrieveBookList(
+        currentPage: currentPage.value, filter: inputController.text);
   }
 
   Future<void> onLoadMoreData() async {
     isLoadMore.value = true;
     currentPage.value++;
     print("masuk sini");
-    controller.retrieveBookList(currentPage: currentPage.value, filter: inputController.text);
+    controller.retrieveBookList(
+        currentPage: currentPage.value, filter: inputController.text);
   }
 
   Future<void> onFilteredData(String value) async {
     isLoading.value = true;
-    isAddedBook.value = false;
     currentPage.value = 1;
     bookList.clear();
     controller.retrieveBookList(currentPage: currentPage.value, filter: value);
@@ -178,6 +184,25 @@ class PlannerPageState extends State<PlannerPage> {
         );
 
     bookListComponent() {
+      itemList() => Expanded(
+          child: RefreshIndicator(
+              onRefresh: () async => onRefreshList(),
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: scrollCtrl,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: bookList.length + (hasMore.value ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index < bookList.length) {
+                      return CustomPlannerListWidget(book: bookList[index]);
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                  })));
+
       return Column(children: [
         GeneralUtils().filterTextFormField(
             controller: inputController,
@@ -188,60 +213,61 @@ class PlannerPageState extends State<PlannerPage> {
             isNumber: false,
             callback: (value) => onFilteredData(value)),
         GeneralUtils().verticalSpacer(20.h),
-        Expanded(
-            child: RefreshIndicator(
-                onRefresh: () async => onRefreshList(),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    controller: scrollCtrl,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    itemCount: bookList.length + (hasMore.value ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index < bookList.length) {
-                        return CustomPlannerListWidget(book: bookList[index]);
-                      } else {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.h),
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      }
-                    })))
+        isSearchNotFound.value
+            ? Column(
+              children: [
+                GeneralUtils().verticalSpacer(35.h),
+                Lottie.asset("assets/animation/emptybox.json",
+                        width: 220.w, height: 220.h, fit: BoxFit.fill),
+                GeneralUtils().verticalSpacer(10.h),
+                Text("Buku Tidak Tersedia",
+                    style: FontTheme.labelStyle1(
+                        status: "bold",
+                        fontSize: 16,
+                        color: ColorsTheme.black)),
+              ])
+            : itemList()
       ]);
     }
 
-    newDocumentComponent() => Stack(
+    baseComponent() => Stack(
           children: [
-            Positioned(
-                bottom: 35.h,
-                right: 3.w,
-                child: FloatingActionButton(
-                  onPressed: () => showCreateBookForm(),
-                  shape: CircleBorder(),
-                  child: Icon(Icons.add, size: 25.w, color: ColorsTheme.black),
-                  backgroundColor: ColorsTheme.yellow,
-                )),
-            Column(children: [
-              GeneralUtils().verticalSpacer(35.h),
-              NewDocumentWidget(
-                moduleType: "",
-                headerLabel: "Buku Proyeksi belum tersedia",
-                descLabel: "Silahkan membuat Buku Proyeksi terlebih dahulu",
-              ),
-            ])
+            isEmptyBook.value
+                ? Column(children: [
+                    GeneralUtils().verticalSpacer(35.h),
+                    NewDocumentWidget(
+                      moduleType: "",
+                      headerLabel: "Buku Proyeksi belum tersedia",
+                      descLabel:
+                          "Silahkan membuat Buku Proyeksi terlebih dahulu",
+                    )
+                  ])
+                : bookListComponent(),
+            isSearchNotFound.value
+                ? Container()
+                : Positioned(
+                    bottom: 35.h,
+                    right: 3.w,
+                    child: FloatingActionButton(
+                      onPressed: () => showCreateBookForm(),
+                      shape: CircleBorder(),
+                      child:
+                          Icon(Icons.add, size: 25.w, color: ColorsTheme.black),
+                      backgroundColor: ColorsTheme.yellow,
+                    )),
           ],
         );
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: EdgeInsets.only(left: 17.w, right: 17.w, top: 29.h),
           child: Obx(() => Stack(
                 children: [
                   isLoading.value
                       ? CustomShimmerCardListWidget()
-                      : isAddedBook.value
-                          ? bookListComponent()
-                          : newDocumentComponent(),
+                      : baseComponent(),
                   handlingError()!,
                 ],
               )),
