@@ -1,6 +1,4 @@
-//////////////////
 ///GENERAL BASE///
-//////////////////
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -13,9 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
-///////////////////////////////
 ///FIREBASE / GOOGLE LIBRARY///
-///////////////////////////////
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:geocoding/geocoding.dart';
@@ -32,9 +28,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:shimmer/shimmer.dart';
 import 'firebase_options.dart';
 
-////////////////////
 ///CUSTOM LIBRARY///
-////////////////////
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -45,16 +39,12 @@ import 'package:realm/realm.dart';
 //ARGUMENTS//
 import 'package:catat_uang/arguments/transaction_arguments.dart';
 
-///////////////////////
-///CUSTOM STYLE PAGE///
-///////////////////////
+///UTILS THEME///
 part 'style/colors_theme.dart';
 part 'style/font_theme.dart';
 part 'style/layout_theme.dart';
 
-///////////////////
 ///CUSTOM WIDGET///
-///////////////////
 part 'widget/header/custom_header_widget.dart';
 part 'widget/button/custom_menu_button_widget.dart';
 part 'widget/general_widget/custom_shorcut_menu_widget.dart';
@@ -75,19 +65,12 @@ part 'widget/shimmer/custom_shimmer_card_widget.dart';
 part 'widget/shimmer/custom_shimmer_profile_widget.dart';
 part 'widget/shimmer/custom_shimmer_card_list_widget.dart';
 part 'widget/item_list/custom_planner_list_widget.dart';
+part 'widget/bottom_sheet/custom_bs_planner_input_field_widget.dart';
 
-/////////////////
-///MINI MODULE///
-/////////////////
-
-////////////////////
 ///LOCAL DATABASE///
-////////////////////
 part 'database/local_manager.dart';
 
-////////////////
 ///CONTROLLER///
-////////////////
 part 'controller/base_controller.dart';
 part 'controller/planner_controller.dart';
 part 'controller/login_controller.dart';
@@ -119,14 +102,15 @@ part 'interfaces/transactionservice_interfaces.dart';
 part 'interfaces/plannerservice_interfaces.dart';
 
 //MODEL//
-part 'model/login_model.dart';
-part 'model/account_model.dart';
-part 'model/balance_model.dart';
-part 'model/transaction_model.dart';
-part 'model/categories_model.dart';
-part 'model/http_model.dart';
-part 'model/planner_book_list_model.dart';
-part 'model/pagination_model.dart';
+part 'model/retrieve_model/login_model.dart';
+part 'model/retrieve_model/account_model.dart';
+part 'model/retrieve_model/balance_model.dart';
+part 'model/retrieve_model/transaction_model.dart';
+part 'model/retrieve_model/categories_model.dart';
+part 'model/util_model/http_model.dart';
+part 'model/retrieve_model/planner_book_list_model.dart';
+part 'model/util_model/pagination_model.dart';
+part 'model/request_model/create_planner_book_model.dart';
 
 //SERVICE//
 part 'service/login_service.dart';
@@ -156,6 +140,7 @@ part 'view/personal_role/transaction/transaction_page.dart';
 part 'view/personal_role/planner/planner_page.dart';
 part 'view/personal_role/transaction/form/category_form_page.dart';
 part 'view/personal_role/transaction/form/transaction_form_page.dart';
+part 'view/personal_role/planner/detail_planner_page.dart';
 
 //OWNER ROLE//
 //part 'view/owner_role/owner_dashboard_page.dart';

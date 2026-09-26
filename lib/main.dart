@@ -73,6 +73,11 @@ class MyApp extends StatelessWidget {
               name: "/home_navigation",
               page: () => HomeNavigationPage(),
               binding: HomeDashboardBinding(),
+            ),
+            GetPage(
+              name: "/detail_planner_page",
+              page: () => DetailPlannerPage(),
+              binding: DetailPlannerPageBinding(),
             )
           ],
         );

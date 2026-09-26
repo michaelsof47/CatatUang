@@ -75,6 +75,20 @@ class GeneralUtils {
         ),
       );
 
+  searchDateDecorationType(label, color) => InputDecoration(
+        border: outlineBorder(color),
+        enabledBorder: outlineBorder(ColorsTheme.white),
+        contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+        hintText: label,
+        fillColor: color,
+        filled: true,
+        hintStyle: FontTheme.labelHintStyle2(false),
+        suffixIcon: Icon(
+          Icons.date_range,
+          color: ColorsTheme.yellow,
+        ),
+      );
+
   currencyUnderlineDecoType(label, currencyFormat) => InputDecoration(
       border: underlineBorder(),
       enabledBorder: underlineBorder(),
@@ -99,7 +113,7 @@ class GeneralUtils {
         hintText: label,
         filled: true,
         fillColor: ColorsTheme.white,
-        hintStyle: FontTheme.labelHintStyle1(false),
+        hintStyle: FontTheme.labelHintStyle2(false),
       );
 
   generalTextFormField({
@@ -128,7 +142,7 @@ class GeneralUtils {
                     : Icons.visibility,
                 isPassword: isPassword!)
             : borderedDecorationType(label),
-        style: FontTheme.labelHintStyle1(true),
+        style: FontTheme.labelHintStyle2(true),
         inputFormatters: isNumber!
             ? [FilteringTextInputFormatter.digitsOnly, CustomCurrencyFormat()]
             : [],
@@ -148,20 +162,21 @@ class GeneralUtils {
         obscureText: isPassword! ? !isPasswordVisible! : false,
       );
 
-  filterTextFormField({
+  iconClickableTextFormField({
     TextEditingController? controller,
     String? label,
     bool? isFinalInput,
     bool? isEnabled,
     Color? color,
     bool? isNumber,
+    String? click_type,
     Function(String value)? callback,
   }) =>
       TextFormField(
         controller: controller,
         cursorColor: ColorsTheme.green,
         readOnly: isEnabled! ? false : true,
-        decoration: searchDecorationType(label, color),
+        decoration: click_type == "date" ? searchDateDecorationType(label, color) : searchDecorationType(label, color),
         style: FontTheme.labelHintStyle2(true),
         maxLines: 1,
         onFieldSubmitted: (value) => callback!(value),
@@ -185,7 +200,7 @@ class GeneralUtils {
         cursorColor: ColorsTheme.green,
         readOnly: isEnabled! ? false : true,
         onChanged: (string) => inputAction!(string),
-        decoration: currencyUnderlineDecoType(label, currencyFormat),
+        decoration: decoType == "currency_compact" ? borderedDecorationType(label) : currencyUnderlineDecoType(label, currencyFormat),
         style: FontTheme.labelHintStyle1(true),
         maxLines: 1,
         keyboardType: TextInputType.number,
@@ -426,7 +441,7 @@ class GeneralUtils {
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
                     child: Column(children: [
-                      filterTextFormField(
+                      iconClickableTextFormField(
                           label: "Pilih Kategori",
                           isFinalInput: true,
                           isEnabled: true,

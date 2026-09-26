@@ -11,4 +11,10 @@ class PlannerService extends BaseService implements PlannerServiceInterface {
 
     return HttpModel(code: response.statusCode, body: response.body);
   }
+
+  @override
+  Future<HttpModel> createBook({required CreatePlannerBookModel model, required String token}) async {
+    return HttpModel(code: 0, body: "");
+  }
+
 }

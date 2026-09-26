@@ -19,11 +19,18 @@ class PlannerPage extends StatefulWidget {
 }
 
 class PlannerPageState extends State<PlannerPage> {
+  
   late PlannerController controller;
-  late TextEditingController inputController;
   late LocalManager localManager;
   late List<BooksItem> bookList;
   late ScrollController scrollCtrl;
+  late List<String> bottomsheetHintLabels;
+  late TextEditingController booknameInputController;
+  late TextEditingController startdateInputController;
+  late TextEditingController enddateInputController;
+  late TextEditingController currencyInputController;
+  late TextEditingController filterInputController;
+
   var currentPage;
   var isLoadMore;
   var hasMore;
@@ -41,7 +48,11 @@ class PlannerPageState extends State<PlannerPage> {
 
   initConstructor() {
     controller = Get.find<PlannerController>();
-    inputController = TextEditingController();
+    booknameInputController = TextEditingController();
+    startdateInputController = TextEditingController();
+    enddateInputController = TextEditingController();
+    currencyInputController = TextEditingController();
+    filterInputController = TextEditingController();
     scrollCtrl = ScrollController();
 
     isLoading = false.obs;
@@ -51,6 +62,7 @@ class PlannerPageState extends State<PlannerPage> {
     isLoadMore = false.obs;
     isEmptyBook = true.obs;
     isSearchNotFound = false.obs;
+    bottomsheetHintLabels = ["Nama Buku Proyeksi", "Tanggal Awal", "Tanggal Akhir", "Jumlah Saldo"];
 
     scrollCtrl.addListener(() {
       if (scrollCtrl.position.pixels == scrollCtrl.position.maxScrollExtent &&
@@ -122,7 +134,7 @@ class PlannerPageState extends State<PlannerPage> {
     currentPage.value = 1;
     bookList.clear();
     controller.retrieveBookList(
-        currentPage: currentPage.value, filter: inputController.text);
+        currentPage: currentPage.value, filter: filterInputController.text);
   }
 
   Future<void> onLoadMoreData() async {
@@ -130,7 +142,7 @@ class PlannerPageState extends State<PlannerPage> {
     currentPage.value++;
     print("masuk sini");
     controller.retrieveBookList(
-        currentPage: currentPage.value, filter: inputController.text);
+        currentPage: currentPage.value, filter: filterInputController.text);
   }
 
   Future<void> onFilteredData(String value) async {
@@ -140,23 +152,6 @@ class PlannerPageState extends State<PlannerPage> {
     controller.retrieveBookList(currentPage: currentPage.value, filter: value);
   }
 
-  contentBottomSheet() => showModalBottomSheet(
-        context: context,
-        builder: (context) => CustomBottomSheetInputFieldWidget(
-          callback: (value) async {
-            initData();
-          },
-          inputController: inputController,
-          headerLabel: "Nama Buku Proyek",
-          hintLabel: "Masukkan Nama Buku Proyek",
-          isNumber: false,
-        ),
-        isScrollControlled: true,
-        shape: GeneralUtils().customDecoration(),
-        barrierColor: ColorsTheme.black25,
-        backgroundColor: ColorsTheme.yellowSoft,
-      );
-
   showCreateBookForm() => showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -165,12 +160,14 @@ class PlannerPageState extends State<PlannerPage> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.r),
                 topRight: Radius.circular(20.r))),
-        builder: (buildContext) => CustomBottomSheetInputFieldWidget(
-            inputController: inputController,
-            callback: (String value) {},
-            headerLabel: "Tambah Buku Proyeksi Awal",
-            hintLabel: "Nama Buku Proyeksi",
-            isNumber: false),
+        builder: (buildContext) => CustomBSPlannerInputFieldWidget(
+          headerLabel: "Form Tambah Buku",
+          booknameInputController: booknameInputController,
+          startdateInputController: startdateInputController,
+          enddateInputController: enddateInputController,
+          currencyInputController: currencyInputController,
+          hintLabels: bottomsheetHintLabels,
+        ),
       );
 
   @override
@@ -204,12 +201,13 @@ class PlannerPageState extends State<PlannerPage> {
                   })));
 
       return Column(children: [
-        GeneralUtils().filterTextFormField(
-            controller: inputController,
+        GeneralUtils().iconClickableTextFormField(
+            controller: filterInputController,
             label: "Cari Buku Proyeksi",
             isFinalInput: true,
             isEnabled: true,
             color: ColorsTheme.yellow,
+            click_type: "search",
             isNumber: false,
             callback: (value) => onFilteredData(value)),
         GeneralUtils().verticalSpacer(20.h),

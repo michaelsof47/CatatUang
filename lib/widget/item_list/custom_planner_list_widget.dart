@@ -3,6 +3,7 @@ part of 'package:catat_uang/import_url_file.dart';
 class CustomPlannerListWidget extends StatelessWidget {
 
   late BooksItem book;
+  late Function(int id) callback;
   
   CustomPlannerListWidget({required this.book});
 
@@ -12,7 +13,7 @@ class CustomPlannerListWidget extends StatelessWidget {
           shape: GeneralUtils().customDecoration(),
           color: ColorsTheme.yellowSoft,
           child: InkWell(
-              onTap: () {},
+              onTap: () => callback(book.id!),
               splashColor: ColorsTheme.grey,
               borderRadius: BorderRadius.circular(10.r),
               child: Padding(
